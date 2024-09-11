@@ -19,7 +19,6 @@ label_x.pack()
 entry_x = tk.Entry(root)
 entry_x.pack()
 
-
 label_y = tk.Label(root, text="Окно для ввода координаты У")
 label_y.pack()
 
