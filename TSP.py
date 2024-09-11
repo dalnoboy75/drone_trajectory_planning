@@ -39,6 +39,5 @@ def find_min_route(numbers, lines, columns):
     return min(route_data)
 
 
-# Использование функции
 # result = find_min_route([], 0, 0)
 # print(result)

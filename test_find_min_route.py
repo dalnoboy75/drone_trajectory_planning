@@ -7,7 +7,7 @@ def test_valid_case():
     numbers = [1e9, 5, 7, 16, 1e9, 2, 4, 6, 1e9]
     lines = 3
     columns = 3
-    expected = (11, (1, 2, 3))  # пример ожидаемого результата
+    expected = (11, (1, 2, 3))
     assert find_min_route(numbers, lines, columns) == expected
 
 
