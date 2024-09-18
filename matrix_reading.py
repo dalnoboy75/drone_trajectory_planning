@@ -19,11 +19,7 @@ def matrix_distance(data: dict):
         for segment in data['forbid_segments']:
             start = segment[0]
             finish = segment[1]
-            distance_matrix[start, finish] = distance_matrix[finish, start] = 10**8
+            distance_matrix[start, finish] = distance_matrix[finish, start] = 10 ** 8
         return distance_matrix
     except:
         return 'error'
-
-
-if __name__ == '__main__':
-    reading_matrix()

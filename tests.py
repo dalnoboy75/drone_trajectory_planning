@@ -59,6 +59,7 @@ expected_matrix_4 = np.array([
     [9.881295, 12.638433, 10 ** 8]
 ])
 
+
 @pytest.mark.parametrize('mock_data, expected_matrix',
                          [(mock_data_1, expected_matrix_1), (mock_single_point_data, expected_matrix_2),
                           (mock_two_points_data, expected_matrix_3), (mock_data_4, expected_matrix_4)])
