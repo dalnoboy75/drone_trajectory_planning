@@ -1,31 +1,45 @@
-import tkinter as tk
-from tkinter import messagebox
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QMessageBox, QVBoxLayout
 
-def validate_input():
-    try:
-        x = float(entry_x.get())
-        y = float(entry_y.get())
-        messagebox.showinfo("Ввод успешен", f"Координаты: X = {x}, Y = {y}")
-    except ValueError:
-        messagebox.showerror("Ошибка", "Введите корректные числовые значения для координат.")
+class App(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
 
-root = tk.Tk()
-root.geometry('600x400')
-root.title("Построение траектории Беспилотного летательного аппарата")
+    def initUI(self):
+        self.setGeometry(100, 100, 600, 400)
+        self.setWindowTitle("Построение траектории БПЛА")
 
-label_x = tk.Label(root, text="Окно для ввода координаты Х")
-label_x.pack()
+        layout = QVBoxLayout()
 
-entry_x = tk.Entry(root)
-entry_x.pack()
+        self.label_x = QLabel("Окно для ввода координаты Х", self)
+        layout.addWidget(self.label_x)
 
-label_y = tk.Label(root, text="Окно для ввода координаты У")
-label_y.pack()
+        self.entry_x = QLineEdit(self)
+        layout.addWidget(self.entry_x)
 
-entry_y = tk.Entry(root)
-entry_y.pack()
+        self.label_y = QLabel("Окно для ввода координаты У", self)
+        layout.addWidget(self.label_y)
 
-button = tk.Button(root, text="Ввести", command=validate_input)
-button.pack()
+        self.entry_y = QLineEdit(self)
+        layout.addWidget(self.entry_y)
 
-root.mainloop()
+        self.button = QPushButton("Ввести", self)
+        self.button.clicked.connect(self.validate_input)
+        layout.addWidget(self.button)
+
+        self.setLayout(layout)
+
+    def validate_input(self):
+        try:
+            x = float(self.entry_x.text())
+            y = float(self.entry_y.text())
+            QMessageBox.information(self, "Ввод успешен", f"Координаты: X = {x}, Y = {y}")
+        except ValueError:
+            QMessageBox.critical(self, "Ошибка", "Введите корректные числовые значения для координат.")
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    ex = App()
+    ex.show()
+    sys.exit(app.exec_())
