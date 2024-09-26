@@ -26,7 +26,7 @@ def intersection_number(a, b, circle):
     else:
         return 0
 
-
+#Поиск точек касания касательных от точки с окружностью
 def touch_points_search(point, circle):
     lx = circle[0] - point[0]
     ly = circle[1] - point[1]
@@ -41,8 +41,11 @@ def touch_points_search(point, circle):
 
     return [(t1x, t1y), (t2x, t2y)]
 
+#Расчёт расстояния между двумя точками
 def calc_dist(first_point, second_point):
     return sqrt((first_point[0] - second_point[0])**2 + (first_point[1]-second_point[1])**2)
+
+#Расчёт длины дуги между двумя точками на окружности
 def arc_length(first_point,second_point, circle):
     center = [circle[0], circle[1]]
     a = calc_dist(first_point, second_point)
