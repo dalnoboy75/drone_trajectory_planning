@@ -1,61 +1,50 @@
 import numpy as np
 
-bottomLimit = 0
-record = np.inf
 
+def CalculationBottomLimit(new_matrix: np.ndarray, bottomLimit: int) -> int:
+    "Принимает на вход матрицу с расстояниями и высчитывает НГЦФ"
 
-def get_coefficient(m, r, c):
-    rmin = cmin = float('inf')
+    # Пропустим первую строку и первый столбец
+    sub_matrix = new_matrix[1:, 1:]
 
-    # Обход строки и столбца
-    for i in range(m.shape[0]):
-        if i != r:
-            rmin = min(rmin, m[i, c])
-        if i != c:
-            cmin = min(cmin, m[r, i])
+    # Находим минимумы по строкам и столбцам подматрицы
+    row_min = sub_matrix.min(axis=1)
+    sub_matrix -= row_min[:, np.newaxis]
+    columns_min = sub_matrix.min(axis=0)
+    sub_matrix -= columns_min
 
-    return rmin + cmin
-
-def algorithm_Lit(numbers):
-    global bottomLimit, record
-    matrix = np.array(numbers).reshape(int(len(numbers) ** 0.5), int(len(numbers) ** 0.5))
-    lines = int(len(numbers) ** 0.5)
-    columns = int(len(numbers) ** 0.5)
-    list_column = np.arange(1, columns + 1).reshape(-1, 1)  # столбец из элементов от 1 до n
-    list_row = np.arange(0, columns + 1).reshape(1, -1)  # строка из элементов от 0 до n
-    row_min = matrix.min(axis=1)
-    matrix -= row_min[:, np.newaxis]
-    columns_min = matrix.min(axis=0)
-    matrix -= columns_min
+    # Суммируем минимумы
     substractSum = sum(row_min) + sum(columns_min)
+
+    # Обновляем нижнюю границу
     bottomLimit += substractSum
 
-    if bottomLimit > record:  # сравнение верхней и нижней границ
-        return
+    new_matrix[1:, 1:] = sub_matrix
+    return bottomLimit
 
+
+def SerachingMaxDegreeZero(new_matrix: np.ndarray, max_coeff: int) -> (list, int):
+    "Передаем матрицу, считаем максимальную степень нуля и возвращаем индексы, под которыми находится этот ноль в матрице"
     # Список координат нулевых элементов
     zeros = []
     # Список их коэффициентов
     coeff_list = []
 
-    # Максимальный коэффициент
-    max_coeff = 0
     # Поиск нулевых элементов
-    for i in range(matrix.shape[0]):
-        for j in range(matrix.shape[1]):
+    for i in range(1, new_matrix.shape[0]):
+        for j in range(1, new_matrix.shape[1]):
             # Если равен нулю
-            if matrix[i, j] == 0:
+            if new_matrix[i, j] == 0:
                 # Добавление в список координат
-                zeros.append((i, j))
+                zeros.append((new_matrix[i][0], new_matrix[0][j]))
                 # Расчет коэффициента и добавление в список
-                coeff = get_coefficient(matrix, i, j)
+                coeff = get_coefficient(new_matrix, i, j)
                 coeff_list.append(coeff)
                 # Сравнение с максимальным
                 max_coeff = max(max_coeff, coeff)
 
     length = len(zeros)
     i = 0
-    print(len(zeros), len(coeff_list))
     cnt = 0
     while cnt != length:
         if coeff_list[i] != max_coeff:
@@ -65,23 +54,64 @@ def algorithm_Lit(numbers):
             i += 1
 
         cnt += 1
+    return zeros, max_coeff
 
-    # Переход к множеству, содержащему ребро с максимальным штрафом
+def get_coefficient(m: np.ndarray, r: int, c: int) -> int:
+    "На вход получаем матрицу и номер столбца и строки матрицы, в которой под индексами [r][c] содержится в матрице 0, на выходе получаем его коэффицент"
+    rmin = cmin = float('inf')
+
+    # Обход строки и столбца
+    for i in range(1, m.shape[0]):
+        if i != r:
+            rmin = min(rmin, m[i, c])
+        if i != c:
+            cmin = min(cmin, m[r, i])
+    return rmin + cmin
+
+def DeleteEdge(zeros: list, new_matrix: np.ndarray, bottomLimit, max_coeff: int) -> (np.ndarray, int):
+    "На вход получаем индексы элемента, который имеет наибольший наибольшую степень нуля, удаляем строку и столбец с этими индексами, возвращаем измененную матрицу"
+
     edge = zeros[0]
+    new_matrix[1:, edge[1]] -= max_coeff
+    new_matrix[edge[0]][edge[1]] = 10 ** 8
+    bottomLimit += max_coeff
+    new_matrix = np.delete(new_matrix, edge[0], axis=0)  # Удаляем строку
+    new_matrix = np.delete(new_matrix, edge[1], axis=1)  # Удаляем столбец
+    return new_matrix, bottomLimit
+
+
+def algorithm_Lit(numbers: list) -> np.ndarray:
+    max_coeff = 0
+    ListDanglingBranches = []
+    bottomLimit = 0
+    matrix = np.array(numbers).reshape(int(len(numbers) ** 0.5), int(len(numbers) ** 0.5))
+    lines = int(len(numbers) ** 0.5)
+    columns = int(len(numbers) ** 0.5)
+    list_column = np.arange(1, columns + 1).reshape(-1, 1)  # столбец из элементов от 1 до n
+    list_row = np.arange(0, columns + 1).reshape(1, -1)  # строка из элементов от 0 до n
     new_matrix = matrix
-    print(new_matrix)
     new_matrix = np.hstack((np.array(list_column), new_matrix))
     new_matrix = np.vstack((np.array(list_row), new_matrix))
-    new_matrix[edge[1] + 1][edge[0] + 1] = -1
-    new_matrix = np.delete(new_matrix, edge[0] + 1, axis=0)  # Удаляем строку
-    new_matrix = np.delete(new_matrix, edge[1] + 1, axis=1)  # Удаляем столбец
+    bottomLimit = CalculationBottomLimit(new_matrix, bottomLimit)
+    zeros, max_coeff = SerachingMaxDegreeZero(new_matrix, max_coeff)
+    # Создание нашей новой матрицы
+    new_matrix, bottomLimit_in = DeleteEdge(zeros, new_matrix, bottomLimit, max_coeff)
+
+    bottomLimit_not_in = CalculationBottomLimit(new_matrix, bottomLimit)
+
+    if bottomLimit_in > bottomLimit_not_in:
+        index_j = np.where(new_matrix[0] == zeros[0][0])[0]
+        index_i = np.where(new_matrix[:, 0] == zeros[0][1])[0]
+        new_matrix[index_i[0]][index_j[0]] = 10**8
+    #     zeros = SerachingMaxDegreeZero(new_matrix)
+
 
     return new_matrix
 
 
-
-numbers = [10**8, 5, 7, 16, 10**8, 2, 4, 6, 10**8]
-print(algorithm_Lit(numbers))
+# numbers = [10 ** 8, 20, 18, 12, 8, 5, 10 ** 8, 14, 7, 11, 12, 18, 10 ** 8, 6, 11, 11, 17, 11, 10 ** 8, 12, 5, 5, 5, 5,
+#            10 ** 8]
+# print(algorithm_Lit(numbers))
 # list_column = [[1], [2]]
 # list_row = [[0, 1, 2]]
 #
