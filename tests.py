@@ -15,7 +15,8 @@ mock_data_1 = {
     ],
     "circles": [
 
-    ]
+    ],
+    "name": "empty"
 }
 expected_matrix_1 = np.array([
     [INF, 4.887740, 9.881295],
@@ -30,7 +31,8 @@ mock_single_point_data = {
     ],
     "circles": [
 
-    ]
+    ],
+    "name": "single"
 }
 expected_matrix_2 = np.array([[INF]])
 
@@ -44,7 +46,8 @@ mock_two_points_data = {
     ],
     "circles": [
 
-    ]
+    ],
+    "name": "two"
 }
 
 expected_matrix_3 = np.array([
@@ -63,7 +66,8 @@ mock_data_4 = {
     ],
     "circles": [
 
-    ]
+    ],
+    "name":"three_with_forbid"
 }
 
 expected_matrix_4 = np.array([
@@ -82,7 +86,8 @@ mock_data_5 = {
     ],
     "circles": [
         [0, 5, 3]
-    ]
+    ],
+    "name":"three_circle"
 }
 expected_matrix_5 = np.array([[INF, 11.861007, 11.180340], [11.861007, INF, 11.180340], [11.180340, 11.180340, INF]])
 
@@ -95,7 +100,8 @@ mock_data_6 = {
     ],
     "circles": [
         [0, 3, 3]
-    ]
+    ],
+    "name":"two_circle"
 }
 expected_matrix_6 = np.array([[INF, 9.424778], [9.424778, INF]])
 

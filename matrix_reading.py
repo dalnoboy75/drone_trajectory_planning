@@ -13,7 +13,7 @@ from pathlib import Path
 INF = 10 ** 8
 
 
-def plot_trajectory(trajectory, circles=None):
+def plot_trajectory(trajectory, circles=None, name=""):
     fig, ax = plt.subplots(figsize=(10, 10))
     # Рисуем зоны пво
     for circle in circles:
@@ -42,7 +42,7 @@ def plot_trajectory(trajectory, circles=None):
     ax.set_ylabel('Y')
     ax.set_title('Trajectory Plot')
     plt.axis('equal')
-    plt.savefig(os.path.join(Path.cwd() / 'plots', f'plot-{random.randint(100, 10000)}.png'))
+    plt.savefig(os.path.join(Path.cwd() / 'plots', f'plot_{name}.png'))
 
 
 def reading_matrix():
@@ -104,7 +104,7 @@ def matrix_distance(data: dict):
                                         Point2D(points[finish, 0], points[finish, 1]))
                             path = GPath([line])
                             trajectory.append(path)
-        plot_trajectory(trajectory, data['circles'])
+        plot_trajectory(trajectory, data['circles'], data['name'])
         return distance_matrix
     except:
         return 'error'

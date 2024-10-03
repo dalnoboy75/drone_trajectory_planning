@@ -5,13 +5,9 @@ INF = 10 ** 8
 
 # Расчёт количества точек пересечения с окружностью
 def intersection_number(a, b, circle):
-    ax = a[0]
-    ay = a[1]
-    bx = b[0]
-    by = b[1]
-    ox = circle[0]
-    oy = circle[1]
-    r = circle[2]
+    ax, ay = a
+    bx, by = b
+    ox, oy, r = circle
 
     # Считаем коэф-ты кв. уравнения
     aa = (bx - ax) ** 2 + (by - ay) ** 2
@@ -46,8 +42,7 @@ def touch_points_search(point, circle):
 
 # Расчёт расстояния между двумя точками
 def calc_dist(first_point, second_point):
-    return sqrt((first_point[0] - second_point[0]) ** 2 + (first_point[1] - second_point[1]) ** 2)
-
+    return hypot(first_point[0] - second_point[0], first_point[1] - second_point[1])
 
 # Расчёт длины дуги между двумя точками на окружности
 def arc_length(first_point, second_point, circle):
