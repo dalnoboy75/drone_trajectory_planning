@@ -6,7 +6,7 @@ from PyQt5.QtCore import Qt
 class CoordinateInputApp(QWidget):
     def __init__(self):
         super().__init__()
-        self.points = []  # Список для хранения точек
+        self.points = []
         self.initUI()
 
     def initUI(self):
@@ -76,7 +76,7 @@ class PointsWindow(QWidget):
         painter.setPen(pen)
 
         for x, y in self.points:
-            painter.drawPoint(x + 200, 400 - y)  # Центрируем координаты для отображения
+            painter.drawPoint(x + 200, 400 - y)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
