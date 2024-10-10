@@ -8,7 +8,7 @@ class CoordinateInputApp(QWidget):
     def __init__(self):
         super().__init__()
         self.points = []
-        self.points_window = None  # Инициализация points_window как None
+        self.points_window = None
         self.initUI()
 
     def initUI(self):
@@ -41,8 +41,8 @@ class CoordinateInputApp(QWidget):
 
     def add_point(self):
         try:
-            x = float(self.input_x.text())
-            y = float(self.input_y.text())
+            x = float(self.input_x.text().replace(',', '.'))
+            y = float(self.input_y.text().replace(',', '.'))
             self.points.append((x, y))
             QMessageBox.information(self, 'Успех', f'Точка добавлена: X = {x}, Y = {y}')
             self.input_x.clear()
@@ -58,16 +58,15 @@ class CoordinateInputApp(QWidget):
                 data = file.readlines()
                 for line in data:
                     try:
-                        # Разделяем строку по пробелам и конвертируем в float
-                        x, y = map(float, line.strip().split())
+                        x, y = map(float, line.strip().split().replace(',', '.'))
                         self.points.append((x, y))
                     except ValueError:
                         QMessageBox.warning(self, 'Ошибка', 'Неправильный формат в строке: ' + line.strip())
 
     def show_points(self):
-        if self.points_window is not None:  # Если окно уже существует, закрываем его
+        if self.points_window is not None:
             self.points_window.close()
-        self.points_window = PointsWindow(self.points)  # Создаем новое окно
+        self.points_window = PointsWindow(self.points)
         self.points_window.show()
 
 class PointsWindow(QWidget):
@@ -75,44 +74,43 @@ class PointsWindow(QWidget):
         super().__init__()
         self.points = points
         self.setWindowTitle('Точки')
-        self.setGeometry(100, 100, 800, 800)  # Увеличиваем размер окна
+        self.setGeometry(100, 100, 800, 800)
 
     def paintEvent(self, event):
         painter = QPainter(self)
         pen = QPen(Qt.blue)
         painter.setPen(pen)
 
-        # Рисуем оси
-        painter.drawLine(50, 400, 750, 400)  # Ось X
-        painter.drawLine(400, 50, 400, 750)  # Ось Y
+        # Оси
+        painter.drawLine(50, 400, 750, 400)
+        painter.drawLine(400, 50, 400, 750)
 
         # Подписи осей
         painter.setFont(QFont('Arial', 10))
         painter.drawText(760, 405, 'X')
         painter.drawText(395, 40, 'Y')
 
-        # Рисуем сетку
+        # Координатная плоскость
         pen.setColor(Qt.lightGray)
-        pen.setWidth(1)  # Устанавливаем ширину линий сетки
+        pen.setWidth(1)
         painter.setPen(pen)
         for i in range(50, 800, 50):
-            painter.drawLine(i, 50, i, 750)  # Вертикальные линии
-            painter.drawLine(50, i, 750, i)  # Горизонтальные линии
+            painter.drawLine(i, 50, i, 750)
+            painter.drawLine(50, i, 750, i)
 
-        # Рисуем оси на сетке
+        # Оси
         pen.setColor(Qt.black)
-        pen.setWidth(2)  # Устанавливаем ширину линий осей
+        pen.setWidth(2)
         painter.setPen(pen)
         painter.drawLine(50, 400, 750, 400)  # Ось X
         painter.drawLine(400, 50, 400, 750)  # Ось Y
 
-        # Рисуем точки
+        # Точки
         pen.setColor(Qt.red)
-        pen.setWidth(4)  # Устанавливаем ширину точек
+        pen.setWidth(4)
         painter.setPen(pen)
         for x, y in self.points:
-            # Центрируем координаты для отображения и увеличиваем масштаб
-            painter.drawPoint(int(x * 20 + 400), int(400 - y * 20))  # Увеличиваем масштаб
+            painter.drawPoint(int(x * 20 + 400), int(400 - y * 20)) #для масштаба
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
