@@ -123,7 +123,6 @@ class PointsWindow(QWidget):
         # Рисуем основную линию стрелки
         painter.drawLine(x, y, x + arrow_size_x, y + arrow_size_y)  # Основная линия стрелки
         painter.drawLine(x, y, x + arrow_size_x, y - arrow_size_y)  # Вторая линия стрелки
-
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = CoordinateInputApp()
