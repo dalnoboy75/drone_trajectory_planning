@@ -98,7 +98,7 @@ def algorithm_Lit(numbers: list) -> np.ndarray:
     new_matrix, bottomLimit_in = DeleteEdge(zeros, new_matrix, bottomLimit, max_coeff)
 
     bottomLimit_not_in = CalculationBottomLimit(new_matrix, bottomLimit)
-
+    print('12312312', bottomLimit_in)
     if bottomLimit_in > bottomLimit_not_in:
         index_j = np.where(new_matrix[0] == zeros[0][0])[0]
         index_i = np.where(new_matrix[:, 0] == zeros[0][1])[0]
@@ -109,9 +109,9 @@ def algorithm_Lit(numbers: list) -> np.ndarray:
     return new_matrix
 
 
-# numbers = [10 ** 8, 20, 18, 12, 8, 5, 10 ** 8, 14, 7, 11, 12, 18, 10 ** 8, 6, 11, 11, 17, 11, 10 ** 8, 12, 5, 5, 5, 5,
-#            10 ** 8]
-# print(algorithm_Lit(numbers))
+numbers = [10 ** 8, 20, 18, 12, 8, 5, 10 ** 8, 14, 7, 11, 12, 18, 10 ** 8, 6, 11, 11, 17, 11, 10 ** 8, 12, 5, 5, 5, 5,
+           10 ** 8]
+print(algorithm_Lit(numbers))
 # list_column = [[1], [2]]
 # list_row = [[0, 1, 2]]
 #
