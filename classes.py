@@ -1,4 +1,8 @@
 import math
+import matplotlib.pyplot as plt
+import matplotlib.patches
+import matplotlib.lines
+import numpy as np
 
 INF = 10 ** 8
 
@@ -50,6 +54,14 @@ class Line:
     def get_length(self):
         return self.first_point.calc_dist(self.second_point)
 
+    def plot(self, ax: plt.Axes):
+        # Рисуем линию
+        l = matplotlib.lines.Line2D([self.first_point.x, self.second_point.x],
+                                    [self.first_point.y, self.second_point.y], color="blue")
+        ax.scatter(self.first_point.x, self.first_point.y, color="purple")
+        ax.scatter(self.second_point.x, self.second_point.y, color="purple")
+        ax.add_line(l)
+
 
 class Circle:
     """
@@ -66,6 +78,11 @@ class Circle:
     def __init__(self, x, y, r):
         self.center = Point2D(x, y)
         self.radius = r
+
+    def plot(self, ax: plt.Axes):
+        ax.add_patch(
+            matplotlib.patches.Circle((self.center.x, self.center.y), self.radius, fill=False, edgecolor='black',
+                                      linewidth=0.5))
 
 
 class Arc:
@@ -94,6 +111,18 @@ class Arc:
         except:
             return INF
         return angle * self.circle.radius
+
+    def plot(self, ax: plt.Axes):
+        start_angle = np.degrees(
+            np.arctan2(self.first_point.y - self.circle.center.y, self.first_point.x - self.circle.center.x))
+        end_angle = np.degrees(
+            np.arctan2(self.second_point.y - self.circle.center.y, self.second_point.x - self.circle.center.x))
+
+        arc_patch = matplotlib.patches.Arc((self.circle.center.x, self.circle.center.y), 2 * self.circle.radius,
+                                           2 * self.circle.radius,
+                                           theta1=start_angle,
+                                           theta2=end_angle, edgecolor="orange")
+        ax.add_patch(arc_patch)
 
 
 class GPath:

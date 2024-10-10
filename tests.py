@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 import json
-from matrix_reading import matrix_distance
+from matrix_reading import Task
 
 INF = 10 ** 8
 mock_data_1 = {
@@ -67,7 +67,7 @@ mock_data_4 = {
     "circles": [
 
     ],
-    "name":"three_with_forbid"
+    "name": "three_with_forbid"
 }
 
 expected_matrix_4 = np.array([
@@ -87,7 +87,7 @@ mock_data_5 = {
     "circles": [
         [0, 5, 3]
     ],
-    "name":"three_circle"
+    "name": "three_circle"
 }
 expected_matrix_5 = np.array([[INF, 11.861007, 11.180340], [11.861007, INF, 11.180340], [11.180340, 11.180340, INF]])
 
@@ -101,7 +101,7 @@ mock_data_6 = {
     "circles": [
         [0, 3, 3]
     ],
-    "name":"two_circle"
+    "name": "two_circle"
 }
 expected_matrix_6 = np.array([[INF, 9.424778], [9.424778, INF]])
 
@@ -111,5 +111,7 @@ expected_matrix_6 = np.array([[INF, 9.424778], [9.424778, INF]])
                           (mock_two_points_data, expected_matrix_3), (mock_data_4, expected_matrix_4),
                           (mock_data_5, expected_matrix_5), (mock_data_6, expected_matrix_6)])
 def test_matrix_reading(mock_data, expected_matrix):
-    distance_matrix = matrix_distance(mock_data)
+    t = Task(mock_data)
+    distance_matrix = t.length_matrix
+    print(t.length_matrix)
     np.testing.assert_array_almost_equal(distance_matrix, expected_matrix)

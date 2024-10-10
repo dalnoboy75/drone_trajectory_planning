@@ -1,13 +1,14 @@
 from math import *
+import classes
 
 INF = 10 ** 8
 
 
 # Расчёт количества точек пересечения с окружностью
 def intersection_number(a, b, circle):
-    ax, ay = a
-    bx, by = b
-    ox, oy, r = circle
+    ax, ay = a.x, a.y
+    bx, by = b.x, b.y
+    ox, oy, r = circle.center.x, circle.center.y, circle.radius
 
     # Считаем коэф-ты кв. уравнения
     aa = (bx - ax) ** 2 + (by - ay) ** 2
@@ -25,30 +26,31 @@ def intersection_number(a, b, circle):
 
 
 # Поиск точек касания касательных от точки с окружностью
-def touch_points_search(point, circle):
-    lx = circle[0] - point[0]
-    ly = circle[1] - point[1]
+def touch_points_search(point: classes.Point2D, circle: classes.Circle):
+    lx = circle.center.x - point.x
+    ly = circle.center.y - point.y
     l = sqrt(lx ** 2 + ly ** 2)
-    r = circle[2]
+    r = circle.radius
     d = atan2(ly, lx)
     t = asin(r / l)
-    t1x = r * sin(d - t) + circle[0]
-    t1y = r * (-cos(d - t)) + circle[1]
-    t2x = r * (-sin(d + t)) + circle[0]
-    t2y = r * cos(d + t) + circle[1]
+    t1x = r * sin(d - t) + circle.center.x
+    t1y = r * (-cos(d - t)) + circle.center.y
+    t2x = r * (-sin(d + t)) + circle.center.x
+    t2y = r * cos(d + t) + circle.center.y
 
-    return [(t1x, t1y), (t2x, t2y)]
+    return [classes.Point2D(t1x, t1y), classes.Point2D(t2x, t2y)]
 
 
 # Расчёт расстояния между двумя точками
 def calc_dist(first_point, second_point):
-    return hypot(first_point[0] - second_point[0], first_point[1] - second_point[1])
+    return hypot(first_point.x - second_point.x, first_point.y - second_point.y)
+
 
 # Расчёт длины дуги между двумя точками на окружности
 def arc_length(first_point, second_point, circle):
     chord = calc_dist(first_point, second_point)
     try:
-        angle = acos((2 * circle[2] ** 2 - chord ** 2) / (2 * circle[2] ** 2))
+        angle = acos((2 * circle.radius ** 2 - chord ** 2) / (2 * circle.radius ** 2))
     except:
         return INF
-    return angle * circle[2]
+    return angle * circle.radius
