@@ -106,10 +106,6 @@ class PointsWindow(QWidget):
         painter.drawLine(50, 400, 750, 400)  # Ось X
         painter.drawLine(400, 50, 400, 750)  # Ось Y
 
-        # Рисуем стрелочки на осях
-        self.draw_arrow(painter, 750, 400, -10, -5)  # Стрелка на оси X
-        self.draw_arrow(painter, 400, 50, 5, 10)  # Стрелка на оси Y
-
         # Рисуем точки
         pen.setColor(Qt.red)
         pen.setWidth(4)  # Устанавливаем ширину точек
@@ -118,11 +114,6 @@ class PointsWindow(QWidget):
             # Центрируем координаты для отображения и увеличиваем масштаб
             painter.drawPoint(int(x * 20 + 400), int(400 - y * 20))  # Увеличиваем масштаб
 
-    def draw_arrow(self, painter, x, y, arrow_size_x, arrow_size_y):
-        """Рисует стрелку на координатах (x, y)"""
-        # Рисуем основную линию стрелки
-        painter.drawLine(x, y, x + arrow_size_x, y + arrow_size_y)  # Основная линия стрелки
-        painter.drawLine(x, y, x + arrow_size_x, y - arrow_size_y)  # Вторая линия стрелки
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = CoordinateInputApp()
