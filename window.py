@@ -58,7 +58,7 @@ class CoordinateInputApp(QWidget):
                 data = file.readlines()
                 for line in data:
                     try:
-                        x, y = map(float, line.strip().split().replace(',', '.'))
+                        x, y = map(float, line.strip().split())
                         self.points.append((x, y))
                     except ValueError:
                         QMessageBox.warning(self, 'Ошибка', 'Неправильный формат в строке: ' + line.strip())
