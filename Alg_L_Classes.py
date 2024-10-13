@@ -9,21 +9,24 @@ class Edge:
         self.include = include
 
 class AlgLittle:
-    def __init__(self, new_matrix: np.ndarray, discarded_nodes: list[Self] | list[Self] = [], paths: list[tuple] = None, hmin: float | int = 0):
+    def __init__(self, new_matrix: np.ndarray, discarded_nodes: list[AlgLittle] | list[AlgLittle] = [], paths: list[tuple] = None, hmin: float | int = 0):
         self.matrix = new_matrix
         # обрезаем первый столбец и строку - это номера точек, а не расстояния,
         self.sub_matrix = new_matrix[1:, 1:]
         self.paths: list[Edge] = paths or []   # [+(1, 5), -(3, 4), -(2, 5)]
-        self.discarded_nodes: list[Self] = discarded_nodes or []  # ноды дерева, суть планы Xi
+        self.discarded_nodes: list[AlgLittle] = discarded_nodes or []  # ноды дерева, суть планы Xi
         self.hmin = hmin
 
-    def include_edge(self, zeros: list, max_coeff: int):
+    def include_edge(self, zeros: list):
         edge = zeros[0]
+
         self.matrix = np.delete(self.matrix, edge[0], axis=0)  # Удаляем строку
         self.matrix = np.delete(self.matrix, edge[1], axis=1)  # Удаляем столбец
+        self.sub_matrix = self.matrix[1:, 1:]
+        print('in_h_min = ', self.hmin)
         return self.matrix, self.reduce()
 
-    def reduce(self) -> int:
+    def reduce(self: np.ndarray) -> int:
         """высчитывает НГЦФ, редуцирует матрицу"""
         # Находим минимумы по строкам и столбцам подматрицы
         row_min = self.sub_matrix.min(axis=1)
@@ -32,15 +35,15 @@ class AlgLittle:
         self.sub_matrix -= columns_min
 
         # Суммируем минимумы
-        self.hmin = sum(row_min) + sum(columns_min)
+        self.hmin += sum(row_min) + sum(columns_min)
 
         self.matrix[1:, 1:] = self.sub_matrix
-        print(self.hmin)
+        print('1231231', self.hmin)
         return self.hmin
 
 
 
-    def SerachingMaxDegreeZero(self: np.ndarray, max_coeff: int) -> (list, int):
+    def SerachingMaxDegreeZero(self, max_coeff: int) -> (list, int):
         "Передаем матрицу, считаем максимальную степень нуля и возвращаем индексы, под которыми находится этот ноль в матрице"
         # Список координат нулевых элементов
         zeros = []
@@ -90,6 +93,7 @@ class AlgLittle:
         edge = zeros[0]
         self.matrix[1:, edge[1]] -= max_coeff
         self.matrix[edge[0]][edge[1]] = 10 ** 8
+        print('d_h_min = ', self.hmin)
         self.hmin += max_coeff
         return self.matrix, self.hmin
 
@@ -116,11 +120,13 @@ def algorithm_Lit(numbers: np.ndarray) -> list[int]:
     node = AlgLittle(new_matrix=numbers)
     node.reduce()
     zeros, max_coeff = node.SerachingMaxDegreeZero(max_coeff)
-    print(zeros, max_coeff)
-    Matrix, node_include = node.include_edge(zeros, max_coeff)
-    # Matrix, node_exclude = node.delete_edge(zeros, max_coeff)
+    return
+    node_1, node_2 = node, node
+    Matrix_1, node_exclude = node_1.delete_edge(zeros, max_coeff)
+    Matrix_2, node_include = node_2.include_edge(zeros)
     print("Matrix and node_include:")
-    print(Matrix, node_include)
+    print(Matrix_1, node_exclude)
+    print(Matrix_2, node_include)
 
 matrix = np.array(
         [[0, 1, 2, 3, 4, 5], [1, 10 ** 8, 20, 18, 12, 8], [2, 5, 10 ** 8, 14, 7, 11], [3, 12, 18, 10 ** 8, 6, 11],
