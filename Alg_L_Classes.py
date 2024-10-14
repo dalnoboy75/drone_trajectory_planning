@@ -1,31 +1,64 @@
 from __future__ import annotations
+from dataclasses import dataclass
+
 
 import numpy as np
 
+@dataclass
 class Edge:
-    def __init__(self, istart: int, ifinish: int, include: bool):
-        self.istart = istart
-        self.ifinish = ifinish
-        self.include = include
+    istart: int
+    ifinish: int
+    include: bool
 
 class AlgLittle:
-    def __init__(self, new_matrix: np.ndarray, discarded_nodes: list[AlgLittle] | list[AlgLittle] = [], paths: list[tuple] = None, hmin: float | int = 0):
+    def __init__(self,
+                 new_matrix: np.ndarray,
+                 discarded_nodes: list[AlgLittle] | None = None,
+                 paths: list[Edge] = None,
+                 hmin: float | int = 0
+                 ):
+
         self.matrix = new_matrix
         # обрезаем первый столбец и строку - это номера точек, а не расстояния,
         self.sub_matrix = new_matrix[1:, 1:]
         self.paths: list[Edge] = paths or []   # [+(1, 5), -(3, 4), -(2, 5)]
         self.discarded_nodes: list[AlgLittle] = discarded_nodes or []  # ноды дерева, суть планы Xi
         self.hmin = hmin
+        # self.reduce()   # ????
+
+    # @property
+    # def hmin(self):
+    #     return self.__hmin
+
+    # @hmin.setter
+    # def hmin(self, value: int):
+    #     self.__hmin += value
+
 
     def include_edge(self, zeros: list):
         edge = zeros[0]
+        node_include = AlgLittle(new_matrix=self.matrix.copy(),
+                                 discarded_nodes=self.discarded_nodes,
+                                 paths=self.paths + [Edge(*edge, include=True)],
+                                 hmin=self.hmin
+                                 )
+        col_index = np.where(node_include.matrix[0] == edge[1])[0]
+        row_index = np.where(node_include.matrix[:, 0] == edge[0])[0]
 
-        self.matrix = np.delete(self.matrix, edge[0], axis=0)  # Удаляем строку
-        self.matrix = np.delete(self.matrix, edge[1], axis=1)  # Удаляем столбец
-        self.sub_matrix = self.matrix[1:, 1:]
-        print('in_h_min = ', self.hmin)
-        return self.matrix, self.reduce()
+        col_index_1 = np.where(node_include.matrix[0] == edge[0])[0]
+        row_index_1 = np.where(node_include.matrix[:, 0] == edge[1])[0]
+        print(col_index_1, row_index_1)
+        print(node_include.matrix[row_index_1[0]][col_index_1[0]])
 
+        keeps_value = node_include.matrix[row_index_1[0]][col_index_1[0]]
+        node_include.matrix[row_index_1[0]][col_index_1[0]] = 10 ** 8
+        self.matrix[row_index_1[0]][col_index_1[0]] = keeps_value
+        print(node_include.matrix)
+        node_include.matrix = np.delete(node_include.matrix, row_index[0], axis=0)  # Удаляем строку
+        node_include.matrix = np.delete(node_include.matrix, col_index[0], axis=1)  # Удаляем столбец
+        node_include.sub_matrix = node_include.matrix[1:, 1:]
+        print(f'{self.include_edge.__qualname__}: {node_include.hmin=} {node_include.matrix=} {node_include.paths=}')
+        return node_include
     def reduce(self: np.ndarray) -> int:
         """высчитывает НГЦФ, редуцирует матрицу"""
         # Находим минимумы по строкам и столбцам подматрицы
@@ -38,7 +71,7 @@ class AlgLittle:
         self.hmin += sum(row_min) + sum(columns_min)
 
         self.matrix[1:, 1:] = self.sub_matrix
-        print('1231231', self.hmin)
+        print(f'{self.reduce.__qualname__}: {self.hmin=}')
         return self.hmin
 
 
@@ -91,12 +124,19 @@ class AlgLittle:
         "На вход получаем индексы элемента, который имеет наибольший наибольшую степень нуля, удаляем строку и столбец с этими индексами, возвращаем измененную матрицу"
 
         edge = zeros[0]
-        self.matrix[1:, edge[1]] -= max_coeff
-        self.matrix[edge[0]][edge[1]] = 10 ** 8
-        print('d_h_min = ', self.hmin)
-        self.hmin += max_coeff
-        return self.matrix, self.hmin
 
+        node_exclude = AlgLittle(new_matrix=self.matrix,
+                                 discarded_nodes=self.discarded_nodes,
+                                 paths=self.paths + [Edge(edge[0], edge[1], include=False)],
+                                 hmin=self.hmin
+                                 )
+        keeps_value = node_exclude.matrix[edge[1]][edge[0]]
+        node_exclude.matrix[edge[0], edge[1]] = 10 ** 8
+        self.matrix = keeps_value
+        node_exclude.matrix[1:, edge[1]] -= max_coeff
+        node_exclude.hmin += max_coeff
+        print(f'{self.delete_edge.__qualname__}: {node_exclude.hmin=} {node_exclude.matrix=} {node_exclude.paths=}')
+        return node_exclude
 
     @staticmethod
     def head_matrix(matrix: np.ndarray) -> np.ndarray:
@@ -113,20 +153,54 @@ class AlgLittle:
         """Возвращает последовательность точек от 1 до конца, связанную траекторию."""
         return [1, 2, 3]
 
+    def check_end_algo(self) -> bool:
+        if self.sub_matrix.shape == (2, 2):
+            return True
+        return False
+
+    def end_algo(self):
+        for i in range(len(self.paths)):
+            if self.paths[i].include == True:
+                print(self.paths[i])
 
 def algorithm_Lit(numbers: np.ndarray) -> list[int]:
     max_coeff = 0
-    headed_matrix = AlgLittle.head_matrix(numbers)
+    # добавление строки и столбца "заголовков"
+    # headed_matrix = AlgLittle.head_matrix(numbers)
     node = AlgLittle(new_matrix=numbers)
+    # node.reduce()
+    # zeros, max_coeff = node.SerachingMaxDegreeZero(max_coeff)
+    # node_include, node_exclude = node, node
+    # node_include = node_include.include_edge(zeros)
+    # node_exclude = node_exclude.delete_edge(zeros, max_coeff)
+    cnt = 0
     node.reduce()
-    zeros, max_coeff = node.SerachingMaxDegreeZero(max_coeff)
-    return
-    node_1, node_2 = node, node
-    Matrix_1, node_exclude = node_1.delete_edge(zeros, max_coeff)
-    Matrix_2, node_include = node_2.include_edge(zeros)
-    print("Matrix and node_include:")
-    print(Matrix_1, node_exclude)
-    print(Matrix_2, node_include)
+    while True:
+        # если размер матрицы 2х2, то закончить алгоритм
+        if node.check_end_algo():
+            return node.end_algo()   # [(2, 5)-, (4, 3)+ ]  ---> [1, 3, 4, ...], из набора ребер делаем последовательность вершин
+        # if cnt == 1:
+        #     print(node.hmin, node.paths, node.matrix)
+        #     return
+        zeros, max_coeff = node.SerachingMaxDegreeZero(max_coeff)
+        node_include, node_exclude = node, node
+        node_include = node_include.include_edge(zeros)
+        if cnt == 1:
+            print(node_include.hmin, node_include.paths, node_include.matrix)
+            return
+        node_exclude = node_exclude.delete_edge(zeros, max_coeff)
+        node_include.discarded_nodes.append(node_exclude)
+        node_exclude.discarded_nodes.append(node_include)
+        all_possible_plans = node.discarded_nodes + [node_exclude, node_include]
+        cnt += 1
+        if cnt == 2:
+            print(next_node.hmin, next_node.paths, next_node.matrix)
+            return
+        next_node = min(all_possible_plans, key=lambda node: node.hmin)
+        # clean up current node
+        # node.clean()   # TODO: node.matrix = None, node.submatrix = None, node.path = None....
+        node = next_node
+
 
 matrix = np.array(
         [[0, 1, 2, 3, 4, 5], [1, 10 ** 8, 20, 18, 12, 8], [2, 5, 10 ** 8, 14, 7, 11], [3, 12, 18, 10 ** 8, 6, 11],
