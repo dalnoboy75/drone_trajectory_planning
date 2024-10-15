@@ -190,11 +190,6 @@ def algorithm_Lit(numbers: np.ndarray) -> list[list]:
     # добавление строки и столбца "заголовков"
     # headed_matrix = AlgLittle.head_matrix(numbers)
     node = AlgLittle(new_matrix=numbers)
-    # node.reduce()
-    # zeros, max_coeff = node.SerachingMaxDegreeZero(max_coeff)
-    # node_include, node_exclude = node, node
-    # node_include = node_include.include_edge(zeros)
-    # node_exclude = node_exclude.delete_edge(zeros, max_coeff)
     cnt = 0
     node.reduce()
     while True:
@@ -208,13 +203,9 @@ def algorithm_Lit(numbers: np.ndarray) -> list[list]:
         node_exclude.discarded_nodes.append(node_include)
         all_possible_plans = node.discarded_nodes + [node_exclude, node_include]
         cnt += 1
-        for i in node.discarded_nodes:
-            print(i.hmin)
         if cnt == 1:
             node_exclude.discarded_nodes = []
         next_node = min(all_possible_plans, key=lambda node: node.hmin)
-        if cnt == 4:
-            print(next_node.hmin, next_node.paths, next_node.matrix)
         # clean up current node
         # node.clean()   #node.matrix = None, node.submatrix = None, node.path = None....
         node = next_node
@@ -227,7 +218,6 @@ def algorithm_Lit(numbers: np.ndarray) -> list[list]:
                 listok.append(i.ifinish)
                 listok.append(i.include)
                 l.append(listok)
-            return l
             print("END!!!")
             return l
         # if next_node == node_include:
@@ -235,19 +225,8 @@ def algorithm_Lit(numbers: np.ndarray) -> list[list]:
         # if next_node == node_exclude:
         #     node_include.paths[0].used = True
 
-matrix = np.array(
-    [[0, 1, 2, 3, 4, 5], [1, 10 ** 8, 20, 18, 12, 8], [2, 5, 10 ** 8, 14, 7, 11], [3, 12, 18, 10 ** 8, 6, 11],
-     [4, 11, 17, 11, 10 ** 8, 12],
-     [5, 5, 5, 5, 5, 10 ** 8]])
-print(algorithm_Lit(matrix))
-# while True:
-#     if node.the_end():
-#         return node.trajectory()
-#     node.reduce()
-#     zeros, max_coeff = node.zero_degrees()
-#     node_include = node.include_edge(zeros, max_coeff)
-#     node_exclude = node.delete_edge(zeros, max_coeff)
-#     # по node_include, node_exclude и списку отброшенных планов self.discarded_nodes
-#     # ищем ноду с наименьшим весом и переходим к ней
-#     next_node = AlgLittle.minh_node(node_include, node_exclude, node.discarded_nodes)
-#     node = next_node
+# matrix = np.array(
+#     [[0, 1, 2, 3, 4, 5], [1, 10 ** 8, 20, 18, 12, 8], [2, 5, 10 ** 8, 14, 7, 11], [3, 12, 18, 10 ** 8, 6, 11],
+#      [4, 11, 17, 11, 10 ** 8, 12],
+#      [5, 5, 5, 5, 5, 10 ** 8]])
+# print(algorithm_Lit(matrix))
