@@ -30,6 +30,15 @@ class Point2D:
     def calc_dist(self, other):
         return math.hypot(other.x - self.x, other.y - self.y)
 
+    def __sub__(self, other):
+        return Point2D(self.x - other.x, self.y - other.y)
+
+    def __pow__(self, power, modulo=None):
+        return (self.x ** power + self.y ** power)
+
+    def __str__(self):
+        return f'{self.x} {self.y}'
+
 
 class Line:
     """
@@ -54,12 +63,18 @@ class Line:
     def get_length(self):
         return self.first_point.calc_dist(self.second_point)
 
-    def plot(self, ax: plt.Axes):
+    def plot(self, ax: plt.Axes, targets):
         # Рисуем линию
         l = matplotlib.lines.Line2D([self.first_point.x, self.second_point.x],
                                     [self.first_point.y, self.second_point.y], color="blue")
-        ax.scatter(self.first_point.x, self.first_point.y, color="purple")
-        ax.scatter(self.second_point.x, self.second_point.y, color="purple")
+        if (self.first_point in targets):
+            ax.scatter(self.first_point.x, self.first_point.y, color="black")
+        else:
+            ax.scatter(self.first_point.x, self.first_point.y, color="purple")
+        if (self.second_point in targets):
+            ax.scatter(self.second_point.x, self.second_point.y, color="black")
+        else:
+            ax.scatter(self.second_point.x, self.second_point.y, color="purple")
         ax.add_line(l)
 
 
@@ -83,6 +98,12 @@ class Circle:
         ax.add_patch(
             matplotlib.patches.Circle((self.center.x, self.center.y), self.radius, fill=False, edgecolor='black',
                                       linewidth=0.5))
+
+    def __str__(self):
+        return f'Circle {self.center.x} {self.center.y} {self.radius}'
+
+    def __cmp__(self, other):
+        return self.center.x == other.center.x and self.center.y == other.center.y and self.radius == other.radius
 
 
 class Arc:
@@ -112,7 +133,7 @@ class Arc:
             return INF
         return angle * self.circle.radius
 
-    def plot(self, ax: plt.Axes):
+    def plot(self, ax: plt.Axes, targets):
         start_angle = np.degrees(
             np.arctan2(self.first_point.y - self.circle.center.y, self.first_point.x - self.circle.center.x))
         end_angle = np.degrees(
@@ -141,3 +162,10 @@ class GPath:
             self.route = list()
         else:
             self.route = figures
+
+    def __add__(self, other):
+        return GPath(self.route + other.route)
+
+    def __iadd__(self, other):
+        self.route += other.route
+        return self
