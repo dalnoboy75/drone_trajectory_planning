@@ -3,12 +3,15 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
+INF = 10 ** 8
+
 
 @dataclass
 class Edge:
     istart: int
     ifinish: int
     include: bool
+
 
 class AlgLittle:
     def __init__(self,
@@ -50,11 +53,10 @@ class AlgLittle:
         col_index_1 = np.where(node_include.matrix[0] == edge[0])[0]
         row_index_1 = np.where(node_include.matrix[:, 0] == edge[1])[0]
 
-
         # print(node_include.matrix, col_index_1[0], edge[1])
         if len(row_index_1) != 0 or len(col_index_1) != 0:
             keeps_value = node_include.matrix[row_index_1[0]][col_index_1[0]]
-            node_include.matrix[row_index_1[0]][col_index_1[0]] = 10 ** 8
+            node_include.matrix[row_index_1[0]][col_index_1[0]] = INF
             self.matrix[row_index_1[0]][col_index_1[0]] = keeps_value
         # print(node_include.matrix)
         node_include.matrix = np.delete(node_include.matrix, row_index[0], axis=0)  # Удаляем строку
@@ -147,7 +149,7 @@ class AlgLittle:
         col_index_1 = np.where(node_exclude.matrix[0] == edge[1])[0]
         row_index_1 = np.where(node_exclude.matrix[:, 0] == edge[0])[0]
         keeps_value = node_exclude.matrix[row_index_1[0]][col_index_1[0]]
-        node_exclude.matrix[row_index_1[0], col_index_1[0]] = 10 ** 8
+        node_exclude.matrix[row_index_1[0], col_index_1[0]] = INF
         self.matrix = keeps_value
         node_exclude.matrix[1:, col_index_1] -= max_coeff
         node_exclude.hmin += max_coeff
@@ -195,6 +197,7 @@ class AlgLittle:
         l = [[value[0], value[1], True] for value in indices]
         return l
 
+
 def Print_Answer(data: list, num_rows: int) -> list[tuple]:
     data = [[3, 4, True], [5, 3, True], [5, 2, False], [4, 2, True], [1, 5, True], [2, 1, True]]
 
@@ -219,6 +222,7 @@ def Print_Answer(data: list, num_rows: int) -> list[tuple]:
 
     return result
 
+
 def Print_Vertex(l: list[tuple]) -> list:
     vertices = []
     for i in l:
@@ -226,12 +230,11 @@ def Print_Vertex(l: list[tuple]) -> list:
     return vertices
 
 
-
 def algorithm_Lit(numbers: np.ndarray) -> list[list]:
     # добавление строки и столбца "заголовков"
     # headed_matrix = AlgLittle.head_matrix(numbers)
     node = AlgLittle(new_matrix=numbers)
-    num_rows = matrix.shape[0] - 1
+    num_rows = node.matrix.shape[0] - 1
     cnt = 0
     node.reduce()
     while True:
@@ -268,6 +271,5 @@ def algorithm_Lit(numbers: np.ndarray) -> list[list]:
 #      [5, 5, 5, 5, 5, 10 ** 8]])
 # print(algorithm_Lit(matrix))
 
-#QUESTIONS:
-#1) Почему то удаляется матрица просто и если в 214 строке написать node....., то будет плохо очень
-
+# QUESTIONS:
+# 1) Почему то удаляется матрица просто и если в 214 строке написать node....., то будет плохо очень
