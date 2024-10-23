@@ -70,7 +70,7 @@ class AlgLittle:
 
         node_include.matrix[1:, 1:] = node_include.sub_matrix
 
-        print(f'{self.include_edge.__qualname__}: {node_include.hmin=} {node_include.matrix=} {node_include.paths=}')
+        # print(f'{self.include_edge.__qualname__}: {node_include.hmin=} {node_include.matrix=} {node_include.paths=}')
         return node_include
 
     def reduce(self: np.ndarray) -> int:
@@ -85,7 +85,7 @@ class AlgLittle:
         self.hmin += sum(row_min) + sum(columns_min)
 
         self.matrix[1:, 1:] = self.sub_matrix
-        print(f'{self.reduce.__qualname__}: {self.hmin=}')
+        # print(f'{self.reduce.__qualname__}: {self.hmin=}')
         return self.hmin
 
     def SearchingMaxDegreeZero(self, max_coeff: int) -> (list, int):
@@ -152,7 +152,7 @@ class AlgLittle:
         node_exclude.matrix[1:, col_index_1] -= max_coeff
         node_exclude.hmin += max_coeff
         node_exclude.sub_matrix = node_exclude.matrix[1:, 1:]
-        print(f'{self.delete_edge.__qualname__}: {node_exclude.hmin=} {node_exclude.matrix=} {node_exclude.paths=}')
+        # print(f'{self.delete_edge.__qualname__}: {node_exclude.hmin=} {node_exclude.matrix=} {node_exclude.paths=}')
         return node_exclude
 
     @staticmethod
@@ -171,7 +171,6 @@ class AlgLittle:
         return [1, 2, 3]
 
     def check_end_algo(self) -> bool:
-        print("self.sub_matrix.shape: ", self.matrix)
         if self.sub_matrix.shape == (2, 2):
             return True
         return False
@@ -203,7 +202,7 @@ def Print_Answer(data: list, num_rows: int) -> list[tuple]:
 
     # Найти первую пару
     for item in data:
-        if item[2]:
+        if item[2] and item[0] == 1:
             result.append((item[0], item[1]))
             last_pair = result[-1]
             break
@@ -219,6 +218,13 @@ def Print_Answer(data: list, num_rows: int) -> list[tuple]:
                 break
 
     return result
+
+def Print_Vertex(l: list[tuple]) -> list:
+    vertices = []
+    for i in l:
+        vertices.append(i[0])
+    return vertices
+
 
 
 def algorithm_Lit(numbers: np.ndarray) -> list[list]:
@@ -252,13 +258,15 @@ def algorithm_Lit(numbers: np.ndarray) -> list[list]:
                 listok.append(i.ifinish)
                 listok.append(i.include)
                 l.append(listok)
-            return Print_Answer(l, num_rows)
+            answer = Print_Answer(l, num_rows)
+            print(Print_Vertex(answer))
+            return answer
 
-matrix = np.array(
-    [[0, 1, 2, 3, 4, 5], [1, 10 ** 8, 20, 18, 12, 8], [2, 5, 10 ** 8, 14, 7, 11], [3, 12, 18, 10 ** 8, 6, 11],
-     [4, 11, 17, 11, 10 ** 8, 12],
-     [5, 5, 5, 5, 5, 10 ** 8]])
-print(algorithm_Lit(matrix))
+# matrix = np.array(
+#     [[0, 1, 2, 3, 4, 5], [1, 10 ** 8, 20, 18, 12, 8], [2, 5, 10 ** 8, 14, 7, 11], [3, 12, 18, 10 ** 8, 6, 11],
+#      [4, 11, 17, 11, 10 ** 8, 12],
+#      [5, 5, 5, 5, 5, 10 ** 8]])
+# print(algorithm_Lit(matrix))
 
 #QUESTIONS:
 #1) Почему то удаляется матрица просто и если в 214 строке написать node....., то будет плохо очень
