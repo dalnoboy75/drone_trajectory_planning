@@ -9,14 +9,14 @@ class Edge:
     istart: int
     ifinish: int
     include: bool
-    used: bool = field(default=False)
 
 class AlgLittle:
     def __init__(self,
                  new_matrix: np.ndarray,
                  discarded_nodes: list[AlgLittle] | None = None,
                  paths: list[Edge] = None,
-                 hmin: float | int = 0
+                 hmin: float | int = 0,
+                 h_level: int = 0
                  ):
 
         self.matrix = new_matrix
@@ -25,6 +25,7 @@ class AlgLittle:
         self.paths: list[Edge] = paths or []  # [+(1, 5), -(3, 4), -(2, 5)]
         self.discarded_nodes: list[AlgLittle] = discarded_nodes or []  # ноды дерева, суть планы Xi
         self.hmin = hmin
+        self.h_level = h_level or 0
         # self.reduce()   # ????
 
     # @property
@@ -40,7 +41,8 @@ class AlgLittle:
         node_include = AlgLittle(new_matrix=self.matrix.copy(),
                                  discarded_nodes=self.discarded_nodes,
                                  paths=self.paths + [Edge(edge[0], edge[1], include=True)],
-                                 hmin=self.hmin
+                                 hmin=self.hmin,
+                                 h_level=self.h_level + 1
                                  )
         col_index = np.where(node_include.matrix[0] == edge[1])[0]
         row_index = np.where(node_include.matrix[:, 0] == edge[0])[0]
@@ -139,7 +141,8 @@ class AlgLittle:
         node_exclude = AlgLittle(new_matrix=self.matrix.copy(),
                                  discarded_nodes=self.discarded_nodes,
                                  paths=self.paths + [Edge(edge[0], edge[1], include=False)],
-                                 hmin=self.hmin
+                                 hmin=self.hmin,
+                                 h_level=self.h_level + 1
                                  )
         col_index_1 = np.where(node_exclude.matrix[0] == edge[1])[0]
         row_index_1 = np.where(node_exclude.matrix[:, 0] == edge[0])[0]
@@ -182,14 +185,47 @@ class AlgLittle:
             listok.append(i.include)
             l.append(listok)
         return l
-            # if self.paths[i].used == False:
 
+    def find_rest_path(self) -> list[list]:
+        l = []
+        if self.matrix[1][1] + self.matrix[2][2] < self.matrix[1][2] + self.matrix[2][1]:
+            indices = [(self.matrix[1][0], self.matrix[0][1]), (self.matrix[2][0], self.matrix[0][2])]
+        else:
+            indices = [(self.matrix[1][0], self.matrix[0][2]), (self.matrix[2][0], self.matrix[0][1])]
+
+        l = [[value[0], value[1], True] for value in indices]
+        return l
+
+def Print_Answer(data: list, num_rows: int) -> list[tuple]:
+    data = [[3, 4, True], [5, 3, True], [5, 2, False], [4, 2, True], [1, 5, True], [2, 1, True]]
+
+    result = []
+
+    # Найти первую пару
+    for item in data:
+        if item[2]:
+            result.append((item[0], item[1]))
+            last_pair = result[-1]
+            break
+
+    cnt = 1
+    while cnt < num_rows:
+        for item in data:
+            if item[2] and last_pair[1] == item[0]:
+                result.append((item[0], item[1]))
+                last_pair = result[-1]
+                cnt += 1
+                data.remove(item)  # Удаляем элемент из data
+                break
+
+    return result
 
 
 def algorithm_Lit(numbers: np.ndarray) -> list[list]:
     # добавление строки и столбца "заголовков"
     # headed_matrix = AlgLittle.head_matrix(numbers)
     node = AlgLittle(new_matrix=numbers)
+    num_rows = matrix.shape[0] - 1
     cnt = 0
     node.reduce()
     while True:
@@ -202,31 +238,28 @@ def algorithm_Lit(numbers: np.ndarray) -> list[list]:
         node_include.discarded_nodes.append(node_exclude)
         node_exclude.discarded_nodes.append(node_include)
         all_possible_plans = node.discarded_nodes + [node_exclude, node_include]
-        cnt += 1
-        if cnt == 1:
-            node_exclude.discarded_nodes = []
         next_node = min(all_possible_plans, key=lambda node: node.hmin)
-        # clean up current node
-        # node.clean()   #node.matrix = None, node.submatrix = None, node.path = None....
+        prev_node = node
         node = next_node
+        if prev_node.h_level == next_node.h_level:
+            node.discarded_nodes.remove(prev_node)
         # если размер матрицы 2х2, то закончить алгоритм
         if node_include.check_end_algo():
-            l = []
+            l = node_include.find_rest_path()
             for i in node_include.paths:
                 listok = []
                 listok.append(i.istart)
                 listok.append(i.ifinish)
                 listok.append(i.include)
                 l.append(listok)
-            print("END!!!")
-            return l
-        # if next_node == node_include:
-        #     node_exclude.paths[0].used = True
-        # if next_node == node_exclude:
-        #     node_include.paths[0].used = True
+            return Print_Answer(l, num_rows)
 
-# matrix = np.array(
-#     [[0, 1, 2, 3, 4, 5], [1, 10 ** 8, 20, 18, 12, 8], [2, 5, 10 ** 8, 14, 7, 11], [3, 12, 18, 10 ** 8, 6, 11],
-#      [4, 11, 17, 11, 10 ** 8, 12],
-#      [5, 5, 5, 5, 5, 10 ** 8]])
-# print(algorithm_Lit(matrix))
+matrix = np.array(
+    [[0, 1, 2, 3, 4, 5], [1, 10 ** 8, 20, 18, 12, 8], [2, 5, 10 ** 8, 14, 7, 11], [3, 12, 18, 10 ** 8, 6, 11],
+     [4, 11, 17, 11, 10 ** 8, 12],
+     [5, 5, 5, 5, 5, 10 ** 8]])
+print(algorithm_Lit(matrix))
+
+#QUESTIONS:
+#1) Почему то удаляется матрица просто и если в 214 строке написать node....., то будет плохо очень
+
