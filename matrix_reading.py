@@ -131,7 +131,7 @@ class Task:
             raise ValueError
 
         trajectory = list()
-        points = points = np.array([(float(point.x), float(point.y)) for point in self.targets])
+        points = np.array([(float(point.x), float(point.y)) for point in self.targets])
         point_amount = len(points)
         # Используем векторизацию для вычисления матрицы расстояний
         matrix_length = np.sqrt(np.sum((points[:, np.newaxis] - points[np.newaxis, :]) ** 2, axis=-1))
@@ -184,27 +184,53 @@ class Task:
             if intersection_number(pstart, pfinish, circle) != 2:
                 continue
             inter_circles.append(circle)
-
+        '''
+        Ищем касательные которые не пересекают окружности
+        ищем общие касательные между окружностями
+        
+        '''
         if len(inter_circles):
             touch_points_list = []
-            all_points = [[pstart, None, pstart]]
+            all_points = [[pstart, None, None]]
             # Ищем касательные точки
             for circle in inter_circles:
                 start_touch_points = touch_points_search(pstart, circle)
                 finish_touch_points = touch_points_search(pfinish, circle)
-                touch_points_list.append([*start_touch_points, *finish_touch_points])
-                for s in start_touch_points:
-                    all_points.append([s, circle, pstart])
-                for f in finish_touch_points:
-                    all_points.append([f, circle, pfinish])
-            all_points.append([pfinish, None, pfinish])
+                for p in start_touch_points + finish_touch_points:
+                    f = True
+                    for c in self.circles:
+                        if c != circle:
+                            if intersection_number(pstart if p in start_touch_points else pfinish, p, c) == 2:
+                                f = False
+                    if f:
+                        all_points.append([p, circle, pstart if p in start_touch_points else pfinish])
 
+            # ищем точки общих касательных к окружностям
+
+            if len(inter_circles) > 1:
+                for fc in range(len(inter_circles)):
+                    for sc in range(fc + 1, len(inter_circles)):
+                        tangents = tangents_between_circles(inter_circles[fc], inter_circles[sc])
+                        for tangent in tangents:
+                            p1, p2 = tangent_points(tangent, inter_circles[fc], inter_circles[sc])
+                            f = True
+                            for c in self.circles:
+                                if c != inter_circles[fc] and c != inter_circles[sc]:
+                                    if intersection_number(p1, p2, c) == 2:
+                                        f = False
+                            if f:
+                                all_points.append([p1, inter_circles[fc], None])
+                                all_points.append([p2, inter_circles[sc], None])
+
+            all_points.append([pfinish, None])
             points_length = np.full((len(all_points), len(all_points)), fill_value=INF, dtype=float)
             points_path = np.empty((len(all_points), len(all_points)), dtype=GPath)
 
             # ищем оптимальный путь
             for i in range(len(all_points)):
                 for j in range(i + 1, len(all_points)):
+                    # TODO: посчитать пути между найденными точками
+                    '''
                     circ = None
                     # Проверяем, лежат ли точки на одной окружности
                     for k in range(len(touch_points_list)):
@@ -239,6 +265,7 @@ class Task:
                                      self.circles])):
                             points_length[i, j] = points_length[j, i] = calc_dist(all_points[i][0], all_points[j][0])
                             points_path[i, j] = points_path[j, i] = GPath([Line(all_points[i][0], all_points[j][0])])
+                            '''
             # Представляем наши точки в виде графа и ищем оптимальный путь между начальной и конечной
             new_distance, new_path = self.dijkstra(points_length)
             path = GPath()
@@ -285,20 +312,20 @@ class Task:
         num_vertices = len(matrix)
         distances = np.full(num_vertices, np.inf)
         predecessors = np.full(num_vertices, -1)
-
+        used = np.full(num_vertices, 0)
         distances[start_vertex] = 0
 
         for _ in range(num_vertices):
-            for v in range(num_vertices):
-                if np.isinf(distances[v]):
-                    continue
-
-                for u in range(num_vertices):
-                    if matrix[v, u] < INF:
-                        new_distance = distances[v] + matrix[v, u]
-                        if new_distance < distances[u]:
-                            distances[u] = new_distance
-                            predecessors[u] = v
+            v = -1
+            for u in range(num_vertices):
+                if not used[u] and (v == -1 or distances[u] < distances[v]):
+                    v = u
+            used[v] = 1
+            for i in range(num_vertices):
+                if matrix[v, i] != INF:
+                    if distances[v] + matrix[v, i] < distances[i]:
+                        distances[i] = distances[v] + matrix[v, i]
+                        predecessors[i] = v
 
         return distances[num_vertices - 1], self.reconstruct_path(predecessors, 0, num_vertices - 1)
 

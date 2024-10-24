@@ -89,6 +89,7 @@ class Circle:
         Методы:
         __init__(x, y, r): Инициализирует объект Circle.
         """
+    center: Point2D
 
     def __init__(self, x, y, r):
         self.center = Point2D(x, y)
