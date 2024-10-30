@@ -1,9 +1,11 @@
 from __future__ import annotations
+
+import typing
 from dataclasses import dataclass, field
 
 import numpy as np
 
-INF = 10 ** 8
+INF = 10**8
 
 
 @dataclass
@@ -14,22 +16,38 @@ class Edge:
 
 
 class AlgLittle:
-    def __init__(self,
-                 new_matrix: np.ndarray,
-                 discarded_nodes: list[AlgLittle] | None = None,
-                 paths: list[Edge] = None,
-                 hmin: float | int = 0,
-                 h_level: int = 0
-                 ):
+    MAXID = -1  # чтобы первый id был 0 и как в примере.
 
+    def __init__(
+        self,
+        new_matrix: np.ndarray,
+        discarded_nodes: list[AlgLittle] | None = None,
+        paths: list[Edge] = None,
+        hmin: float | int = 0,
+        h_level: int = 0,
+    ):
+        self.planID = AlgLittle.next_id()
         self.matrix = new_matrix
         # обрезаем первый столбец и строку - это номера точек, а не расстояния,
         self.sub_matrix = new_matrix[1:, 1:]
         self.paths: list[Edge] = paths or []  # [+(1, 5), -(3, 4), -(2, 5)]
-        self.discarded_nodes: list[AlgLittle] = discarded_nodes or []  # ноды дерева, суть планы Xi
+        self.discarded_nodes: list[AlgLittle] = (
+            discarded_nodes or []
+        )  # ноды дерева, суть планы Xi
         self.hmin = hmin
         self.h_level = h_level or 0
         # self.reduce()   # ????
+
+    def __str__(self):
+        return f"x{self.planID}({self.hmin})"
+
+    def __repr__(self):
+        delim = "-" * 20
+        discarded = " ".join([str(n) for n in self.discarded_nodes])
+        return f"{delim}\nX{self.planID}\n{self.pretty_matrix()}\nhmin={self.hmin}\ndiscraded={discarded}"
+
+    def pretty_matrix(self):
+        return str(self.matrix)
 
     # @property
     # def hmin(self):
@@ -41,37 +59,35 @@ class AlgLittle:
 
     def include_edge(self, zeros: list):
         edge = zeros[0]
-        node_include = AlgLittle(new_matrix=self.matrix.copy(),
-                                 discarded_nodes=self.discarded_nodes,
-                                 paths=self.paths + [Edge(edge[0], edge[1], include=True)],
-                                 hmin=self.hmin,
-                                 h_level=self.h_level + 1
-                                 )
-        col_index = np.where(node_include.matrix[0] == edge[1])[0]
-        row_index = np.where(node_include.matrix[:, 0] == edge[0])[0]
+        new_matrix = self.matrix.copy()
 
-        col_index_1 = np.where(node_include.matrix[0] == edge[0])[0]
-        row_index_1 = np.where(node_include.matrix[:, 0] == edge[1])[0]
+        col_index = np.where(new_matrix[0] == edge[1])[0]
+        row_index = np.where(new_matrix[:, 0] == edge[0])[0]
+
+        col_index_1 = np.where(new_matrix[0] == edge[0])[0]
+        row_index_1 = np.where(new_matrix[:, 0] == edge[1])[0]
 
         # print(node_include.matrix, col_index_1[0], edge[1])
         if len(row_index_1) != 0 or len(col_index_1) != 0:
-            keeps_value = node_include.matrix[row_index_1[0]][col_index_1[0]]
-            node_include.matrix[row_index_1[0]][col_index_1[0]] = INF
+            keeps_value = new_matrix[row_index_1[0]][col_index_1[0]]
+            new_matrix[row_index_1[0]][col_index_1[0]] = INF
             self.matrix[row_index_1[0]][col_index_1[0]] = keeps_value
         # print(node_include.matrix)
-        node_include.matrix = np.delete(node_include.matrix, row_index[0], axis=0)  # Удаляем строку
-        node_include.matrix = np.delete(node_include.matrix, col_index[0], axis=1)  # Удаляем столбец
-        node_include.sub_matrix = node_include.matrix[1:, 1:]
-        row_min = node_include.sub_matrix.min(axis=1)
-        node_include.sub_matrix -= row_min[:, np.newaxis]
-        columns_min = node_include.sub_matrix.min(axis=0)
-        node_include.sub_matrix -= columns_min
+        new_matrix = np.delete(
+            new_matrix, row_index[0], axis=0
+        )  # Удаляем строку
+        new_matrix = np.delete(
+            new_matrix, col_index[0], axis=1
+        )  # Удаляем столбец
 
-        # Суммируем минимумы
-        node_include.hmin += sum(row_min) + sum(columns_min)
-
-        node_include.matrix[1:, 1:] = node_include.sub_matrix
-
+        node_include = AlgLittle(
+            new_matrix=new_matrix,
+            discarded_nodes=self.discarded_nodes.copy(),
+            paths=self.paths + [Edge(edge[0], edge[1], include=True)],
+            hmin=self.hmin,
+            h_level=self.h_level + 1,
+        )
+        node_include.reduce()
         # print(f'{self.include_edge.__qualname__}: {node_include.hmin=} {node_include.matrix=} {node_include.paths=}')
         return node_include
 
@@ -125,7 +141,7 @@ class AlgLittle:
 
     def get_coefficient(self: np.ndarray, r: int, c: int) -> int:
         "На вход получаем матрицу и номер столбца и строки матрицы, в которой под индексами [r][c] содержится в матрице 0, на выходе получаем его коэффицент"
-        rmin = cmin = float('inf')
+        rmin = cmin = float("inf")
 
         # Обход строки и столбца
         for i in range(1, self.matrix.shape[0]):
@@ -135,34 +151,37 @@ class AlgLittle:
                 cmin = min(cmin, self.matrix[r, i])
         return rmin + cmin
 
-    def delete_edge(self, zeros: list, max_coeff: int) -> (np.ndarray, int):
+    def delete_edge(self, zeros: list, max_coeff: int) -> (typing.Self, int):
         "На вход получаем индексы элемента, который имеет наибольший наибольшую степень нуля, удаляем строку и столбец с этими индексами, возвращаем измененную матрицу"
 
         edge = zeros[0]
 
-        node_exclude = AlgLittle(new_matrix=self.matrix.copy(),
-                                 discarded_nodes=self.discarded_nodes,
-                                 paths=self.paths + [Edge(edge[0], edge[1], include=False)],
-                                 hmin=self.hmin,
-                                 h_level=self.h_level + 1
-                                 )
-        col_index_1 = np.where(node_exclude.matrix[0] == edge[1])[0]
-        row_index_1 = np.where(node_exclude.matrix[:, 0] == edge[0])[0]
-        keeps_value = node_exclude.matrix[row_index_1[0]][col_index_1[0]]
-        node_exclude.matrix[row_index_1[0], col_index_1[0]] = INF
-        self.matrix = keeps_value
-        node_exclude.matrix[1:, col_index_1] -= max_coeff
-        node_exclude.hmin += max_coeff
-        node_exclude.sub_matrix = node_exclude.matrix[1:, 1:]
-        # print(f'{self.delete_edge.__qualname__}: {node_exclude.hmin=} {node_exclude.matrix=} {node_exclude.paths=}')
+        # делаем КОПИЮ матрицы с поставленной куда надо бесконечностью
+        new_matrix = self.matrix.copy()
+        col_index_1 = np.where(new_matrix[0] == edge[1])[0]
+        row_index_1 = np.where(new_matrix[:, 0] == edge[0])[0]
+        new_matrix[row_index_1[0], col_index_1[0]] = INF
+
+        node_exclude = AlgLittle(
+            new_matrix=new_matrix,
+            discarded_nodes=self.discarded_nodes.copy(),
+            paths=self.paths + [Edge(edge[0], edge[1], include=False)],
+            hmin=self.hmin,
+            h_level=self.h_level + 1,
+        )
+        node_exclude.reduce()
         return node_exclude
 
     @staticmethod
     def head_matrix(matrix: np.ndarray) -> np.ndarray:
         """Возвращает матрицу, приписывая первую строку и столбец с НОМЕРАМИ точек от 1 до n."""
         rows, columns = np.shape(matrix)
-        list_column = np.arange(1, columns + 1).reshape(-1, 1)  # столбец из элементов от 1 до n
-        list_row = np.arange(0, columns + 1).reshape(1, -1)  # строка из элементов от 0 до n
+        list_column = np.arange(1, columns + 1).reshape(
+            -1, 1
+        )  # столбец из элементов от 1 до n
+        list_row = np.arange(0, columns + 1).reshape(
+            1, -1
+        )  # строка из элементов от 0 до n
         new_matrix = matrix
         new_matrix = np.hstack((np.array(list_column), new_matrix))
         new_matrix = np.vstack((np.array(list_row), new_matrix))
@@ -189,18 +208,30 @@ class AlgLittle:
 
     def find_rest_path(self) -> list[list]:
         l = []
-        if self.matrix[1][1] + self.matrix[2][2] < self.matrix[1][2] + self.matrix[2][1]:
-            indices = [(self.matrix[1][0], self.matrix[0][1]), (self.matrix[2][0], self.matrix[0][2])]
+        if (
+            self.matrix[1][1] + self.matrix[2][2]
+            < self.matrix[1][2] + self.matrix[2][1]
+        ):
+            indices = [
+                (self.matrix[1][0], self.matrix[0][1]),
+                (self.matrix[2][0], self.matrix[0][2]),
+            ]
         else:
-            indices = [(self.matrix[1][0], self.matrix[0][2]), (self.matrix[2][0], self.matrix[0][1])]
+            indices = [
+                (self.matrix[1][0], self.matrix[0][2]),
+                (self.matrix[2][0], self.matrix[0][1]),
+            ]
 
         l = [[value[0], value[1], True] for value in indices]
         return l
 
+    @classmethod
+    def next_id(cls):
+        cls.MAXID += 1
+        return cls.MAXID
 
-def Print_Answer(data: list, num_rows: int) -> list[tuple]:
-    data = [[3, 4, True], [5, 3, True], [5, 2, False], [4, 2, True], [1, 5, True], [2, 1, True]]
 
+def get_list_edges(data: list, num_rows: int) -> list[tuple]:
     result = []
 
     # Найти первую пару
@@ -223,7 +254,7 @@ def Print_Answer(data: list, num_rows: int) -> list[tuple]:
     return result
 
 
-def Print_Vertex(l: list[tuple]) -> list:
+def vertex(l: list[tuple]) -> list:
     vertices = []
     for i in l:
         vertices.append(i[0])
@@ -235,41 +266,50 @@ def algorithm_Lit(numbers: np.ndarray) -> list[list]:
     # headed_matrix = AlgLittle.head_matrix(numbers)
     node = AlgLittle(new_matrix=numbers)
     num_rows = node.matrix.shape[0] - 1
-    cnt = 0
     node.reduce()
     while True:
+        print(repr(node))
         max_coeff = 0
         zeros, max_coeff = node.SearchingMaxDegreeZero(max_coeff)
-        node_include, node_exclude = node, node
-        node_include = node_include.include_edge(zeros)
-        node_exclude = node_exclude.delete_edge(zeros, max_coeff)
+        # node_include, node_exclude = node, node
+        # print('Before delete ' + repr(node))
+        node_exclude = node.delete_edge(zeros, max_coeff)
+        # print('After delete ' + repr(node))
+        node_include = node.include_edge(zeros)
 
         node_include.discarded_nodes.append(node_exclude)
         node_exclude.discarded_nodes.append(node_include)
         all_possible_plans = node.discarded_nodes + [node_exclude, node_include]
-        next_node = min(all_possible_plans, key=lambda node: node.hmin)
         prev_node = node
-        node = next_node
-        if prev_node.h_level == next_node.h_level:
+        node = min(all_possible_plans, key=lambda nd: nd.hmin)
+        print("=" * 20)
+        print(f"prev_node: {prev_node.hmin}")
+        print(f"node: {node.hmin}")
+        if prev_node.h_level == node.h_level:
             node.discarded_nodes.remove(prev_node)
         # если размер матрицы 2х2, то закончить алгоритм
-        if node_include.check_end_algo():
-            l = node_include.find_rest_path()
-            for i in node_include.paths:
+        node1 = node
+        if node1.check_end_algo():
+            l = node1.find_rest_path()
+            for i in node1.paths:
                 listok = []
                 listok.append(i.istart)
                 listok.append(i.ifinish)
                 listok.append(i.include)
                 l.append(listok)
-            answer = Print_Answer(l, num_rows)
-            print(Print_Vertex(answer))
+            answer = get_list_edges(l, num_rows)
+            print(vertex(answer))
             return answer
 
-# matrix = np.array(
-#     [[0, 1, 2, 3, 4, 5], [1, 10 ** 8, 20, 18, 12, 8], [2, 5, 10 ** 8, 14, 7, 11], [3, 12, 18, 10 ** 8, 6, 11],
-#      [4, 11, 17, 11, 10 ** 8, 12],
-#      [5, 5, 5, 5, 5, 10 ** 8]])
-# print(algorithm_Lit(matrix))
 
-# QUESTIONS:
-# 1) Почему то удаляется матрица просто и если в 214 строке написать node....., то будет плохо очень
+matrix = np.array(
+    [
+        [0, 1, 2, 3, 4, 5],
+        [1, 10**8, 20, 18, 12, 8],
+        [2, 5, 10**8, 14, 7, 11],
+        [3, 12, 18, 10**8, 6, 11],
+        [4, 11, 17, 11, 10**8, 12],
+        [5, 5, 5, 5, 5, 10**8],
+    ]
+)
+print(algorithm_Lit(matrix))
