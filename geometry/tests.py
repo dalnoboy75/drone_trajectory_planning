@@ -1,7 +1,6 @@
 import pytest
 import numpy as np
-import json
-from matrix_reading import Task
+from geometry.matrix_reading import Task
 
 INF = 10 ** 8
 mock_data_1 = {

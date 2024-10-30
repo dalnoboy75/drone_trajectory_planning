@@ -1,10 +1,8 @@
 import json
 from pathlib import Path
 
-import matplotlib.pyplot as plt
-
-from classes import *
-from geometric_functions import *
+from geometry.classes import *
+from geometry.geometric_functions import *
 
 INF = 10 ** 8
 

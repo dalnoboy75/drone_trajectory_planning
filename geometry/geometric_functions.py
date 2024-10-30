@@ -1,5 +1,5 @@
 from math import *
-import classes
+from geometry import classes
 
 INF = 10 ** 8
 EPS = 10 ** -6
