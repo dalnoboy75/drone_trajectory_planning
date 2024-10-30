@@ -1,9 +1,9 @@
 from math import *
 import classes
-from decimal import *
 
 INF = 10 ** 8
 EPS = 10 ** -6
+ROUND_NUM = 6
 
 
 # Расчёт количества точек пересечения с окружностью
@@ -18,6 +18,8 @@ def intersection_number(a: classes.Point2D, b: classes.Point2D, circle: classes.
     cc = (ax - ox) ** 2 + (ay - oy) ** 2 - r ** 2
 
     d = bb ** 2 - aa * cc
+    if 0 < d < EPS:
+        d = 0
     if d > 0:
         return 2
     elif d == 0:
@@ -39,7 +41,8 @@ def touch_points_search(point: classes.Point2D, circle: classes.Circle):
     t2x = r * (-sin(d + t)) + circle.center.x
     t2y = r * cos(d + t) + circle.center.y
 
-    return [classes.Point2D(t1x, t1y), classes.Point2D(t2x, t2y)]
+    return [classes.Point2D(round(t1x, ROUND_NUM), round(t1y, ROUND_NUM)),
+            classes.Point2D(round(t2x, ROUND_NUM), round(t2y, ROUND_NUM))]
 
 
 # Расчёт расстояния между двумя точками

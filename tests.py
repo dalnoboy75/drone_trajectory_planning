@@ -119,7 +119,7 @@ mock_data_7 = {
     "name": "two_circles"
 }
 
-expected_matrix_7 = np.array([[INF, 11.0337384], [11.0337384, INF]])
+expected_matrix_7 = np.array([[INF, 11.727909], [11.727909, INF]])
 
 
 @pytest.mark.parametrize('mock_data, expected_matrix',

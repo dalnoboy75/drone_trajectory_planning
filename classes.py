@@ -139,11 +139,10 @@ class Arc:
             np.arctan2(self.first_point.y - self.circle.center.y, self.first_point.x - self.circle.center.x))
         end_angle = np.degrees(
             np.arctan2(self.second_point.y - self.circle.center.y, self.second_point.x - self.circle.center.x))
-
         arc_patch = matplotlib.patches.Arc((self.circle.center.x, self.circle.center.y), 2 * self.circle.radius,
                                            2 * self.circle.radius,
-                                           theta1=start_angle,
-                                           theta2=end_angle, edgecolor="orange")
+                                           theta1=min(start_angle, end_angle),
+                                           theta2=max(end_angle, start_angle), edgecolor="orange")
         ax.add_patch(arc_patch)
 
 

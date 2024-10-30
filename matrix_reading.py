@@ -1,14 +1,10 @@
 import json
-import os.path
-import random
-
-import numpy as np
-from geometric_functions import *
-from classes import *
-import matplotlib.pyplot as plt
-import matplotlib.patches
-import matplotlib.lines
 from pathlib import Path
+
+import matplotlib.pyplot as plt
+
+from classes import *
+from geometric_functions import *
 
 INF = 10 ** 8
 
@@ -130,7 +126,6 @@ class Task:
         if not self.targets:
             raise ValueError
 
-        trajectory = list()
         points = np.array([(float(point.x), float(point.y)) for point in self.targets])
         point_amount = len(points)
         # Используем векторизацию для вычисления матрицы расстояний
@@ -190,7 +185,6 @@ class Task:
         
         '''
         if len(inter_circles):
-            touch_points_list = []
             all_points = [[pstart, None, None]]
             # Ищем касательные точки
             for circle in inter_circles:
@@ -219,53 +213,48 @@ class Task:
                                     if intersection_number(p1, p2, c) == 2:
                                         f = False
                             if f:
-                                all_points.append([p1, inter_circles[fc], None])
-                                all_points.append([p2, inter_circles[sc], None])
+                                all_points.append([p1, inter_circles[fc], p2])
+                                all_points.append([p2, inter_circles[sc], p1])
 
-            all_points.append([pfinish, None])
+            all_points.append([pfinish, None, None])
             points_length = np.full((len(all_points), len(all_points)), fill_value=INF, dtype=float)
             points_path = np.empty((len(all_points), len(all_points)), dtype=GPath)
 
             # ищем оптимальный путь
             for i in range(len(all_points)):
                 for j in range(i + 1, len(all_points)):
-                    # TODO: посчитать пути между найденными точками
-                    '''
-                    circ = None
-                    # Проверяем, лежат ли точки на одной окружности
-                    for k in range(len(touch_points_list)):
-                        if all_points[i][0] in touch_points_list[k] and all_points[j][0] in touch_points_list[k]:
-                            circ = inter_circles[k]
-                            break
-                    # если лежат, то считаем длину дуги
-                    if circ is not None:
-                        points_length[i, j] = points_length[j, i] = arc_length(all_points[i][0], all_points[j][0], circ)
-                        points_path[i, j] = points_path[j, i] = GPath([Arc(all_points[i][0], all_points[j][0], circ)])
-                    else:
-                        # Иначе строим линию и смотрим, нет ли пересечения с окружностями
-                        if i == 0 and all_points[j][2] == pstart or j == len(all_points) - 1 and all_points[i][
-                            2] == pfinish:
-                            tpoint = None
-                            if (i == 0):
-                                tpoint = all_points[j]
-                            else:
-                                tpoint = all_points[i]
-                            check_list = []
-                            for c in self.circles:
-                                if c != tpoint[1]:
-                                    check_list.append(intersection_number(all_points[i][0], all_points[j][0], c) != 2)
-                            if all(check_list):
-                                points_length[i, j] = points_length[j, i] = calc_dist(all_points[i][0],
-                                                                                      all_points[j][0])
-                                points_path[i, j] = points_path[j, i] = GPath(
-                                    [Line(all_points[i][0], all_points[j][0])])
-
-                        elif (
-                                all([intersection_number(all_points[i][0], all_points[j][0], circle) != 2 for circle in
-                                     self.circles])):
+                    if i == 0 and j == len(all_points) - 1:
+                        continue
+                    # если касательная из контрольной точки
+                    if i == 0 and all_points[j][2] == pstart or j == len(all_points) - 1 and all_points[i][
+                        2] == pfinish:
+                        if i == 0:
+                            kt = all_points[i][0]
+                            p = all_points[j]
+                        else:
+                            kt = all_points[j][0]
+                            p = all_points[i]
+                        points_length[i, j] = points_length[j, i] = calc_dist(kt, p[0])
+                        points_path[i, j] = points_path[j, i] = GPath([Line(kt, p[0])])
+                    # если точки на одной окружности
+                    elif all_points[i][1] == all_points[j][1] and all_points[i][1] is not None:
+                        points_length[i, j] = points_length[j, i] = arc_length(all_points[i][0], all_points[j][0],
+                                                                               all_points[i][1])
+                        points_path[i, j] = points_path[j, i] = GPath(
+                            [Arc(all_points[i][0], all_points[j][0], all_points[i][1])])
+                    # если точки на общей касательной к окружностям
+                    elif all_points[i][0] == all_points[j][2]:
+                        if all([intersection_number(all_points[i][0], all_points[j][0], circle) != 2 for circle in
+                                inter_circles if circle not in (all_points[i][1], all_points[j][1])]):
                             points_length[i, j] = points_length[j, i] = calc_dist(all_points[i][0], all_points[j][0])
                             points_path[i, j] = points_path[j, i] = GPath([Line(all_points[i][0], all_points[j][0])])
-                            '''
+                    # остальные варианты
+                    else:
+                        if all([intersection_number(all_points[i][0], all_points[j][0], circle) != 2 for circle in
+                                inter_circles]):
+                            points_length[i, j] = points_length[j, i] = calc_dist(all_points[i][0], all_points[j][0])
+                            points_path[i, j] = points_path[j, i] = GPath([Line(all_points[i][0], all_points[j][0])])
+
             # Представляем наши точки в виде графа и ищем оптимальный путь между начальной и конечной
             new_distance, new_path = self.dijkstra(points_length)
             path = GPath()
