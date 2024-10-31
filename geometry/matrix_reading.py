@@ -180,7 +180,6 @@ class Task:
         '''
         Ищем касательные которые не пересекают окружности
         ищем общие касательные между окружностями
-        
         '''
         if len(inter_circles):
             all_points = [[pstart, None, None]]
@@ -194,6 +193,8 @@ class Task:
                         if c != circle:
                             if intersection_number(pstart if p in start_touch_points else pfinish, p, c) == 2:
                                 f = False
+                                if c not in inter_circles:
+                                    inter_circles.append(c)
                     if f:
                         all_points.append([p, circle, pstart if p in start_touch_points else pfinish])
 
@@ -283,7 +284,7 @@ class Task:
         ax.set_ylabel('Y')
         ax.set_title('Trajectory Plot')
         plt.axis('equal')
-        plt.savefig('plot1.png')
+        plt.savefig('plot3.png')
 
     def dijkstra(self, matrix, start_vertex=0):
         """

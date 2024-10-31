@@ -120,12 +120,42 @@ mock_data_7 = {
 
 expected_matrix_7 = np.array([[INF, 11.727909], [11.727909, INF]])
 
-
+mock_data_8 = {
+    "points": [
+        {"x": 1, "y": 0},
+        {"x": 0, "y": 12},
+    ],
+    "forbid_segments": [
+    ],
+    "circles": [
+        [0, 4, 2],
+        [0, 9, 2],
+        [2.05, 1.66, 0.7]
+    ],
+    "name": "three_circles"
+}
+expected_matrix_8 = np.array([[INF, 13.558623], [13.558623, INF]])
+mock_data_9 = {
+    "points": [
+        {"x": 1, "y": 0},
+        {"x": 0, "y": 12},
+    ],
+    "forbid_segments": [
+    ],
+    "circles": [
+        [0, 4, 2],
+        [0, 9, 2],
+        [1.0, 1.2, 0.7],
+        [-0.8, 1.02, 0.7]
+    ],
+    "name": "four_circles"
+}
+expected_matrix_9 = np.array([[INF, 12.92248], [12.92248, INF]])
 @pytest.mark.parametrize('mock_data, expected_matrix',
                          [(mock_data_1, expected_matrix_1), (mock_single_point_data, expected_matrix_2),
                           (mock_two_points_data, expected_matrix_3), (mock_data_4, expected_matrix_4),
                           (mock_data_5, expected_matrix_5), (mock_data_6, expected_matrix_6),
-                          (mock_data_7, expected_matrix_7)])
+                          (mock_data_7, expected_matrix_7), (mock_data_8, expected_matrix_8),(mock_data_9, expected_matrix_9)])
 def test_matrix_reading(mock_data, expected_matrix):
     t = Task(mock_data)
     distance_matrix = t.length_matrix
