@@ -1,4 +1,3 @@
-import pytest
 import numpy as np
 from Alg_L_Classes import AlgLittle, algorithm_Lit
 
