@@ -1,4 +1,6 @@
 import math
+from typing import List
+
 import matplotlib.pyplot as plt
 import matplotlib.patches
 import matplotlib.lines
@@ -169,3 +171,42 @@ class GPath:
     def __iadd__(self, other):
         self.route += other.route
         return self
+
+class Polygon:
+    """
+    Класс, представляющий многоугольник.
+
+    Атрибуты:
+        points (List[Point2D]): Список точек, определяющих вершины многоугольника.
+
+    Методы:
+        __init__(points: List[Point2D] = None):
+            Инициализирует экземпляр Polygon.
+
+            Аргументы:
+                points (List[Point2D]): Список точек, определяющих вершины многоугольника.
+
+        plot_(ax: plt.Axes):
+            Отображает многоугольник
+
+            Аргументы:
+                ax (plt.Axes): Объект matplotlib Axes, на котором будет отображен многоугольник.
+    """
+
+
+    def __init__(self, points:List[Point2D] = None):
+        self.vertexes = points
+
+    def plot(self, ax: plt.Axes):
+        points_coords = [(point.x,point.y) for point in self.vertexes]
+        polygon = matplotlib.patches.Polygon(points_coords, fill=True, color= "green", closed= True)
+        ax.add_patch(polygon)
+
+
+class LineFunction:
+    def __init__(self, a:Point2D, b:Point2D):
+        self.a = b.y - a.y
+        self.b = -(b.x - a.x)
+        self.c = -self.b* a.y - self.a * a.x
+    def substitute(self, p:Point2D):
+        return self.a * p.x + self.b * p.y + self.c

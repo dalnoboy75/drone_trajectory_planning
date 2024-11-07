@@ -1,5 +1,8 @@
 from math import *
+from typing import Union
+
 from geometry import classes
+from geometry.classes import Point2D
 
 INF = 10 ** 8
 EPS = 10 ** -6
@@ -7,7 +10,7 @@ ROUND_NUM = 6
 
 
 # Расчёт количества точек пересечения с окружностью
-def intersection_number(a: classes.Point2D, b: classes.Point2D, circle: classes.Circle):
+def circle_intersection(a: classes.Point2D, b: classes.Point2D, circle: classes.Circle):
     ax, ay = a.x, a.y
     bx, by = b.x, b.y
     ox, oy, r = circle.center.x, circle.center.y, circle.radius
@@ -21,15 +24,36 @@ def intersection_number(a: classes.Point2D, b: classes.Point2D, circle: classes.
     if 0 < d < EPS:
         d = 0
     if d > 0:
-        return 2
-    elif d == 0:
-        return 1
+        return True
     else:
-        return 0
+        return False
 
+def polygon_intersection(a:classes.Point2D, b:classes.Point2D, polygon: classes.Polygon):
+    line = classes.LineFunction(a,b)
+    vertexes = polygon.vertexes
+    for i in range(len(vertexes)):
+        v = classes.LineFunction(vertexes[i],vertexes[(i+1)%len(vertexes)])
+        if line.substitute(vertexes[i]) * line.substitute(vertexes[(i+1)% len(vertexes)]) < -EPS and v.substitute(a)*v.substitute(b) < -EPS:
+            return True
+
+    pr = INF
+    for i in range(len(vertexes)):
+        if abs(line.substitute(vertexes[i])) <= EPS:
+            if (pr + 1) % INF == 0 or i - pr == 1 or i - pr == len(vertexes) - 1:
+                pr = i
+            else:
+                return True
+    return False
 
 # Поиск точек касания касательных от точки с окружностью
-def touch_points_search(point: classes.Point2D, circle: classes.Circle):
+def touch_points_search(point: classes.Point2D, object: Union[classes.Circle, classes.Polygon]):
+    if isinstance(object, classes.Circle):
+        return circle_touch_points(point, object)
+    elif isinstance(object, classes.Polygon):
+        return polygon_touch_points(point, object)
+
+
+def circle_touch_points(point:classes.Point2D, circle: classes.Circle):
     lx = circle.center.x - point.x
     ly = circle.center.y - point.y
     l = sqrt(lx ** 2 + ly ** 2)
@@ -43,6 +67,38 @@ def touch_points_search(point: classes.Point2D, circle: classes.Circle):
 
     return [classes.Point2D(round(t1x, ROUND_NUM), round(t1y, ROUND_NUM)),
             classes.Point2D(round(t2x, ROUND_NUM), round(t2y, ROUND_NUM))]
+def polygon_touch_points(point:classes.Point2D, polygon:classes.Polygon):
+    center = Point2D(0,0)
+    vertexes = polygon.vertexes
+    for ver in vertexes:
+        center.x += ver.x
+        center.y += ver.y
+    center.x /= len(vertexes)
+    center.y /= len(vertexes)
+
+    tp1 = vertexes[0]
+    tp2 = Point2D()
+    cos_alpha_1 = cos_alpha_2= 1.0
+    center_dist = calc_dist(center, point)
+    line = classes.LineFunction(center, point)
+
+    for vertex in vertexes:
+        if (line.substitute(vertex) * line.substitute(tp1)) < 0:
+            tp2 = vertex
+            break
+
+    for vertex in vertexes:
+        vertex_dist = calc_dist(vertex, point)
+        center_vertex_dist= calc_dist(center,vertex)
+        new_cos_alpha = (vertex_dist**2 + center_dist**2 - center_vertex_dist**2)/(2*vertex_dist*center_dist)
+        if line.substitute(vertex)* line.substitute(tp1) > 0 and new_cos_alpha < cos_alpha_1:
+            cos_alpha_1 = new_cos_alpha
+            tp1 = vertex
+        if line.substitute(vertex)* line.substitute(tp2) > 0 and new_cos_alpha < cos_alpha_2:
+            cos_alpha_2 = new_cos_alpha
+            tp2 = vertex
+
+    return tp1,tp2
 
 
 # Расчёт расстояния между двумя точками
@@ -115,3 +171,6 @@ def tangent_points(tangent: list, circle1: classes.Circle, circle2: classes.Circ
         p1_y = a / b * (-p1_x) - c / b
         p2_y = a / b * (-p2_x) - c / b
     return classes.Point2D(p1_x, p1_y), classes.Point2D(p2_x, p2_y)
+
+def dist_between__poly_points(a:classes.Point2D, b: classes.Point2D, polygon:classes.Polygon):
+    pass
