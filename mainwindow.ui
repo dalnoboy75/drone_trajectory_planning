@@ -1,0 +1,610 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>940</width>
+    <height>740</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Trajectory planning</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../images/icon.png</normaloff>../images/icon.png</iconset>
+  </property>
+  <widget class="QWidget" name="mainLayoutWidget">
+   <layout class="QHBoxLayout" name="mainHorizontalLayout">
+    <item>
+     <widget class="QWidget" name="plot" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="cursor">
+       <cursorShape>CrossCursor</cursorShape>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QDockWidget" name="plotSettingsDockWidget">
+   <property name="minimumSize">
+    <size>
+     <width>175</width>
+     <height>186</height>
+    </size>
+   </property>
+   <property name="baseSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="cursor">
+    <cursorShape>ArrowCursor</cursorShape>
+   </property>
+   <property name="windowIcon">
+    <iconset>
+     <normaloff>../images/sliders.png</normaloff>../images/sliders.png</iconset>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::BottomDockWidgetArea|Qt::RightDockWidgetArea|Qt::TopDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string>Plot Settings</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="plotSettingsDockLayoutWidget">
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>175</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="baseSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::RightToLeft</enum>
+    </property>
+    <layout class="QVBoxLayout" name="plotSettingsDockVerticalLayout">
+     <property name="spacing">
+      <number>5</number>
+     </property>
+     <property name="leftMargin">
+      <number>5</number>
+     </property>
+     <property name="topMargin">
+      <number>5</number>
+     </property>
+     <property name="rightMargin">
+      <number>5</number>
+     </property>
+     <property name="bottomMargin">
+      <number>5</number>
+     </property>
+     <item>
+      <widget class="QScrollArea" name="guiObjectsScrollArea">
+       <property name="baseSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
+       </property>
+       <property name="widgetResizable">
+        <bool>true</bool>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <widget class="QWidget" name="guiObjectsLayoutWidget">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>422</width>
+          <height>707</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="guiObjectsVerticalLayout">
+         <property name="spacing">
+          <number>5</number>
+         </property>
+         <property name="leftMargin">
+          <number>5</number>
+         </property>
+         <property name="topMargin">
+          <number>5</number>
+         </property>
+         <property name="rightMargin">
+          <number>5</number>
+         </property>
+         <property name="bottomMargin">
+          <number>5</number>
+         </property>
+         <item>
+          <layout class="QGridLayout" name="targetTableGridLayout">
+           <item row="1" column="0" rowspan="7">
+            <widget class="QTableWidget" name="targetInfoTableWidget">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="editTriggers">
+              <set>QAbstractItemView::AllEditTriggers</set>
+             </property>
+             <property name="rowCount">
+              <number>3</number>
+             </property>
+             <attribute name="horizontalHeaderMinimumSectionSize">
+              <number>25</number>
+             </attribute>
+             <attribute name="horizontalHeaderDefaultSectionSize">
+              <number>75</number>
+             </attribute>
+             <attribute name="verticalHeaderMinimumSectionSize">
+              <number>25</number>
+             </attribute>
+             <attribute name="verticalHeaderDefaultSectionSize">
+              <number>25</number>
+             </attribute>
+             <row>
+              <property name="text">
+               <string>id</string>
+              </property>
+             </row>
+             <row>
+              <property name="text">
+               <string>X</string>
+              </property>
+             </row>
+             <row>
+              <property name="text">
+               <string>Y</string>
+              </property>
+             </row>
+            </widget>
+           </item>
+           <item row="7" column="1">
+            <widget class="QPushButton" name="targetAddFromTablePushButton">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QPushButton::hover{background-color: rgb(184, 184, 184);border: 1px solid #6f6f6f;}
+QPushButton::pressed{background-color: rgb(135, 135, 135);}
+              </string>
+             </property>
+             <property name="text">
+              <string>Add</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="targetInfoLabel">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>9</pointsize>
+               <weight>75</weight>
+               <italic>false</italic>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Points</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="QPushButton" name="targetRemovePushButton">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QPushButton::hover{background-color: rgb(184, 184, 184);border: 1px solid #6f6f6f;}
+QPushButton::pressed{background-color: rgb(135, 135, 135);}
+              </string>
+             </property>
+             <property name="text">
+              <string>Remove</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QGridLayout" name="hillTableGridLayout">
+           <item row="8" column="1">
+            <widget class="QPushButton" name="hillAddFromTablePushButton">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QPushButton::hover{background-color: rgb(184, 184, 184);border: 1px solid #6f6f6f;}
+QPushButton::pressed{background-color: rgb(135, 135, 135);}
+              </string>
+             </property>
+             <property name="text">
+              <string>Add</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="hillInfoLabel">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>9</pointsize>
+               <weight>75</weight>
+               <italic>false</italic>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Polygons</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0" rowspan="7">
+            <widget class="QTableWidget" name="hillInfoTableWidget">
+             <property name="editTriggers">
+              <set>QAbstractItemView::AllEditTriggers</set>
+             </property>
+             <property name="rowCount">
+              <number>1</number>
+             </property>
+             <attribute name="horizontalHeaderMinimumSectionSize">
+              <number>25</number>
+             </attribute>
+             <attribute name="horizontalHeaderDefaultSectionSize">
+              <number>75</number>
+             </attribute>
+             <attribute name="verticalHeaderMinimumSectionSize">
+              <number>25</number>
+             </attribute>
+             <attribute name="verticalHeaderDefaultSectionSize">
+              <number>25</number>
+             </attribute>
+             <row>
+              <property name="text">
+               <string>id</string>
+              </property>
+             </row>
+            </widget>
+           </item>
+           <item row="7" column="1">
+            <widget class="QPushButton" name="hillRemovePushButton">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QPushButton::hover{background-color: rgb(184, 184, 184);border: 1px solid #6f6f6f;}
+QPushButton::pressed{background-color: rgb(135, 135, 135);}
+              </string>
+             </property>
+             <property name="text">
+              <string>Remove</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QGridLayout" name="trappyCircleGridLayout">
+           <item row="1" column="0">
+            <widget class="QLabel" name="trappyCircleInfoLabel">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>9</pointsize>
+               <weight>75</weight>
+               <italic>false</italic>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Circles</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="1">
+            <widget class="QPushButton" name="trappyCircleAddFromTablePushButton">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QPushButton::hover{background-color: rgb(184, 184, 184);border: 1px solid #6f6f6f;}
+QPushButton::pressed{background-color: rgb(135, 135, 135);}
+              </string>
+             </property>
+             <property name="text">
+              <string>Add</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0" rowspan="7">
+            <widget class="QTableWidget" name="trappyCircleInfoTableWidget">
+             <property name="editTriggers">
+              <set>QAbstractItemView::AllEditTriggers</set>
+             </property>
+             <property name="showGrid">
+              <bool>true</bool>
+             </property>
+             <property name="sortingEnabled">
+              <bool>false</bool>
+             </property>
+             <property name="rowCount">
+              <number>4</number>
+             </property>
+             <attribute name="horizontalHeaderMinimumSectionSize">
+              <number>25</number>
+             </attribute>
+             <attribute name="horizontalHeaderDefaultSectionSize">
+              <number>75</number>
+             </attribute>
+             <attribute name="verticalHeaderMinimumSectionSize">
+              <number>25</number>
+             </attribute>
+             <attribute name="verticalHeaderDefaultSectionSize">
+              <number>25</number>
+             </attribute>
+             <row>
+              <property name="text">
+               <string>id</string>
+              </property>
+             </row>
+             <row>
+              <property name="text">
+               <string>X</string>
+              </property>
+             </row>
+             <row>
+              <property name="text">
+               <string>Y</string>
+              </property>
+             </row>
+             <row>
+              <property name="text">
+               <string>Radius</string>
+              </property>
+             </row>
+            </widget>
+           </item>
+           <item row="7" column="1">
+            <widget class="QPushButton" name="trappyCircleRemovePushButton">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QPushButton::hover{background-color: rgb(184, 184, 184);border: 1px solid #6f6f6f;}
+QPushButton::pressed{background-color: rgb(135, 135, 135);}
+              </string>
+             </property>
+             <property name="text">
+              <string>Remove</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <action name="newFileAction">
+   <property name="icon">
+    <iconset>
+     <normaloff>../images/new_file.png</normaloff>../images/new_file.png</iconset>
+   </property>
+   <property name="text">
+    <string>New</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="openFileAction">
+   <property name="icon">
+    <iconset>
+     <normaloff>../images/open_file.png</normaloff>../images/open_file.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="saveFileAction">
+   <property name="icon">
+    <iconset>
+     <normaloff>../images/save_file.png</normaloff>../images/save_file.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="saveAsFileAction">
+   <property name="icon">
+    <iconset>
+     <normaloff>../images/save_file_as.png</normaloff>../images/save_file_as.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save as...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
+   </property>
+  </action>
+  <action name="actionBeautify">
+   <property name="icon">
+    <iconset>
+     <normaloff>../images/beautify.png</normaloff>../images/beautify.png</iconset>
+   </property>
+   <property name="text">
+    <string>Beautify</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
+   </property>
+  </action>
+  <action name="targetAction">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../images/target.png</normaloff>../images/target.png</iconset>
+   </property>
+   <property name="text">
+    <string>Target</string>
+   </property>
+  </action>
+  <action name="trappyCircleAction">
+   <property name="icon">
+    <iconset>
+     <normaloff>../images/AA.png</normaloff>../images/AA.png</iconset>
+   </property>
+   <property name="text">
+    <string>Trappy Circle</string>
+   </property>
+  </action>
+  <action name="trappyLineAction">
+   <property name="icon">
+    <iconset>
+     <normaloff>../images/trappy_line.png</normaloff>../images/trappy_line.png</iconset>
+   </property>
+   <property name="text">
+    <string>Trappy Line</string>
+   </property>
+  </action>
+  <action name="hillAction">
+   <property name="icon">
+    <iconset>
+     <normaloff>../images/high_hills.png</normaloff>../images/high_hills.png</iconset>
+   </property>
+   <property name="text">
+    <string>Hill</string>
+   </property>
+  </action>
+  <action name="actionHelp">
+   <property name="icon">
+    <iconset>
+     <normaloff>../images/help.png</normaloff>../images/help.png</iconset>
+   </property>
+   <property name="text">
+    <string>Help </string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
