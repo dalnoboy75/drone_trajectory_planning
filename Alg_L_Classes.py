@@ -73,12 +73,8 @@ class AlgLittle:
             new_matrix[row_index_1[0]][col_index_1[0]] = INF
             self.matrix[row_index_1[0]][col_index_1[0]] = keeps_value
         # print(node_include.matrix)
-        new_matrix = np.delete(
-            new_matrix, row_index[0], axis=0
-        )  # Удаляем строку
-        new_matrix = np.delete(
-            new_matrix, col_index[0], axis=1
-        )  # Удаляем столбец
+        new_matrix = np.delete(new_matrix, row_index[0], axis=0)  # Удаляем строку
+        new_matrix = np.delete(new_matrix, col_index[0], axis=1)  # Удаляем столбец
 
         node_include = AlgLittle(
             new_matrix=new_matrix,
@@ -261,9 +257,36 @@ def vertex(l: list[tuple]) -> list:
     return vertices
 
 
-def algorithm_Lit(numbers: np.ndarray) -> list[list]:
+def add_airfields(numbers: np.ndarray, s: int, kolvo_airfields: int) -> np.matrix:
+    rows = numbers.shape[0]
+    size = rows + kolvo_airfields
+    new_matrix = np.zeros((size, size), dtype=int)
+    new_matrix[:rows, :rows] = numbers
+    numbers = new_matrix
+    for i in range(rows):
+        numbers[i, rows: size] = numbers[i][s]
+    for j in range(rows):
+        numbers[rows: size, j] = numbers[s][j]
+    pos_x = rows + 2
+    pos_y = rows + 1
+    for i in range(rows, size):
+        for j in range(rows, size):
+            if i == rows and j == size - 1:
+                continue
+            if i == pos_x and j == pos_y:
+                pos_x += 2
+                pos_y += 2
+            else:
+                numbers[i][j] = INF
+    numbers = np.delete(np.delete(numbers, s, axis=0), s, axis=1)
+    return numbers
+
+def algorithm_Lit(numbers: np.ndarray, s: int, kolvo_airfields: int) -> list[list]:
     # добавление строки и столбца "заголовков"
-    # headed_matrix = AlgLittle.head_matrix(numbers)
+    numbers = add_airfields(numbers, s, kolvo_airfields)
+    print(numbers)
+    return []
+    headed_matrix = AlgLittle.head_matrix(numbers)
     node = AlgLittle(new_matrix=numbers)
     num_rows = node.matrix.shape[0] - 1
     node.reduce()
@@ -304,12 +327,19 @@ def algorithm_Lit(numbers: np.ndarray) -> list[list]:
 
 matrix = np.array(
     [
-        [0, 1, 2, 3, 4, 5],
-        [1, 10**8, 20, 18, 12, 8],
-        [2, 5, 10**8, 14, 7, 11],
-        [3, 12, 18, 10**8, 6, 11],
-        [4, 11, 17, 11, 10**8, 12],
-        [5, 5, 5, 5, 5, 10**8],
+        [INF, 2, 10],
+        [7, INF, 13],
+        [14, 15, INF],
     ]
 )
-print(algorithm_Lit(matrix))
+# matrix = np.array(
+#     [
+#         [0, 1, 2, 3, 4, 5],
+#         [1, 10**8, 20, 18, 12, 8],
+#         [2, 5, 10**8, 14, 7, 11],
+#         [3, 12, 18, 10**8, 6, 11],
+#         [4, 11, 17, 11, 10**8, 12],
+#         [5, 5, 5, 5, 5, 10**8],
+#     ]
+# )
+print(algorithm_Lit(matrix, 2, 6))
