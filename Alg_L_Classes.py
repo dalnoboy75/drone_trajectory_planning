@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import typing
 from dataclasses import dataclass
+from typing import Tuple, List
 
 import numpy as np
 
@@ -230,17 +231,16 @@ class AlgLittle:
         return cls.MAXID
 
 
-def get_list_edges(data: list, num_rows: int) -> list[tuple]:
+def get_list_edges(data: list, num_rows: int, start_airfield: int) -> list[tuple]:
     result = []
     # Найти первую пару
     for item in data:
-        if item[2] and item[0] == 1:
+        if item[2] and item[0] == start_airfield:
             result.append((item[0], item[1]))
             last_pair = result[-1]
             break
     cnt = 1
     while cnt < num_rows:
-        print(1)
         for item in data:
             if item[2] and last_pair[1] == item[0]:
                 result.append((item[0], item[1]))
@@ -252,12 +252,19 @@ def get_list_edges(data: list, num_rows: int) -> list[tuple]:
     return result
 
 
-def vertex(l: list[tuple]) -> list:
-    print(l)
+def vertex(l: list[tuple], list_airfields: list) -> list[list]:
     vertices = []
     for i in l:
         vertices.append(i[0])
-    return vertices
+    print(vertices)
+    result = []
+    cur_res = []
+    for i in vertices:
+        cur_res.append(i)
+        if i in list_airfields:
+            result.append(cur_res)
+            cur_res = []
+    return result
 
 
 def add_airfields(numbers: np.ndarray, s: int, kolvo_airfields: int) -> np.matrix:
@@ -285,13 +292,23 @@ def add_airfields(numbers: np.ndarray, s: int, kolvo_airfields: int) -> np.matri
     return numbers
 
 
-def algorithm_Lit(numbers: np.ndarray, s: int, kolvo_airfields: int) -> list[list]:
+def algorithm_Lit(
+    numbers: np.ndarray, s: int, kolvo_airfields: int
+) -> tuple[list[list], list[tuple]]:
     # добавление строки и столбца "заголовков"
+    pos = numbers.shape[0]
     numbers = add_airfields(numbers, s, kolvo_airfields)
     numbers = AlgLittle.head_matrix(numbers)
     node = AlgLittle(new_matrix=numbers)
     num_rows = node.matrix.shape[0] - 1
     node.reduce()
+    start_airfield = pos
+    list_airfields = []
+    for i in range(int(kolvo_airfields / 2)):
+        list_airfields.append(pos + 1)
+        pos += 2
+
+    print(f"list: {list_airfields}")
     while True:
         print(repr(node))
         max_coeff = 0
@@ -322,37 +339,10 @@ def algorithm_Lit(numbers: np.ndarray, s: int, kolvo_airfields: int) -> list[lis
                 listok.append(i.ifinish)
                 listok.append(i.include)
                 l.append(listok)
-            answer = get_list_edges(l, num_rows)
-            print(vertex(answer))
-            return answer
-
-
-# matrix = np.array(
-#     [
-#         [INF, 2, 10],
-#         [7, INF, 13],
-#         [14, 15, INF],
-#     ]
-# )
-# matrix = np.array(
-#     [
-#         [0, 1, 2, 3, 4, 5],
-#         [1, 10**8, 20, 18, 12, 8],
-#         [2, 5, 10**8, 14, 7, 11],
-#         [3, 12, 18, 10**8, 6, 11],
-#         [4, 11, 17, 11, 10**8, 12],
-#         [5, 5, 5, 5, 5, 10**8],
-#     ]
-# )
+            answer = get_list_edges(l, num_rows, start_airfield)
+            ans = vertex(answer, list_airfields)
+            print(f"ans: {ans}")
+            return ans, answer
 
 # оказывается нам важно (если все будут нули в нашей конечной матрице) какие именно элементы мы берем
-matrix = np.array(
-    [
-        [INF, 20, 18, 12, 8],
-        [5, INF, 14, 7, 11],
-        [12, 18, INF, 6, 11],
-        [11, 17, 11, INF, 12],
-        [5, 5, 5, 5, INF],
-    ]
-)
-print(algorithm_Lit(matrix, 4, 4))
+
