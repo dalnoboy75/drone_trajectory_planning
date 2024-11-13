@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import typing
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 import numpy as np
 
@@ -68,7 +68,7 @@ class AlgLittle:
         row_index_1 = np.where(new_matrix[:, 0] == edge[1])[0]
 
         # print(node_include.matrix, col_index_1[0], edge[1])
-        if len(row_index_1) != 0 or len(col_index_1) != 0:
+        if len(row_index_1) != 0 and len(col_index_1) != 0:
             keeps_value = new_matrix[row_index_1[0]][col_index_1[0]]
             new_matrix[row_index_1[0]][col_index_1[0]] = INF
             self.matrix[row_index_1[0]][col_index_1[0]] = keeps_value
@@ -188,6 +188,7 @@ class AlgLittle:
         return [1, 2, 3]
 
     def check_end_algo(self) -> bool:
+        print(f"MATRIX_SHAPE = {self.sub_matrix.shape}")
         if self.sub_matrix.shape == (2, 2):
             return True
         return False
@@ -203,10 +204,11 @@ class AlgLittle:
         return l
 
     def find_rest_path(self) -> list[list]:
+        print(f"self.matrix: {self.matrix}")
         l = []
         if (
             self.matrix[1][1] + self.matrix[2][2]
-            < self.matrix[1][2] + self.matrix[2][1]
+            <= self.matrix[1][2] + self.matrix[2][1]
         ):
             indices = [
                 (self.matrix[1][0], self.matrix[0][1]),
@@ -219,6 +221,7 @@ class AlgLittle:
             ]
 
         l = [[value[0], value[1], True] for value in indices]
+        print(l)
         return l
 
     @classmethod
@@ -229,16 +232,15 @@ class AlgLittle:
 
 def get_list_edges(data: list, num_rows: int) -> list[tuple]:
     result = []
-
     # Найти первую пару
     for item in data:
         if item[2] and item[0] == 1:
             result.append((item[0], item[1]))
             last_pair = result[-1]
             break
-
     cnt = 1
     while cnt < num_rows:
+        print(1)
         for item in data:
             if item[2] and last_pair[1] == item[0]:
                 result.append((item[0], item[1]))
@@ -251,6 +253,7 @@ def get_list_edges(data: list, num_rows: int) -> list[tuple]:
 
 
 def vertex(l: list[tuple]) -> list:
+    print(l)
     vertices = []
     for i in l:
         vertices.append(i[0])
@@ -264,14 +267,14 @@ def add_airfields(numbers: np.ndarray, s: int, kolvo_airfields: int) -> np.matri
     new_matrix[:rows, :rows] = numbers
     numbers = new_matrix
     for i in range(rows):
-        numbers[i, rows: size] = numbers[i][s]
+        numbers[i, rows:size] = numbers[i][s]
     for j in range(rows):
-        numbers[rows: size, j] = numbers[s][j]
-    pos_x = rows + 2
-    pos_y = rows + 1
+        numbers[rows:size, j] = numbers[s][j]
+    pos_x = rows + 1
+    pos_y = rows + 2
     for i in range(rows, size):
         for j in range(rows, size):
-            if i == rows and j == size - 1:
+            if i == size - 1 and j == rows:
                 continue
             if i == pos_x and j == pos_y:
                 pos_x += 2
@@ -281,12 +284,11 @@ def add_airfields(numbers: np.ndarray, s: int, kolvo_airfields: int) -> np.matri
     numbers = np.delete(np.delete(numbers, s, axis=0), s, axis=1)
     return numbers
 
+
 def algorithm_Lit(numbers: np.ndarray, s: int, kolvo_airfields: int) -> list[list]:
     # добавление строки и столбца "заголовков"
     numbers = add_airfields(numbers, s, kolvo_airfields)
-    print(numbers)
-    return []
-    headed_matrix = AlgLittle.head_matrix(numbers)
+    numbers = AlgLittle.head_matrix(numbers)
     node = AlgLittle(new_matrix=numbers)
     num_rows = node.matrix.shape[0] - 1
     node.reduce()
@@ -325,13 +327,13 @@ def algorithm_Lit(numbers: np.ndarray, s: int, kolvo_airfields: int) -> list[lis
             return answer
 
 
-matrix = np.array(
-    [
-        [INF, 2, 10],
-        [7, INF, 13],
-        [14, 15, INF],
-    ]
-)
+# matrix = np.array(
+#     [
+#         [INF, 2, 10],
+#         [7, INF, 13],
+#         [14, 15, INF],
+#     ]
+# )
 # matrix = np.array(
 #     [
 #         [0, 1, 2, 3, 4, 5],
@@ -342,4 +344,15 @@ matrix = np.array(
 #         [5, 5, 5, 5, 5, 10**8],
 #     ]
 # )
-print(algorithm_Lit(matrix, 2, 6))
+
+# оказывается нам важно (если все будут нули в нашей конечной матрице) какие именно элементы мы берем
+matrix = np.array(
+    [
+        [INF, 20, 18, 12, 8],
+        [5, INF, 14, 7, 11],
+        [12, 18, INF, 6, 11],
+        [11, 17, 11, INF, 12],
+        [5, 5, 5, 5, INF],
+    ]
+)
+print(algorithm_Lit(matrix, 4, 4))
