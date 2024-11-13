@@ -16,7 +16,7 @@ mock_data_1 = {
 
     ],
     "name": "empty",
-    "polygons":[
+    "polygons": [
 
     ]
 }
@@ -35,7 +35,7 @@ mock_single_point_data = {
 
     ],
     "name": "single",
-    "polygons":[
+    "polygons": [
 
     ]
 }
@@ -53,7 +53,7 @@ mock_two_points_data = {
 
     ],
     "name": "two",
-    "polygons":[
+    "polygons": [
 
     ]
 }
@@ -76,7 +76,7 @@ mock_data_4 = {
 
     ],
     "name": "three_with_forbid",
-    "polygons":[
+    "polygons": [
 
     ]
 }
@@ -99,7 +99,7 @@ mock_data_5 = {
         [0, 5, 3]
     ],
     "name": "three_circle",
-    "polygons":[
+    "polygons": [
 
     ]
 }
@@ -116,7 +116,7 @@ mock_data_6 = {
         [0, 5, 3]
     ],
     "name": "two_circle",
-    "polygons":[
+    "polygons": [
 
     ]
 }
@@ -134,7 +134,7 @@ mock_data_7 = {
         [0, 6, 3]
     ],
     "name": "two_circles",
-    "polygons":[
+    "polygons": [
 
     ]
 }
@@ -154,7 +154,7 @@ mock_data_8 = {
         [2.05, 1.66, 0.7]
     ],
     "name": "three_circles",
-    "polygons":[
+    "polygons": [
 
     ]
 }
@@ -173,17 +173,16 @@ mock_data_9 = {
         [-0.8, 1.02, 0.7]
     ],
     "name": "four_circles",
-    "polygons":[
+    "polygons": [
 
     ]
 }
 
 expected_matrix_9 = np.array([[INF, 12.92248], [12.92248, INF]])
 
-
 mock_data_10 = {
     "points": [
-        {"x": 0, "y": 0},
+        {"x": 2, "y": 0},
         {"x": 0, "y": 12},
     ],
     "forbid_segments": [
@@ -191,20 +190,46 @@ mock_data_10 = {
     "circles": [
     ],
     "name": "one_polygon",
-    "polygons":[
+    "polygons": [
         [
             {"x": -3, "y": 2},
             {"x": 0, "y": 7},
-            {"x" : 3, "y": 2}
+            {"x": 4, "y": 6},
+            {"x": 3, "y": 2}
         ]
     ]
 }
+expected_matrix_10 = np.array([[INF, 13.570276], [13.570276, INF]])
+
+mock_data_11 = {
+    "points": [
+        {"x": 2, "y": 0},
+        {"x": 0, "y": 12},
+    ],
+    "forbid_segments": [
+    ],
+    "circles": [
+        [0, 10, 1.5]
+    ],
+    "name": "one_polygon",
+    "polygons": [
+        [
+            {"x": -3, "y": 2},
+            {"x": 0, "y": 7},
+            {"x": 4, "y": 6},
+            {"x": 3, "y": 2}
+        ]
+    ]
+}
+expected_matrix_11 = np.array([[INF, 13.570276], [13.570276, INF]])
+
 
 @pytest.mark.parametrize('mock_data, expected_matrix',
                          [(mock_data_1, expected_matrix_1), (mock_single_point_data, expected_matrix_2),
                           (mock_two_points_data, expected_matrix_3), (mock_data_4, expected_matrix_4),
                           (mock_data_5, expected_matrix_5), (mock_data_6, expected_matrix_6),
-                          (mock_data_7, expected_matrix_7), (mock_data_8, expected_matrix_8),(mock_data_9, expected_matrix_9)])
+                          (mock_data_7, expected_matrix_7), (mock_data_8, expected_matrix_8),
+                          (mock_data_9, expected_matrix_9), (mock_data_10, expected_matrix_10)])
 def test_matrix_reading(mock_data, expected_matrix):
     t = Task(mock_data)
     distance_matrix = t.length_matrix

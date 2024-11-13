@@ -160,6 +160,8 @@ class Task:
                     length, path = self.calculate_path(start, finish, matrix_length, matrix_path)
                     matrix_length[start, finish] = matrix_length[finish, start] = length
                     matrix_path[start, finish] = matrix_path[finish, start] = path
+                    print("aboba")
+                    print(matrix_length[start, finish])
         matrix_length = np.round(matrix_length, 6)
         return matrix_length, matrix_path
 
@@ -180,59 +182,46 @@ class Task:
         pfinish = self.targets[finish]
         new_distance = matrix_length[start, finish]
         path = matrix_path[start, finish]
-        inter_circles = []
-        inter_polygons = []
+        
+        inter_objects = []
 
-        # Смотрим все окружности с которыми пересекаемся
-        for circle in self.circles:
-            # не пересекаемся с окружностями
-            if circle_intersection(pstart, pfinish, circle):
-                inter_circles.append(circle)
+        for obj in self.circles + self.polygons:
+            if intersection(pstart, pfinish, obj):
+                inter_objects.append(obj)
 
-        for polygon in self.polygons:
-            if polygon_intersection(pstart, pfinish, polygon):
-                inter_polygons.append(polygon)
-
-        if len(inter_circles + inter_polygons):
+        if len(inter_objects):
             all_points = [[pstart, None, None]]
             # Ищем касательные точки
-            for object in inter_circles + inter_polygons:
-                start_touch_points = touch_points_search(pstart, object)
-                finish_touch_points = touch_points_search(pfinish, object)
+            for obj in inter_objects:
+                start_touch_points = touch_points_search(pstart, obj)
+                finish_touch_points = touch_points_search(pfinish, obj)
                 for p in start_touch_points + finish_touch_points:
                     f = True
-                    for c in self.circles:
-                        if isinstance(object, Circle) and c != object:
-                            if circle_intersection(pstart if p in start_touch_points else pfinish, p, c):
+                    for ob in self.circles + self.polygons:
+                        if ob != obj:
+                            if intersection(pstart if p in start_touch_points else pfinish, p, ob):
                                 f = False
-                                if c not in inter_circles:
-                                    inter_circles.append(c)
-                    for pol in self.polygons:
-                        if isinstance(object, Polygon) and pol != object:
-                            if polygon_intersection(pstart if p in start_touch_points else pfinish, p, object):
-                                f = False
-                                if object not in inter_polygons:
-                                    inter_polygons.append(object)
+                                if ob not in inter_objects:
+                                    inter_objects.append(ob)
                     if f:
-                        all_points.append([p, object, pstart if p in start_touch_points else pfinish])
-
+                        all_points.append([p, obj, pstart if p in start_touch_points else pfinish])
+            print(len(inter_objects))
             # ищем точки общих касательных к окружностям
-
-            if len(inter_circles) > 1:
-                for fc in range(len(inter_circles)):
-                    for sc in range(fc + 1, len(inter_circles)):
-                        tangents = tangents_between_circles(inter_circles[fc], inter_circles[sc])
+            if len(inter_objects) > 1:
+                for fc in range(len(inter_objects)):
+                    for sc in range(fc + 1, len(inter_objects)):
+                        tangents = tangents_between(inter_objects[fc], inter_objects[sc])
                         for tangent in tangents:
-                            p1, p2 = tangent_points(tangent, inter_circles[fc], inter_circles[sc])
+                            p1, p2 = tangent_points(tangent, inter_objects[fc], inter_objects[sc])
                             f = True
-                            for c in self.circles:
-                                if c != inter_circles[fc] and c != inter_circles[sc]:
-                                    if circle_intersection(p1, p2, c):
+                            for c in self.circles + self.polygons:
+                                if c != inter_objects[fc] and c != inter_objects[sc]:
+                                    if intersection(p1, p2, c):
                                         f = False
                             if f:
-                                all_points.append([p1, inter_circles[fc], p2])
-                                all_points.append([p2, inter_circles[sc], p1])
-
+                                all_points.append([p1, inter_objects[fc], p2])
+                                all_points.append([p2, inter_objects[sc], p1])
+            print(len(all_points))
             all_points.append([pfinish, None, None])
             points_length = np.full((len(all_points), len(all_points)), fill_value=INF, dtype=float)
             points_path = np.empty((len(all_points), len(all_points)), dtype=GPath)
@@ -254,24 +243,30 @@ class Task:
                         points_length[i, j] = points_length[j, i] = calc_dist(kt, p[0])
                         points_path[i, j] = points_path[j, i] = GPath([Line(kt, p[0])])
                     # если точки на одной окружности
-                    elif all_points[i][1] is not None and isinstance(all_points[i][1], Circle) and all_points[i][1] == all_points[j][1]:
+                    elif all_points[i][1] is not None and isinstance(all_points[i][1], Circle) and all_points[i][1] == \
+                            all_points[j][1]:
                         points_length[i, j] = points_length[j, i] = arc_length(all_points[i][0], all_points[j][0],
                                                                                all_points[i][1])
                         points_path[i, j] = points_path[j, i] = GPath(
                             [Arc(all_points[i][0], all_points[j][0], all_points[i][1])])
-                    # если точки на общей касательной к окружностям
+                    # если точки на одном многоугольнике
+                    elif all_points[i][1] is not None and isinstance(all_points[i][1], Polygon) and all_points[i][1] == \
+                            all_points[j][1]:
+                        dist_points, path = dist_between_poly_points(all_points[i][0], all_points[j][0],
+                                                                     all_points[i][1])
+                        points_length[i, j] = points_length[j, i] = dist_points
+                        points_path[i, j] = points_path[j, i] = path
+                    # если точки на общей касательной к препятствиям
                     elif all_points[i][0] == all_points[j][2]:
-                        if all([not circle_intersection(all_points[i][0], all_points[j][0], circle) for circle in
-                                inter_circles if circle not in (all_points[i][1], all_points[j][1])]):
-                            points_length[i, j] = points_length[j, i] = calc_dist(all_points[i][0], all_points[j][0])
-                            points_path[i, j] = points_path[j, i] = GPath([Line(all_points[i][0], all_points[j][0])])
+                        points_length[i, j] = points_length[j, i] = calc_dist(all_points[i][0], all_points[j][0])
+                        points_path[i, j] = points_path[j, i] = GPath([Line(all_points[i][0], all_points[j][0])])
                     # остальные варианты
                     else:
-                        if all([not circle_intersection(all_points[i][0], all_points[j][0], circle) for circle in
-                                inter_circles]):
+                        if all([not intersection(all_points[i][0], all_points[j][0], obj) for obj in
+                                inter_objects]):
                             points_length[i, j] = points_length[j, i] = calc_dist(all_points[i][0], all_points[j][0])
                             points_path[i, j] = points_path[j, i] = GPath([Line(all_points[i][0], all_points[j][0])])
-
+            print(points_length)
             # Представляем наши точки в виде графа и ищем оптимальный путь между начальной и конечной
             new_distance, new_path = self.dijkstra(points_length)
             path = GPath()
@@ -291,6 +286,8 @@ class Task:
         # Рисуем зоны пво
         for circle in self.circles:
             circle.plot(ax)
+        for polygon in self.polygons:
+            polygon.plot(ax)
 
         for start in range(len(self.targets)):
             for finish in range(start + 1, len(self.targets)):
@@ -302,7 +299,7 @@ class Task:
         ax.set_ylabel('Y')
         ax.set_title('Trajectory Plot')
         plt.axis('equal')
-        plt.savefig('plot3.png')
+        plt.savefig('plot5.png')
 
     def dijkstra(self, matrix, start_vertex=0):
         """
@@ -332,7 +329,8 @@ class Task:
                     if distances[v] + matrix[v, i] < distances[i]:
                         distances[i] = distances[v] + matrix[v, i]
                         predecessors[i] = v
-
+        print(distances[num_vertices-1])
+        print(predecessors)
         return distances[num_vertices - 1], self.reconstruct_path(predecessors, 0, num_vertices - 1)
 
     def reconstruct_path(self, predecessors, start, end):

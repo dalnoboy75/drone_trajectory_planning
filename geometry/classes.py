@@ -141,6 +141,8 @@ class Arc:
             np.arctan2(self.first_point.y - self.circle.center.y, self.first_point.x - self.circle.center.x))
         end_angle = np.degrees(
             np.arctan2(self.second_point.y - self.circle.center.y, self.second_point.x - self.circle.center.x))
+        start_angle = (start_angle + 360) % 360
+        end_angle = (end_angle + 360) % 360
         arc_patch = matplotlib.patches.Arc((self.circle.center.x, self.circle.center.y), 2 * self.circle.radius,
                                            2 * self.circle.radius,
                                            theta1=min(start_angle, end_angle),
@@ -204,9 +206,14 @@ class Polygon:
 
 
 class LineFunction:
-    def __init__(self, a:Point2D, b:Point2D):
-        self.a = b.y - a.y
-        self.b = -(b.x - a.x)
-        self.c = -self.b* a.y - self.a * a.x
+    def __init__(self, a:Point2D = None, b:Point2D = None, a_coef = None, b_coef = None, c_coef = None):
+        if (a is not None and b is not None):
+            self.a = b.y - a.y
+            self.b = -(b.x - a.x)
+            self.c = -self.b* a.y - self.a * a.x
+        else:
+            self.a = a_coef
+            self.b = b_coef
+            self.c = c_coef
     def substitute(self, p:Point2D):
         return self.a * p.x + self.b * p.y + self.c
