@@ -189,12 +189,14 @@ class AlgLittle:
         return [1, 2, 3]
 
     def check_end_algo(self) -> bool:
+        """Проверка на то, надо ли заканчивать алгоритм или нет, если матрица 2*2, то алггоритм закоончен"""
         print(f"MATRIX_SHAPE = {self.sub_matrix.shape}")
         if self.sub_matrix.shape == (2, 2):
             return True
         return False
 
     def end_algo(self) -> list[list]:
+        """Преобразовывает пути в лист ребер, где первый параметр это начальная вершина, второй параметр это конечная вершина, третий параметр показывает включено это ребро в путь или нет"""
         l = []
         for i in self.paths:
             listok = []
@@ -205,6 +207,7 @@ class AlgLittle:
         return l
 
     def find_rest_path(self) -> list[list]:
+        """Выбирает два ребра из матрицы 2 на 2, которые надо включить в путь"""
         print(f"self.matrix: {self.matrix}")
         l = []
         if (
@@ -232,6 +235,7 @@ class AlgLittle:
 
 
 def get_list_edges(data: list, num_rows: int, start_airfield: int) -> list[tuple]:
+    """Возвращает лист ребер, где у первого ребра начальная вершина, в которой находится аэродром"""
     result = []
     # Найти первую пару
     for item in data:
@@ -252,11 +256,9 @@ def get_list_edges(data: list, num_rows: int, start_airfield: int) -> list[tuple
     return result
 
 
-def vertex(l: list[tuple], list_airfields: list) -> list[list]:
-    vertices = []
-    for i in l:
-        vertices.append(i[0])
-    print(vertices)
+def vertex(edges: list[tuple], list_airfields: list) -> list[list]:
+    """Возвращает массив вершин, через которые проходит гамильтонов путь"""
+    vertices = [edge for edge in edges]
     result = []
     cur_res = []
     for i in vertices:
@@ -268,6 +270,7 @@ def vertex(l: list[tuple], list_airfields: list) -> list[list]:
 
 
 def add_airfields(numbers: np.ndarray, s: int, kolvo_airfields: int) -> np.matrix:
+    """Добавление в матрицу аэродромов, возвращает матрицу с добавленными аэродромами"""
     rows = numbers.shape[0]
     size = rows + kolvo_airfields
     new_matrix = np.zeros((size, size), dtype=int)
@@ -293,8 +296,9 @@ def add_airfields(numbers: np.ndarray, s: int, kolvo_airfields: int) -> np.matri
 
 
 def algorithm_Lit(
-    numbers: np.ndarray, s: int, kolvo_airfields: int
+        numbers: np.ndarray, s: int, kolvo_airfields: int
 ) -> tuple[list[list], list[tuple]]:
+    """Алгоритм Литтла"""
     # добавление строки и столбца "заголовков"
     pos = numbers.shape[0]
     numbers = add_airfields(numbers, s, kolvo_airfields)
@@ -344,5 +348,4 @@ def algorithm_Lit(
             print(f"ans: {ans}")
             return ans, answer
 
-# оказывается нам важно (если все будут нули в нашей конечной матрице) какие именно элементы мы берем
 
