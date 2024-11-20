@@ -3,10 +3,7 @@ from typing import Union
 
 from geometry import classes
 from geometry.classes import *
-
-INF = 10 ** 8
-EPS = 10 ** -6
-ROUND_NUM = 6
+from constants import *
 
 
 # Расчёт количества точек пересечения с окружностью
@@ -41,7 +38,7 @@ def polygon_intersection(a: classes.Point2D, b: classes.Point2D, polygon: classe
     pr = INF
     for i in range(len(vertexes)):
         if abs(line.substitute(vertexes[i])) <= EPS:
-            if (pr + 1) % INF == 0 or i - pr == 1 or i - pr == len(vertexes) - 1:
+            if (pr + 1) % INF == 0 or i - pr == 1 or (pr == INF and i == 0) or i - pr == len(vertexes) - 1:
                 pr = i
             else:
                 return True
@@ -88,7 +85,8 @@ def polygon_touch_points(point: classes.Point2D, polygon: classes.Polygon):
 
     tp1 = vertexes[0]
     tp2 = Point2D()
-    cos_alpha_1 = cos_alpha_2 = 1.0
+    cos_alpha_1 = 1.0
+    cos_alpha_2 = 1.0
     center_dist = calc_dist(center, point)
     line = classes.LineFunction(center, point)
 
@@ -136,7 +134,9 @@ def tangents_between_circles(circle1: classes.Circle, circle2: classes.Circle):
     r1 = circle2.radius
 
     def find_tangent(r_0, r_1):
-        a = b = c = None
+        a = None
+        b = None
+        c = None
         if abs(x0 - x1) > EPS:
             root = (x1 - x0) ** 2 * ((x1 - x0) ** 2 + (y1 - y0) ** 2 - (r_1 - r_0) ** 2)
             if abs(root) < EPS:
@@ -170,9 +170,9 @@ def tangent_points(tangent: LineFunction, object1: Union[Circle,Polygon], object
         return tangent_points_polygons(tangent, object1, object2)
     else:
         if isinstance(object1, Polygon):
-            return tangent_points_circles(tangent, object1, object2)
+            return tangent_points_polygon_circle(tangent, object1, object2)
         else:
-            return tangent_points_polygons(tangent, object2, object1)
+            return tangent_points_polygon_circle(tangent, object2, object1)
 
 def tangent_points_circles(tangent: LineFunction, circle1: classes.Circle, circle2: classes.Circle):
     a, b, c = tangent.a, tangent.b, tangent.c
@@ -196,60 +196,47 @@ def tangent_points_circles(tangent: LineFunction, circle1: classes.Circle, circl
 
 def dist_between_poly_points(a: classes.Point2D, b: classes.Point2D, polygon: classes.Polygon):
     vertexes = polygon.vertexes
-    for i in range(len(vertexes)):
-        if abs(a.x - vertexes[i].x) < EPS and abs(a.y - vertexes[i].y) < EPS:
+    v1 = None
+    v2 = None
+    for i, v in enumerate(vertexes):
+        if abs(a.x - v.x) < EPS and abs(a.y - v.y) < EPS:
             v1 = i
-    for i in range(len(vertexes)):
-        if abs(b.x - vertexes[i].x) < EPS and abs(b.y - vertexes[i].y) < EPS:
+    for i, v in enumerate(vertexes):
+        if abs(b.x - v.x) < EPS and abs(b.y - v.y) < EPS:
             v2 = i
     if v2 < v1:
         v1, v2 = v2, v1
     path = GPath()
-    points1 = [vertexes[v1]]
-    points2 = [vertexes[v1]]
-    dist1 = dist2 = 0
-    t1 = v1
-    t2 = v2
-    while t1 != t2:
-        t = t1
-        t1 += 1
-        if t1 == len(vertexes):
-            t1 = 0
-        dist1 += calc_dist(vertexes[t], vertexes[t1])
-        points1.append(vertexes[t1])
-    t1 = v1
-    t2 = v2
-    while t1 != t2:
-        t = t1
-        t1-=1
-        if t1 == -1:
-            t1 = len(vertexes) - 1
-        dist2 += calc_dist(vertexes[t], vertexes[t1])
-        points2.append(vertexes[t1])
-    points1.append(vertexes[v2])
-    points2.append(vertexes[v2])
+    points1 = vertexes[v1: v2 + 1]
+    points2 = vertexes[v2:] + vertexes[:v1 + 1]
+    def total_dist(points:list):
+        dist = 0
+        for i in range(len(points) - 1):
+            dist += calc_dist(points[i], points[i+1])
+        return dist
+    dist1 = total_dist(points1)
+    dist2 = total_dist(points2)
 
+    def points_to_path(points:list):
+        path = GPath()
+        for i in range(len(points)-1):
+            tpath = GPath([Line(points[i], points[i+1])])
+            path+= tpath
+        return path
     if dist1 < dist2:
-        for i in range(len(points1)-1):
-            tpath = GPath([Line(points1[i], points1[i+1])])
-            path+= tpath
-        dist = dist1
+        return dist1, points_to_path(points1)
     else:
-        for i in range(len(points2)-1):
-            tpath = GPath([Line(points2[i], points2[i+1])])
-            path+= tpath
-        dist = dist2
-    return dist, path
+        return dist2, points_to_path(points2)
 
-def tangents_between_polygon(polygon: Polygon, object:Union[Polygon, Circle]):
+def tangents_between_polygon(polygon: Polygon, obj:Union[Polygon, Circle]):
     tangents = []
     vertexes = polygon.vertexes
     for vertex in vertexes:
-        tgs = touch_points_search(vertex, object)
+        tgs = touch_points_search(vertex, obj)
         for tg in tgs:
             if vertex != tg:
                 line = LineFunction(vertex, tg)
-                if not intersection(vertex,tg, polygon) and not intersection(vertex,tg,object):
+                if not intersection(vertex,tg, polygon) and not intersection(vertex,tg,obj):
                     f = line.a is not None
                     f = line not in tangents
                     if f:

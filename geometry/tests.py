@@ -1,8 +1,7 @@
 import pytest
 import numpy as np
 from geometry.matrix_reading import Task
-
-INF = 10 ** 8
+from constants import *
 mock_data_1 = {
     "points": [
         {"x": 0.5, "y": 0},
@@ -221,7 +220,7 @@ mock_data_11 = {
         ]
     ]
 }
-expected_matrix_11 = np.array([[INF, 13.570276], [13.570276, INF]])
+expected_matrix_11 = np.array([[INF, 16.117994], [ 16.117994, INF]])
 
 
 @pytest.mark.parametrize('mock_data, expected_matrix',
@@ -229,8 +228,9 @@ expected_matrix_11 = np.array([[INF, 13.570276], [13.570276, INF]])
                           (mock_two_points_data, expected_matrix_3), (mock_data_4, expected_matrix_4),
                           (mock_data_5, expected_matrix_5), (mock_data_6, expected_matrix_6),
                           (mock_data_7, expected_matrix_7), (mock_data_8, expected_matrix_8),
-                          (mock_data_9, expected_matrix_9), (mock_data_10, expected_matrix_10)])
+                          (mock_data_9, expected_matrix_9), (mock_data_10, expected_matrix_10), (mock_data_11, expected_matrix_11)])
 def test_matrix_reading(mock_data, expected_matrix):
     t = Task(mock_data)
     distance_matrix = t.length_matrix
     np.testing.assert_array_almost_equal(distance_matrix, expected_matrix)
+

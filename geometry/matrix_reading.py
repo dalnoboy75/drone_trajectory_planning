@@ -1,10 +1,8 @@
 import json
 from pathlib import Path
 
-from geometry.classes import *
 from geometry.geometric_functions import *
-
-INF = 10 ** 8
+from constants import *
 
 
 class Task:
@@ -160,8 +158,6 @@ class Task:
                     length, path = self.calculate_path(start, finish, matrix_length, matrix_path)
                     matrix_length[start, finish] = matrix_length[finish, start] = length
                     matrix_path[start, finish] = matrix_path[finish, start] = path
-                    print("aboba")
-                    print(matrix_length[start, finish])
         matrix_length = np.round(matrix_length, 6)
         return matrix_length, matrix_path
 
@@ -182,7 +178,7 @@ class Task:
         pfinish = self.targets[finish]
         new_distance = matrix_length[start, finish]
         path = matrix_path[start, finish]
-        
+
         inter_objects = []
 
         for obj in self.circles + self.polygons:
@@ -198,14 +194,14 @@ class Task:
                 for p in start_touch_points + finish_touch_points:
                     f = True
                     for ob in self.circles + self.polygons:
-                        if ob != obj:
+                        if isinstance(ob, Circle) != isinstance(obj, Circle) or isinstance(ob, Polygon) != isinstance(
+                                obj, Polygon) or ob != obj:
                             if intersection(pstart if p in start_touch_points else pfinish, p, ob):
                                 f = False
                                 if ob not in inter_objects:
                                     inter_objects.append(ob)
                     if f:
                         all_points.append([p, obj, pstart if p in start_touch_points else pfinish])
-            print(len(inter_objects))
             # ищем точки общих касательных к окружностям
             if len(inter_objects) > 1:
                 for fc in range(len(inter_objects)):
@@ -219,9 +215,13 @@ class Task:
                                     if intersection(p1, p2, c):
                                         f = False
                             if f:
-                                all_points.append([p1, inter_objects[fc], p2])
-                                all_points.append([p2, inter_objects[sc], p1])
-            print(len(all_points))
+                                if inter_objects[fc].point_on(p1):
+                                    all_points.append([p1, inter_objects[fc], p2])
+                                    all_points.append([p2, inter_objects[sc], p1])
+                                else:
+                                    all_points.append([p1, inter_objects[sc], p2])
+                                    all_points.append([p2, inter_objects[fc], p1])
+
             all_points.append([pfinish, None, None])
             points_length = np.full((len(all_points), len(all_points)), fill_value=INF, dtype=float)
             points_path = np.empty((len(all_points), len(all_points)), dtype=GPath)
@@ -266,7 +266,6 @@ class Task:
                                 inter_objects]):
                             points_length[i, j] = points_length[j, i] = calc_dist(all_points[i][0], all_points[j][0])
                             points_path[i, j] = points_path[j, i] = GPath([Line(all_points[i][0], all_points[j][0])])
-            print(points_length)
             # Представляем наши точки в виде графа и ищем оптимальный путь между начальной и конечной
             new_distance, new_path = self.dijkstra(points_length)
             path = GPath()
@@ -329,8 +328,6 @@ class Task:
                     if distances[v] + matrix[v, i] < distances[i]:
                         distances[i] = distances[v] + matrix[v, i]
                         predecessors[i] = v
-        print(distances[num_vertices-1])
-        print(predecessors)
         return distances[num_vertices - 1], self.reconstruct_path(predecessors, 0, num_vertices - 1)
 
     def reconstruct_path(self, predecessors, start, end):

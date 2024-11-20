@@ -5,8 +5,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches
 import matplotlib.lines
 import numpy as np
-
-INF = 10 ** 8
+from constants import *
 
 
 class Point2D:
@@ -105,9 +104,13 @@ class Circle:
     def __str__(self):
         return f'Circle {self.center.x} {self.center.y} {self.radius}'
 
-    def __cmp__(self, other):
+    def __eq__(self, other):
+        if not isinstance(other, Circle):
+            return False
         return self.center.x == other.center.x and self.center.y == other.center.y and self.radius == other.radius
 
+    def point_on(self, point: Point2D):
+        return abs(self.center.calc_dist(point) - self.radius) < EPS
 
 class Arc:
     """
@@ -203,6 +206,18 @@ class Polygon:
         points_coords = [(point.x,point.y) for point in self.vertexes]
         polygon = matplotlib.patches.Polygon(points_coords, fill=True, color= "green", closed= True)
         ax.add_patch(polygon)
+
+    def point_on(self, point:Point2D):
+        f = False
+        for v in self.vertexes:
+            if abs(v.x - point.x) < EPS and abs(v.y - point.y) < EPS:
+                f = True
+                break
+        return f
+    def __eq__(self, other):
+        if not isinstance(other, Polygon):
+            return False
+        return self.vertexes == other.vertexes
 
 
 class LineFunction:
