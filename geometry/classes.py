@@ -10,16 +10,22 @@ from constants import *
 
 class Point2D:
     """
-        Класс представляющий точку в двумерном пространстве.
+    Представляет точку в 2D пространстве.
 
-        Атрибуты:
+    Args:
         x (float): X-координата точки.
         y (float): Y-координата точки.
 
-        Методы:
+    Methods:
         __init__(x=None, y=None): Инициализирует объект Point2D.
-        calc_dist(other): Вычисляет расстояние между текущей точкой и другой точкой.
-        """
+        calc_dist(other): Вычисляет расстояние между двумя точками.
+        __sub__(self, other): Вычитает одну точку из другой.
+        __pow__(self, power, modulo=None): Возвращает каждую координату в степень.
+        __str__(self): Возвращает строковое представление точки.
+
+    Returns:
+        str: Строковое представление точки (x y).
+    """
 
     def __init__(self, x=None, y=None):
         if x == y == None:
@@ -43,16 +49,20 @@ class Point2D:
 
 class Line:
     """
-       Класс представляющий линию в двумерном пространстве.
+    Представляет линию в 2D пространстве.
 
-       Атрибуты:
-       first_point (Point2D): Первый конец линии.
-       second_point (Point2D): Второй конец линии.
+    Args:
+        first_point (Point2D): Первый конец линии.
+        second_point (Point2D): Второй конец линии.
 
-       Методы:
-       __init__(a=None, b=None): Инициализирует объект Line.
-       get_length(): Вычисляет длину линии.
-       """
+    Methods:
+        __init__(a=None, b=None): Инициализирует объект Line.
+        get_length(): Вычисляет длину линии.
+        plot(ax, targets): Рисует линию на объекте matplotlib Axes.
+
+    Returns:
+        None
+    """
 
     def __init__(self, a: Point2D = None, b: Point2D = None):
         if a == b == None:
@@ -81,15 +91,23 @@ class Line:
 
 class Circle:
     """
-        Класс представляющий круг в двумерном пространстве.
+    Представляет круг в 2D пространстве.
 
-        Атрибуты:
-        center (Point2D): Центр круга.
-        radius (float): Радиус круга.
+    Args:
+        x (float): X-координата центра круга.
+        y (float): Y-координата центра круга.
+        r (float): Радиус круга.
 
-        Методы:
+    Methods:
         __init__(x, y, r): Инициализирует объект Circle.
-        """
+        plot(ax): Рисует круг на объекте matplotlib Axes.
+        __str__(self): Возвращает строковое представление круга.
+        __eq__(self, other): Сравнивает два объекта Circle.
+        point_on(point): Проверяет, лежит ли точка на окружности.
+
+    Returns:
+        str: Строковое представление круга (x y radius).
+    """
     center: Point2D
 
     def __init__(self, x, y, r):
@@ -114,17 +132,21 @@ class Circle:
 
 class Arc:
     """
-        Класс представляющий дугу окружности в двумерном пространстве.
+    Представляет дугу окружности в 2D пространстве.
 
-        Атрибуты:
+    Args:
         first_point (Point2D): Первая точка дуги.
         second_point (Point2D): Вторая точка дуги.
         circle (Circle): Окружность, на которой лежит дуга.
 
-        Методы:
+    Methods:
         __init__(a, b, circle): Инициализирует объект Arc.
         get_length(): Вычисляет длину дуги.
-        """
+        plot(ax, targets): Рисует дугу на объекте matplotlib Axes.
+
+    Returns:
+        float: Длина дуги или INF в случае ошибки вычисления.
+    """
 
     def __init__(self, a: Point2D, b: Point2D, circle: Circle):
         self.first_point = a
@@ -155,14 +177,19 @@ class Arc:
 
 class GPath:
     """
-        Класс представляющий путь в двумерном пространстве.
+    Представляет путь, состоящий из геометрических фигур.
 
-        Атрибуты:
-        route (list): Список фигур, входящих в путь.
+    Args:
+        figures (list): Список геометрических фигур в пути.
 
-        Методы:
+    Methods:
         __init__(figures=None): Инициализирует объект GPath.
-        """
+        __add__(self, other): Добавляет другой путь к текущему.
+        __iadd__(self, other): Добавляет фигуры к текущему пути.
+
+    Returns:
+        None
+    """
 
     def __init__(self, figures: list = None):
         if figures is None:
@@ -181,21 +208,13 @@ class Polygon:
     """
     Класс, представляющий многоугольник.
 
-    Атрибуты:
+    Args:
         points (List[Point2D]): Список точек, определяющих вершины многоугольника.
 
-    Методы:
-        __init__(points: List[Point2D] = None):
-            Инициализирует экземпляр Polygon.
-
-            Аргументы:
-                points (List[Point2D]): Список точек, определяющих вершины многоугольника.
-
-        plot_(ax: plt.Axes):
-            Отображает многоугольник
-
-            Аргументы:
-                ax (plt.Axes): Объект matplotlib Axes, на котором будет отображен многоугольник.
+    Methods:
+        __init__(points: List[Point2D] = None): Инициализирует экземпляр Polygon.
+        plot_(ax: plt.Axes): Отображает многоугольник
+        point_on(point:Point2D): проверяет, лежит ли точка на сторонах многоульгольника
     """
 
 
@@ -221,6 +240,18 @@ class Polygon:
 
 
 class LineFunction:
+    """
+        Класс, представляющий линейную функцию (прямую).
+
+        Args:
+            a:Point2D: первая точка, принадлежащая прямой
+            b:Point2D: вторая точка принадлежащая прямой
+            a_coef, b_coef, c_coef: коэффициенты прямой
+
+        Methods:
+            __init__(a:Point2D = None, b:Point2D = None, a_coef = None, b_coef = None, c_coef = None): Инициализирует экземпляр LineFunction.
+            substitute(p:Point2D): проверка, лежит ли точка на прямой
+        """
     def __init__(self, a:Point2D = None, b:Point2D = None, a_coef = None, b_coef = None, c_coef = None):
         if (a is not None and b is not None):
             self.a = b.y - a.y
