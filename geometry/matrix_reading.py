@@ -302,7 +302,7 @@ class Task:
         ax.set_ylabel('Y')
         ax.set_title('Trajectory Plot')
         plt.axis('equal')
-        plt.savefig('plot6.png')
+        plt.savefig('plot7.png')
 
     def dijkstra(self, matrix, start_vertex=0) -> tuple[np.array, list]:
         """

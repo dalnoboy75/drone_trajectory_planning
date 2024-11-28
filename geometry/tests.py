@@ -248,8 +248,29 @@ mock_data_12 = {
     ]
 }
 expected_matrix_12 = np.array([[INF, 16.990716], [16.990716, INF]])
-
-
+'''
+mock_data_13 = {
+    "points": [
+        {"x": 0, "y": 8},
+        {"x": 0, "y": 18},
+    ],
+    "forbid_segments": [
+    ],
+    "circles": [
+    ],
+    "name": "one_polygon",
+    "polygons": [
+        [
+            {"x": 0, "y": 10},
+            {"x": 5, "y": 5},
+            {"x": 5, "y": 15},
+            {"x": -5, "y": 15},
+            {"x":-5, "y": 5}
+        ]
+    ]
+}
+expected_matrix_13 = np.array([[INF, 16.990716], [16.990716, INF]])
+'''
 @pytest.mark.parametrize('mock_data, expected_matrix',
                          [(mock_data_1, expected_matrix_1), (mock_single_point_data, expected_matrix_2),
                           (mock_two_points_data, expected_matrix_3), (mock_data_4, expected_matrix_4),

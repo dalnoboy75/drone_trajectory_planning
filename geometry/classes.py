@@ -214,7 +214,7 @@ class Polygon:
     Methods:
         __init__(points: List[Point2D] = None): Инициализирует экземпляр Polygon.
         plot_(ax: plt.Axes): Отображает многоугольник
-        point_on(point:Point2D): проверяет, лежит ли точка на сторонах многоульгольника
+        point_on(point:Point2D): проверяет, лежит ли точка на вершинах многоульгольника
     """
 
 
