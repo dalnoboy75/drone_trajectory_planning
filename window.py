@@ -1,120 +1,124 @@
 import sys
-from PyQt5.QtWidgets import (QApplication, QWidget, QVBoxLayout, QLabel,
-                             QLineEdit, QPushButton, QFileDialog, QMessageBox)
-from PyQt5.QtGui import QPainter, QPen, QFont
+from PyQt5 import QtWidgets, uic
+from PyQt5.QtWidgets import QMainWindow, QPushButton, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QColor
+from pyqtgraph import PlotWidget, mkPen, EllipseROI
+import numpy as np
 
-class CoordinateInputApp(QWidget):
+
+class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+
+        uic.loadUi('mainwindow.ui', self)
+        self.init_ui()
+
+    def init_ui(self):
+        self.plot = self.findChild(QWidget, 'plot')
+        self.plot_widget = PlotWidget(self)
+
+        layout = QVBoxLayout(self.plot)
+        layout.addWidget(self.plot_widget)
+
+        self.plot_widget.setBackground('w')
+        self.targetAddFromTablePushButton = self.findChild(QPushButton, 'targetAddFromTablePushButton')
+        self.targetRemovePushButton = self.findChild(QPushButton, 'targetRemovePushButton')
+        self.hillAddFromTablePushButton = self.findChild(QPushButton, 'hillAddFromTablePushButton')
+        self.hillRemovePushButton = self.findChild(QPushButton, 'hillRemovePushButton')
+        self.trappyCircleAddFromTablePushButton = self.findChild(QPushButton, 'trappyCircleAddFromTablePushButton')
+        self.trappyCircleRemovePushButton = self.findChild(QPushButton, 'trappyCircleRemovePushButton')
+
+        self.targetInfoTableWidget = self.findChild(QTableWidget, 'targetInfoTableWidget')
+        self.hillInfoTableWidget = self.findChild(QTableWidget, 'hillInfoTableWidget')
+        self.trappyCircleInfoTableWidget = self.findChild(QTableWidget, 'trappyCircleInfoTableWidget')
+
+        self.targetAddFromTablePushButton.clicked.connect(self.add_target_from_table)
+        self.targetRemovePushButton.clicked.connect(self.remove_target)
+        # self.hillAddFromTablePushButton.clicked.connect(self.add_hill_from_table)
+        # self.hillRemovePushButton.clicked.connect(self.remove_hill)
+        self.trappyCircleAddFromTablePushButton.clicked.connect(self.add_trappy_circle_from_table)
+        self.trappyCircleRemovePushButton.clicked.connect(self.remove_trappy_circle)
+
+        self.targetInfoTableWidget.setColumnCount(3)
+        self.targetInfoTableWidget.setHorizontalHeaderLabels(['ID', 'X', 'Y'])
+        self.hillInfoTableWidget.setColumnCount(1)
+        self.hillInfoTableWidget.setHorizontalHeaderLabels(['ID'])
+        self.trappyCircleInfoTableWidget.setColumnCount(4)
+        self.trappyCircleInfoTableWidget.setHorizontalHeaderLabels(['ID', 'X', 'Y', 'Radius'])
+
         self.points = []
-        self.points_window = None
-        self.initUI()
+        self.circles = []
 
-    def initUI(self):
-        self.setWindowTitle('Ввод координат')
-        layout = QVBoxLayout()
+        self.targetRemovePushButton.setEnabled(False)
+        self.hillRemovePushButton.setEnabled(False)
+        self.trappyCircleRemovePushButton.setEnabled(False)
+        self.targetInfoTableWidget.selectionModel().selectionChanged.connect(self.update_remove_button_state)
+        self.hillInfoTableWidget.selectionModel().selectionChanged.connect(self.update_remove_button_state)
+        self.trappyCircleInfoTableWidget.selectionModel().selectionChanged.connect(self.update_remove_button_state)
 
-        self.label_x = QLabel('Введите X:')
-        self.input_x = QLineEdit(self)
-        layout.addWidget(self.label_x)
-        layout.addWidget(self.input_x)
+    def add_target_from_table(self):
+        row = self.targetInfoTableWidget.rowCount()
+        self.targetInfoTableWidget.insertRow(row)
+        self.targetInfoTableWidget.setItem(row, 0, QTableWidgetItem(f'Target{row}'))
+        self.targetInfoTableWidget.setItem(row, 1, QTableWidgetItem('0.0'))
+        self.targetInfoTableWidget.setItem(row, 2, QTableWidgetItem('0.0'))
+        self.update_plot()
+        self.update_remove_button_state()
 
-        self.label_y = QLabel('Введите Y:')
-        self.input_y = QLineEdit(self)
-        layout.addWidget(self.label_y)
-        layout.addWidget(self.input_y)
+    def remove_target(self):
+        selected_row = self.targetInfoTableWidget.currentRow()
+        if selected_row >= 0:
+            self.targetInfoTableWidget.removeRow(selected_row)
+            self.update_plot()
+        self.update_remove_button_state()
 
-        self.button_check = QPushButton('Добавить точку', self)
-        self.button_check.clicked.connect(self.add_point)
-        layout.addWidget(self.button_check)
+    def add_trappy_circle_from_table(self):
+        row = self.trappyCircleInfoTableWidget.rowCount()
+        self.trappyCircleInfoTableWidget.insertRow(row)
+        self.trappyCircleInfoTableWidget.setItem(row, 0, QTableWidgetItem(f'Circle{row}'))
+        self.trappyCircleInfoTableWidget.setItem(row, 1, QTableWidgetItem('0.0'))
+        self.trappyCircleInfoTableWidget.setItem(row, 2, QTableWidgetItem('0.0'))
+        self.trappyCircleInfoTableWidget.setItem(row, 3, QTableWidgetItem('1.0'))
+        self.update_plot()
+        self.update_remove_button_state()
 
-        self.button_file = QPushButton('Выбрать файл', self)
-        self.button_file.clicked.connect(self.open_file_dialog)
-        layout.addWidget(self.button_file)
+    def remove_trappy_circle(self):
+        selected_row = self.trappyCircleInfoTableWidget.currentRow()
+        if selected_row >= 0:
+            self.trappyCircleInfoTableWidget.removeRow(selected_row)
+            self.update_plot()
+        self.update_remove_button_state()
 
-        self.button_show_points = QPushButton('Показать точки', self)
-        self.button_show_points.clicked.connect(self.show_points)
-        layout.addWidget(self.button_show_points)
+    def update_remove_button_state(self):
+        selected_target_row = self.targetInfoTableWidget.currentRow()
+        selected_hill_row = self.hillInfoTableWidget.currentRow()
+        selected_circle_row = self.trappyCircleInfoTableWidget.currentRow()
 
-        self.setLayout(layout)
+        self.targetRemovePushButton.setEnabled(selected_target_row >= 0)
+        self.hillRemovePushButton.setEnabled(selected_hill_row >= 0)
+        self.trappyCircleRemovePushButton.setEnabled(selected_circle_row >= 0)
 
-    def add_point(self):
-        try:
-            x = float(self.input_x.text().replace(',', '.'))
-            y = float(self.input_y.text().replace(',', '.'))
-            self.points.append((x, y))
-            QMessageBox.information(self, 'Успех', f'Точка добавлена: X = {x}, Y = {y}')
-            self.input_x.clear()
-            self.input_y.clear()
-        except ValueError:
-            QMessageBox.warning(self, 'Ошибка', 'Введите корректные числовые значения для координат.')
+    def update_plot(self):
+        self.plot_widget.clear()
+        for row in range(self.targetInfoTableWidget.rowCount()):
+            x = float(self.targetInfoTableWidget.item(row, 1).text())
+            y = float(self.targetInfoTableWidget.item(row, 2).text())
+            self.plot_widget.plot([x], [y], pen=None, symbol='o', symbolSize=5, symbolBrush=QColor(255, 0, 0))
+        for row in range(self.trappyCircleInfoTableWidget.rowCount()):
+            x = float(self.trappyCircleInfoTableWidget.item(row, 1).text())
+            y = float(self.trappyCircleInfoTableWidget.item(row, 2).text())
+            radius = float(self.trappyCircleInfoTableWidget.item(row, 3).text())
+            ellipse = EllipseROI(pos=(x - radius, y - radius), size=(2 * radius, 2 * radius))
+            ellipse.setPen(mkPen(color=QColor(0, 0, 255)))
+            self.plot_widget.addItem(ellipse)
+        self.plot_widget.replot()
 
-    def open_file_dialog(self):
-        options = QFileDialog.Options()
-        file_name, _ = QFileDialog.getOpenFileName(self, "Выберите файл с координатами", "", "Text Files (*.txt);;All Files (*)", options=options)
-        if file_name:
-            with open(file_name, 'r') as file:
-                data = file.readlines()
-                for line in data:
-                    try:
-                        x, y = map(float, line.strip().split())
-                        self.points.append((x, y))
-                    except ValueError:
-                        QMessageBox.warning(self, 'Ошибка', 'Неправильный формат в строке: ' + line.strip())
-
-    def show_points(self):
-        if self.points_window is not None:
-            self.points_window.close()
-        self.points_window = PointsWindow(self.points)
-        self.points_window.show()
-
-class PointsWindow(QWidget):
-    def __init__(self, points):
-        super().__init__()
-        self.points = points
-        self.setWindowTitle('Точки')
-        self.setGeometry(100, 100, 800, 800)
-
-    def paintEvent(self, event):
-        painter = QPainter(self)
-        pen = QPen(Qt.blue)
-        painter.setPen(pen)
-
-        # Оси
-        painter.drawLine(50, 400, 750, 400)
-        painter.drawLine(400, 50, 400, 750)
-
-        # Подписи осей
-        painter.setFont(QFont('Arial', 10))
-        painter.drawText(760, 405, 'X')
-        painter.drawText(395, 40, 'Y')
-
-        # Координатная плоскость
-        pen.setColor(Qt.lightGray)
-        pen.setWidth(1)
-        painter.setPen(pen)
-        for i in range(50, 800, 50):
-            painter.drawLine(i, 50, i, 750)
-            painter.drawLine(50, i, 750, i)
-
-        # Оси
-        pen.setColor(Qt.black)
-        pen.setWidth(2)
-        painter.setPen(pen)
-        painter.drawLine(50, 400, 750, 400)  # Ось X
-        painter.drawLine(400, 50, 400, 750)  # Ось Y
-
-        # Точки
-        pen.setColor(Qt.red)
-        pen.setWidth(4)
-        painter.setPen(pen)
-        for x, y in self.points:
-            painter.drawPoint(int(x * 20 + 400), int(400 - y * 20)) #для масштаба
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    ex = CoordinateInputApp()
-    ex.resize(300, 200)
-    ex.show()
+def main():
+    app = QtWidgets.QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
     sys.exit(app.exec_())
+
+if __name__ == "__main__":
+    main()
