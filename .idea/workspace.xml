@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="d93f83c5-d0f2-4aaa-a57e-4e9d27f425b6" name="Changes" comment="add files" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="geometry-logic" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;dalnoboy75&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/dalnoboy75/drone_trajectory_planning.git&quot;,
+    &quot;accountId&quot;: &quot;7b4eba39-c2b6-4e1f-84e3-846e65bf9a56&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="2lvb6qodnDBwszC0C5f5WZ69vtB" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python tests.Python tests in tests.py.executor": "Run",
+    "Python.geometric_functions.executor": "Run",
+    "Python.main.executor": "Run",
+    "Python.matrix_reading.executor": "Run",
+    "Python.tasks.executor": "Run",
+    "Python.tests.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "C:/Projects/drone_trajectory_planning",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "ml.llm.LLMConfigurable",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Projects\drone_trajectory_planning\geometry" />
+      <recent name="C:\Projects\drone_trajectory_planning" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-PY-242.23726.102" />
+        <option value="bundled-python-sdk-5e1850174b45-399fe30bd8c1-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-242.23726.102" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d93f83c5-d0f2-4aaa-a57e-4e9d27f425b6" name="Changes" comment="" />
+      <created>1726063325214</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1726063325214</updated>
+      <workItem from="1730728378396" duration="278000" />
+      <workItem from="1730728671033" duration="157000" />
+      <workItem from="1730922917501" duration="23000" />
+      <workItem from="1730922962535" duration="955000" />
+      <workItem from="1730924338659" duration="60000" />
+      <workItem from="1730976280411" duration="296000" />
+      <workItem from="1730976594596" duration="6606000" />
+      <workItem from="1730985463796" duration="306000" />
+      <workItem from="1731432513118" duration="12232000" />
+      <workItem from="1732118633062" duration="1301000" />
+      <workItem from="1732119956417" duration="2511000" />
+      <workItem from="1732122506951" duration="222000" />
+      <workItem from="1732188268143" duration="5803000" />
+      <workItem from="1732795406273" duration="971000" />
+      <workItem from="1733331125977" duration="63000" />
+      <workItem from="1733331196888" duration="276000" />
+    </task>
+    <task id="LOCAL-00001" summary="first commit">
+      <option name="closed" value="true" />
+      <created>1726066099051</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1726066099051</updated>
+    </task>
+    <task id="LOCAL-00002" summary="make reading from json and make tests">
+      <option name="closed" value="true" />
+      <created>1726073944926</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1726073944926</updated>
+    </task>
+    <task id="LOCAL-00003" summary="add forbidden segments and rewrite tests">
+      <option name="closed" value="true" />
+      <created>1726679800188</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1726679800188</updated>
+    </task>
+    <task id="LOCAL-00004" summary="some fixes">
+      <option name="closed" value="true" />
+      <created>1726680037381</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1726680037381</updated>
+    </task>
+    <task id="LOCAL-00005" summary="make flight near circle and add tests">
+      <option name="closed" value="true" />
+      <created>1727356204921</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1727356204921</updated>
+    </task>
+    <task id="LOCAL-00006" summary="add some comments">
+      <option name="closed" value="true" />
+      <created>1727356357477</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1727356357477</updated>
+    </task>
+    <task id="LOCAL-00007" summary="make classes">
+      <option name="closed" value="true" />
+      <created>1727463243928</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1727463243928</updated>
+    </task>
+    <task id="LOCAL-00008" summary="make trajectory plot, add comments and docstrings">
+      <option name="closed" value="true" />
+      <created>1727890178408</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1727890178409</updated>
+    </task>
+    <task id="LOCAL-00009" summary="fixes">
+      <option name="closed" value="true" />
+      <created>1727954821310</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1727954821310</updated>
+    </task>
+    <task id="LOCAL-00010" summary="refactor code">
+      <option name="closed" value="true" />
+      <created>1728568232398</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1728568232398</updated>
+    </task>
+    <task id="LOCAL-00011" summary="fix">
+      <option name="closed" value="true" />
+      <created>1728568282851</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1728568282851</updated>
+    </task>
+    <task id="LOCAL-00012" summary="add plot and make algorithm for many circles(not working)">
+      <option name="closed" value="true" />
+      <created>1729168993372</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1729168993372</updated>
+    </task>
+    <task id="LOCAL-00013" summary="reworked the algorithm for many circles, but not completely">
+      <option name="closed" value="true" />
+      <created>1729778281167</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1729778281167</updated>
+    </task>
+    <task id="LOCAL-00014" summary="finished writing algorthm for many circles, added plot and made fixes">
+      <option name="closed" value="true" />
+      <created>1730317990407</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1730317990407</updated>
+    </task>
+    <task id="LOCAL-00015" summary="some fixes">
+      <option name="closed" value="true" />
+      <created>1730318777983</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1730318777983</updated>
+    </task>
+    <task id="LOCAL-00016" summary="some fixes, add tests and plots">
+      <option name="closed" value="true" />
+      <created>1730381677287</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1730381677287</updated>
+    </task>
+    <task id="LOCAL-00017" summary="started doing geometry for polygons and adapt main code for polygons">
+      <option name="closed" value="true" />
+      <created>1730985583869</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1730985583869</updated>
+    </task>
+    <task id="LOCAL-00018" summary="full write algorithm with polygons, but not working with polygon and other figure">
+      <option name="closed" value="true" />
+      <created>1731527032127</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1731527032127</updated>
+    </task>
+    <task id="LOCAL-00019" summary="full working algorithm">
+      <option name="closed" value="true" />
+      <created>1732122657363</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1732122657363</updated>
+    </task>
+    <task id="LOCAL-00020" summary="add docstrings">
+      <option name="closed" value="true" />
+      <created>1732199498513</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1732199498513</updated>
+    </task>
+    <task id="LOCAL-00021" summary="some fixes">
+      <option name="closed" value="true" />
+      <created>1732796065511</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1732796065511</updated>
+    </task>
+    <task id="LOCAL-00022" summary="add files">
+      <option name="closed" value="true" />
+      <created>1733331370775</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1733331370775</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="geometry-logic" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="first commit" />
+    <MESSAGE value="make reading from json and make tests" />
+    <MESSAGE value="add forbidden segments and rewrite tests" />
+    <MESSAGE value="make flight near circle and add tests" />
+    <MESSAGE value="add some comments" />
+    <MESSAGE value="make classes" />
+    <MESSAGE value="make trajectory plot, add comments and docstrings" />
+    <MESSAGE value="fixes" />
+    <MESSAGE value="refactor code" />
+    <MESSAGE value="fix" />
+    <MESSAGE value="add plot and make algorithm for many circles(not working)" />
+    <MESSAGE value="reworked the algorithm for many circles, but not completely" />
+    <MESSAGE value="finished writing algorthm for many circles, added plot and made fixes" />
+    <MESSAGE value="some fixes, add tests and plots" />
+    <MESSAGE value="started doing geometry for polygons and adapt main code for polygons" />
+    <MESSAGE value="full write algorithm with polygons, but not working with polygon and other figure" />
+    <MESSAGE value="full working algorithm" />
+    <MESSAGE value="add docstrings" />
+    <MESSAGE value="some fixes" />
+    <MESSAGE value="add files" />
+    <option name="LAST_COMMIT_MESSAGE" value="add files" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/drone_trajectory_planning$tests.coverage" NAME="tests Coverage Results" MODIFIED="1732122430312" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/geometry" />
+    <SUITE FILE_PATH="coverage/drone_trajectory_planning$main.coverage" NAME="main Coverage Results" MODIFIED="1732121605118" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/geometry" />
+    <SUITE FILE_PATH="coverage/drone_trajectory_planning$.coverage" NAME=" Coverage Results" MODIFIED="1732796029347" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/geometry" />
+    <SUITE FILE_PATH="coverage/drone_trajectory_planning$geometric_functions.coverage" NAME="geometric_functions Coverage Results" MODIFIED="1732120426621" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/geometry" />
+  </component>
+</project>

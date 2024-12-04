@@ -1,0 +1,359 @@
+Index: data.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{\r\n  \"amount\": \"3\",\r\n  \"points\": [\r\n    {\r\n      \"x\": \"4.37\",\r\n      \"y\": \"5.52\"\r\n    },\r\n    {\r\n      \"x\": \"-17.21\",\r\n      \"y\": \"24.93\"\r\n    },\r\n    {\r\n      \"x\": \"26.78\",\r\n      \"y\": \"-43.6\"\r\n    }\r\n  ],\r\n  \"forbid_segments\": [\r\n    [\r\n      1,\r\n      2\r\n    ]\r\n  ],\r\n  \"circles\": [\r\n    [\r\n      1,\r\n      1,\r\n      1\r\n    ]\r\n  ]\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/data.json b/data.json
+--- a/data.json	(revision 38cb7bb644dbacca8ee8aa06497a946579d1f853)
++++ b/data.json	(date 1727883486313)
+@@ -1,30 +1,22 @@
+ {
+-  "amount": "3",
++  "amount": "2",
+   "points": [
+     {
+-      "x": "4.37",
+-      "y": "5.52"
+-    },
+-    {
+-      "x": "-17.21",
+-      "y": "24.93"
++      "x": "0",
++      "y": "0"
+     },
+     {
+-      "x": "26.78",
+-      "y": "-43.6"
++      "x": "0",
++      "y": "10"
+     }
+   ],
+   "forbid_segments": [
+-    [
+-      1,
+-      2
+-    ]
+   ],
+   "circles": [
+     [
+-      1,
+-      1,
+-      1
++      0,
++      5,
++      3
+     ]
+   ]
+ }
+\ No newline at end of file
+Index: geometric_functions.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from math import *\r\n\r\nINF = 10**8\r\n\r\n# Расчёт количества точек пересечения с окружностью\r\ndef intersection_number(a, b, circle):\r\n    ax = a[0]\r\n    ay = a[1]\r\n    bx = b[0]\r\n    by = b[1]\r\n    ox = circle[0]\r\n    oy = circle[1]\r\n    r = circle[2]\r\n\r\n    # Считаем коэф-ты кв. уравнения\r\n    A = (bx - ax) ** 2 + (by - ay) ** 2\r\n    B = (ax - ox) * (bx - ax) + (ay - oy) * (by - ay)\r\n    C = (ax - ox) ** 2 + (ay - oy) ** 2 - r ** 2\r\n\r\n    D = B ** 2 - A * C\r\n\r\n    if D > 0:\r\n        return 2\r\n    elif D == 0:\r\n        return 1\r\n    else:\r\n        return 0\r\n\r\n#Поиск точек касания касательных от точки с окружностью\r\ndef touch_points_search(point, circle):\r\n    lx = circle[0] - point[0]\r\n    ly = circle[1] - point[1]\r\n    l = sqrt(lx ** 2 + ly ** 2)\r\n    r = circle[2]\r\n    d = atan2(ly, lx)\r\n    t = asin(r / l)\r\n    t1x = r * sin(d - t) + circle[0]\r\n    t1y = r * (-cos(d - t)) + circle[1]\r\n    t2x = r * (-sin(d + t)) + circle[0]\r\n    t2y = r * cos(d + t) + circle[1]\r\n\r\n    return [(t1x, t1y), (t2x, t2y)]\r\n\r\n#Расчёт расстояния между двумя точками\r\ndef calc_dist(first_point, second_point):\r\n    return sqrt((first_point[0] - second_point[0])**2 + (first_point[1]-second_point[1])**2)\r\n\r\n#Расчёт длины дуги между двумя точками на окружности\r\ndef arc_length(first_point,second_point, circle):\r\n    center = [circle[0], circle[1]]\r\n    a = calc_dist(first_point, second_point)\r\n    b = calc_dist(first_point, center)\r\n    c = calc_dist(second_point, center)\r\n    try:\r\n        angle = acos((b**2 + c**2 - a**2) / (2*b*c))\r\n    except:\r\n        return INF\r\n    return angle * circle[2]\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/geometric_functions.py b/geometric_functions.py
+--- a/geometric_functions.py	(revision 38cb7bb644dbacca8ee8aa06497a946579d1f853)
++++ b/geometric_functions.py	(date 1727879567130)
+@@ -1,7 +1,8 @@
+ from math import *
+ 
+-INF = 10**8
++INF = 10 ** 8
+ 
++
+ # Расчёт количества точек пересечения с окружностью
+ def intersection_number(a, b, circle):
+     ax = a[0]
+@@ -13,20 +14,21 @@
+     r = circle[2]
+ 
+     # Считаем коэф-ты кв. уравнения
+-    A = (bx - ax) ** 2 + (by - ay) ** 2
+-    B = (ax - ox) * (bx - ax) + (ay - oy) * (by - ay)
+-    C = (ax - ox) ** 2 + (ay - oy) ** 2 - r ** 2
++    aa = (bx - ax) ** 2 + (by - ay) ** 2
++    bb = (ax - ox) * (bx - ax) + (ay - oy) * (by - ay)
++    cc = (ax - ox) ** 2 + (ay - oy) ** 2 - r ** 2
+ 
+-    D = B ** 2 - A * C
++    d = bb ** 2 - aa * cc
+ 
+-    if D > 0:
++    if d > 0:
+         return 2
+-    elif D == 0:
++    elif d == 0:
+         return 1
+     else:
+         return 0
+ 
+-#Поиск точек касания касательных от точки с окружностью
++
++# Поиск точек касания касательных от точки с окружностью
+ def touch_points_search(point, circle):
+     lx = circle[0] - point[0]
+     ly = circle[1] - point[1]
+@@ -41,18 +43,17 @@
+ 
+     return [(t1x, t1y), (t2x, t2y)]
+ 
+-#Расчёт расстояния между двумя точками
++
++# Расчёт расстояния между двумя точками
+ def calc_dist(first_point, second_point):
+-    return sqrt((first_point[0] - second_point[0])**2 + (first_point[1]-second_point[1])**2)
++    return sqrt((first_point[0] - second_point[0]) ** 2 + (first_point[1] - second_point[1]) ** 2)
+ 
+-#Расчёт длины дуги между двумя точками на окружности
+-def arc_length(first_point,second_point, circle):
+-    center = [circle[0], circle[1]]
+-    a = calc_dist(first_point, second_point)
+-    b = calc_dist(first_point, center)
+-    c = calc_dist(second_point, center)
++
++# Расчёт длины дуги между двумя точками на окружности
++def arc_length(first_point, second_point, circle):
++    chord = calc_dist(first_point, second_point)
+     try:
+-        angle = acos((b**2 + c**2 - a**2) / (2*b*c))
++        angle = acos((2 * circle[2] ** 2 - chord ** 2) / (2 * circle[2] ** 2))
+     except:
+         return INF
+     return angle * circle[2]
+Index: classes.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import math\r\n\r\nINF = 10 ** 8\r\n\r\n\r\nclass Point2D:\r\n    def __init__(self, x, y):\r\n        self.x = x\r\n        self.y = y\r\n\r\n    def calc_dist(self, other):\r\n        return math.hypot(other.x - self.x, other.y - self.y)\r\n\r\n\r\nclass Line:\r\n    def __init__(self, a: Point2D, b: Point2D):\r\n        self.first_point = a\r\n        self.second_point = b\r\n\r\n    def get_length(self):\r\n        return self.first_point.calc_dist(self.second_point)\r\n\r\n\r\nclass Circle:\r\n    def __init__(self, x, y, r):\r\n        self.center = Point2D(x, y)\r\n        self.radius = r\r\n\r\n\r\nclass Arc:\r\n    def __init__(self, a: Point2D, b: Point2D, circle: Circle):\r\n        self.first_point = a\r\n        self.second_point = b\r\n        self.circle = circle\r\n\r\n    def get_length(self):\r\n        chord = self.first_point.calc_dist(self.second_point)\r\n        try:\r\n            angle = math.acos((2 * self.circle.radius ** 2 - chord ** 2) / (2 * self.circle.radius ** 2))\r\n        except:\r\n            return INF\r\n        return angle * self.circle.radius\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/classes.py b/classes.py
+--- a/classes.py	(revision 38cb7bb644dbacca8ee8aa06497a946579d1f853)
++++ b/classes.py	(date 1727889940087)
+@@ -4,30 +4,84 @@
+ 
+ 
+ class Point2D:
+-    def __init__(self, x, y):
+-        self.x = x
+-        self.y = y
++    """
++        Класс представляющий точку в двумерном пространстве.
++
++        Атрибуты:
++        x (float): X-координата точки.
++        y (float): Y-координата точки.
++
++        Методы:
++        __init__(x=None, y=None): Инициализирует объект Point2D.
++        calc_dist(other): Вычисляет расстояние между текущей точкой и другой точкой.
++        """
++
++    def __init__(self, x=None, y=None):
++        if x == y == None:
++            self.x = self.y = None
++        else:
++            self.x = x
++            self.y = y
+ 
+     def calc_dist(self, other):
+         return math.hypot(other.x - self.x, other.y - self.y)
+ 
+ 
+ class Line:
+-    def __init__(self, a: Point2D, b: Point2D):
+-        self.first_point = a
+-        self.second_point = b
++    """
++       Класс представляющий линию в двумерном пространстве.
++
++       Атрибуты:
++       first_point (Point2D): Первый конец линии.
++       second_point (Point2D): Второй конец линии.
++
++       Методы:
++       __init__(a=None, b=None): Инициализирует объект Line.
++       get_length(): Вычисляет длину линии.
++       """
++
++    def __init__(self, a: Point2D = None, b: Point2D = None):
++        if a == b == None:
++            self.first_point = self.second_point = None
++        else:
++            self.first_point = a
++            self.second_point = b
+ 
+     def get_length(self):
+         return self.first_point.calc_dist(self.second_point)
+ 
+ 
+ class Circle:
++    """
++        Класс представляющий круг в двумерном пространстве.
++
++        Атрибуты:
++        center (Point2D): Центр круга.
++        radius (float): Радиус круга.
++
++        Методы:
++        __init__(x, y, r): Инициализирует объект Circle.
++        """
++
+     def __init__(self, x, y, r):
+         self.center = Point2D(x, y)
+         self.radius = r
+ 
+ 
+ class Arc:
++    """
++        Класс представляющий дугу окружности в двумерном пространстве.
++
++        Атрибуты:
++        first_point (Point2D): Первая точка дуги.
++        second_point (Point2D): Вторая точка дуги.
++        circle (Circle): Окружность, на которой лежит дуга.
++
++        Методы:
++        __init__(a, b, circle): Инициализирует объект Arc.
++        get_length(): Вычисляет длину дуги.
++        """
++
+     def __init__(self, a: Point2D, b: Point2D, circle: Circle):
+         self.first_point = a
+         self.second_point = b
+@@ -40,3 +94,21 @@
+         except:
+             return INF
+         return angle * self.circle.radius
++
++
++class GPath:
++    """
++        Класс представляющий путь в двумерном пространстве.
++
++        Атрибуты:
++        route (list): Список фигур, входящих в путь.
++
++        Методы:
++        __init__(figures=None): Инициализирует объект GPath.
++        """
++
++    def __init__(self, figures: list = None):
++        if figures is None:
++            self.route = list()
++        else:
++            self.route = figures
+Index: matrix_reading.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import json\r\nimport numpy as np\r\nfrom geometric_functions import *\r\n\r\nINF = 10 ** 8\r\n\r\n\r\ndef reading_matrix():\r\n    with open('data.json') as file:\r\n        data = json.load(file)\r\n    matrix_distance(data)\r\n\r\n\r\ndef matrix_distance(data: dict):\r\n    try:\r\n        points = np.array([(float(point['x']), float(point['y'])) for point in data['points']])\r\n        point_amount = len(points)\r\n        # Используем векторизацию для вычисления матрицы расстояний\r\n        distance_matrix = np.sqrt(np.sum((points[:, np.newaxis] - points[np.newaxis, :]) ** 2, axis=-1))\r\n        distance_matrix = np.round(distance_matrix, 6)\r\n        np.fill_diagonal(distance_matrix, INF)\r\n\r\n        # Запрещенные коридоры для полёта\r\n        for segment in data['forbid_segments']:\r\n            start = segment[0]\r\n            finish = segment[1]\r\n            distance_matrix[start, finish] = distance_matrix[finish, start] = INF\r\n\r\n        # Облёт ПВО\r\n        for circle in data[\"circles\"]:\r\n            for start in range(point_amount):\r\n                for finish in range(start + 1, point_amount):\r\n                    if distance_matrix[start, finish] != INF:\r\n                        if intersection_number(points[start], points[finish], circle) == 2:\r\n                            new_distance = INF\r\n                            # Ищем точки касания касательных в окружности (в процессе)\r\n                            start_touch_points = touch_points_search(points[start], circle)\r\n                            finish_touch_points = touch_points_search(points[finish], circle)\r\n                            # Ищем минимальный путь\r\n                            for st in start_touch_points:\r\n                                for ft in finish_touch_points:\r\n                                    new_distance = min(new_distance,\r\n                                                       calc_dist(points[start], st) + arc_length(st, ft,circle) + calc_dist(ft,points[finish]))\r\n                            distance_matrix[start, finish] = distance_matrix[finish, start] = round(new_distance, 6)\r\n\r\n        return distance_matrix\r\n    except:\r\n        return 'error'\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/matrix_reading.py b/matrix_reading.py
+--- a/matrix_reading.py	(revision 38cb7bb644dbacca8ee8aa06497a946579d1f853)
++++ b/matrix_reading.py	(date 1727889951590)
+@@ -1,10 +1,50 @@
+ import json
++import os.path
++import random
++
+ import numpy as np
+ from geometric_functions import *
++from classes import *
++import matplotlib.pyplot as plt
++import matplotlib.patches
++import matplotlib.lines
++from pathlib import Path
+ 
+ INF = 10 ** 8
+ 
+ 
++def plot_trajectory(trajectory, circles=None):
++    fig, ax = plt.subplots(figsize=(10, 10))
++    # Рисую зоны пво
++    for circle in circles:
++        ax.add_patch(
++            matplotlib.patches.Circle((circle[0], circle[1]), circle[2], fill=False, edgecolor='black', linewidth=0.5))
++    for path in trajectory:
++        for line in path.route:
++            if isinstance(line, Line):
++                # Рисуем линию
++                l = matplotlib.lines.Line2D([line.first_point.x, line.second_point.x],
++                                            [line.first_point.y, line.second_point.y], color="blue")
++                ax.scatter(line.first_point.x, line.first_point.y, color="purple")
++                ax.scatter(line.second_point.x, line.second_point.y, color="purple")
++                ax.add_line(l)
++            elif isinstance(line, Arc):
++                # Рисуем дугу
++                arc = line
++                center = arc.circle.center
++                radius = arc.circle.radius
++                start_angle = np.degrees(np.arctan2(line.first_point.y - center.y, line.first_point.x - center.x))
++                end_angle = np.degrees(np.arctan2(line.second_point.y - center.y, line.second_point.x - center.x))
++                arc_patch = matplotlib.patches.Arc((center.x, center.y), 2 * radius, 2 * radius, theta1=start_angle,
++                                                   theta2=end_angle, edgecolor="orange")
++                ax.add_patch(arc_patch)
++    ax.set_xlabel('X')
++    ax.set_ylabel('Y')
++    ax.set_title('Trajectory Plot')
++    plt.axis('equal')
++    plt.savefig(os.path.join(Path.cwd() / 'plots', f'plot-{random.randint(100, 10000)}.png'))
++
++
+ def reading_matrix():
+     with open('data.json') as file:
+         data = json.load(file)
+@@ -12,6 +52,7 @@
+ 
+ 
+ def matrix_distance(data: dict):
++    trajectory = list()
+     try:
+         points = np.array([(float(point['x']), float(point['y'])) for point in data['points']])
+         point_amount = len(points)
+@@ -33,16 +74,37 @@
+                     if distance_matrix[start, finish] != INF:
+                         if intersection_number(points[start], points[finish], circle) == 2:
+                             new_distance = INF
++                            path = GPath()
++                            line1 = Line()
++                            line1.first_point = Point2D(points[start, 0], points[start, 1])
++                            line2 = Line()
++                            line2.second_point = Point2D(points[finish, 0], points[finish, 1])
++                            arc = None
+                             # Ищем точки касания касательных в окружности (в процессе)
+                             start_touch_points = touch_points_search(points[start], circle)
+                             finish_touch_points = touch_points_search(points[finish], circle)
+                             # Ищем минимальный путь
+                             for st in start_touch_points:
+                                 for ft in finish_touch_points:
+-                                    new_distance = min(new_distance,
+-                                                       calc_dist(points[start], st) + arc_length(st, ft,circle) + calc_dist(ft,points[finish]))
++                                    path_len = calc_dist(points[start], st) + arc_length(st, ft, circle) + calc_dist(ft,
++                                                                                                                     points[
++                                                                                                                         finish])
++                                    if path_len < new_distance:
++                                        # Запоминаем мин. путь, добавляем этот путь в общую траекторию
++                                        new_distance = path_len
++                                        line1.second_point = Point2D(st[0], st[1])
++                                        line2.first_point = Point2D(ft[0], ft[1])
++                                        arc = Arc(Point2D(st[0], st[1]), Point2D(ft[0], ft[1]),
++                                                  Circle(circle[0], circle[1], circle[2]))
++                            path.route = [line1, arc, line2]
++                            trajectory.append(path)
+                             distance_matrix[start, finish] = distance_matrix[finish, start] = round(new_distance, 6)
+-
++                        else:
++                            line = Line(Point2D(points[start, 0], points[start, 1]),
++                                        Point2D(points[finish, 0], points[finish, 1]))
++                            path = GPath([line])
++                            trajectory.append(path)
++        plot_trajectory(trajectory, data['circles'])
+         return distance_matrix
+     except:
+         return 'error'
