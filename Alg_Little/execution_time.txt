@@ -1,0 +1,2 @@
+Execution time 1: 0.004845100000000047 second
+Execution time 2: 0.0002768999999999133 second
