@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 
 from geometry.geometric_functions import *
-from constants import *
+from geometry.constants import *
 
 
 class Task:

@@ -3,7 +3,7 @@ from typing import Union
 
 from geometry import classes
 from geometry.classes import *
-from constants import *
+from geometry.constants import *
 
 
 # Расчёт количества точек пересечения с окружностью
