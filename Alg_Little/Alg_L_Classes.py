@@ -238,14 +238,14 @@ def get_list_edges(data: list, num_rows: int, start_airfield: int) -> list[tuple
     # Найти первую пару
     for item in data:
         if item[2] and item[0] == start_airfield:
-            result.append((item[0], item[1]))
+            result.append((int (item[0]), int (item[1])))
             last_pair = result[-1]
             break
     cnt = 1
     while cnt < num_rows:
         for item in data:
             if item[2] and last_pair[1] == item[0]:
-                result.append((item[0], item[1]))
+                result.append((int (item[0]), int (item[1])))
                 last_pair = result[-1]
                 cnt += 1
                 data.remove(item)  # Удаляем элемент из data
@@ -256,7 +256,8 @@ def get_list_edges(data: list, num_rows: int, start_airfield: int) -> list[tuple
 
 def vertex(edges: list[tuple], list_airfields: list) -> list[list]:
     """Возвращает массив вершин, через которые проходит гамильтонов путь"""
-    vertices = [edge for edge in edges]
+    print(edges, list_airfields)
+    vertices = [edge[0] for edge in edges]
     result = []
     cur_res = []
     for i in vertices:

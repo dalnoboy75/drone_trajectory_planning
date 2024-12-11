@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches
 import matplotlib.lines
 import numpy as np
-from constants import *
+from geometry.constants import *
 
 
 class Point2D:

@@ -1,0 +1,15 @@
+Index: geometry/main.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>def main():\r\n    pass\r\n\r\n\r\nif __name__ == '__main__':\r\n    main()\r\n
+===================================================================
+diff --git a/geometry/main.py b/geometry/main.py
+--- a/geometry/main.py	(revision 1148e8b6af0352fba315ed03734a45bfeda9a4e6)
++++ b/geometry/main.py	(date 1732122495518)
+@@ -1,6 +1,5 @@
+ def main():
+     pass
+ 
+-
+ if __name__ == '__main__':
+     main()
