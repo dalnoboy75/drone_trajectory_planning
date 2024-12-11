@@ -3,72 +3,65 @@ import timeit
 import numpy as np
 from Alg_L_Classes import algorithm_Lit
 from TSP import find_min_route
+import copy
+import datetime
 
 
 INF = 10**8
+kolvo_airfields = 1
 
 
-# def rand_znach():
-#     max_size = 30
-#
-#     # Создаем случайную матрицу размером max_size x max_size
-#     matrix_size = np.random.randint(3, max_size + 1)  # случайный размер от 1 до 30
-#     matrix = np.random.rand(matrix_size, matrix_size)
-#     size = matrix.shape[0]
-#     np.fill_diagonal(matrix, INF)
-#     for i in range(matrix_size):
-#         for j in range(matrix_size):
-#             if i != j:
-#                 matrix[i, j] = np.random.rand()
-#
-#     st = size - 1
-#
-#     kolvo = random.choice(range(2, 13, 2))
-#
-#     return matrix, st, kolvo
-#
-#
-# numbers, start_airfield, kolvo_airfields = rand_znach()
-#
-# print(numbers, start_airfield, kolvo_airfields)
-
-
-
-def test_right_p():
-    numbers = np.array(
-        [
-            [INF, 20, 18, 12, 8],
-            [5, INF, 14, 7, 11],
-            [12, 18, INF, 6, 11],
-            [11, 17, 11, INF, 12],
-            [5, 5, 5, 5, INF],
-        ]
-    )
+def test_right_p(numbers):
     result_2 = find_min_route(numbers)
     return result_2
-def test_right_paths():
-    numbers = np.array(
-        [
-            [INF, 20, 18, 12, 8],
-            [5, INF, 14, 7, 11],
-            [12, 18, INF, 6, 11],
-            [11, 17, 11, INF, 12],
-            [5, 5, 5, 5, INF],
-        ]
-    )
-    start_airfield = 4
-    kolvo_airfields = 4
+def test_right_paths(numbers, start_airfield):
     result = algorithm_Lit(numbers, start_airfield, kolvo_airfields)
     return result
 
+with open('answers.txt', 'w') as file, open("execution_time.txt", 'w') as f:
+    for i in range(15):
+        # Генерируем случайный размер матрицы от 3 до 10
+        size = random.randint(3, 9)
+
+        # Создаем матрицу с рандомными числами
+        matrix = np.random.randint(1, 100, size=(size, size))
+
+        # Устанавливаем INF на главной диагонали
+        np.fill_diagonal(matrix, INF)
+        matrix_tsp = copy.deepcopy(matrix)
+        matrix_alg_lit = copy.deepcopy(matrix)
+        start_airfield = matrix_alg_lit.shape[0]
+
+        # Измеряем время выполнения функции test_right_p
+        execution_time_1 = timeit.timeit(lambda: test_right_p(matrix_tsp), number=1)
+
+        # Измеряем время выполнения функции test_right_paths
+        execution_time_2 = timeit.timeit(lambda: test_right_paths(matrix_alg_lit, start_airfield), number=1)
+
+        res_tsp = test_right_p(matrix_tsp)
+        res_alg_lit = test_right_paths(matrix_alg_lit, start_airfield)
+
+        file.write(f"{'res_tsp:', res_tsp, 'res_alg_lit:', res_alg_lit}\n")
+        
+        # Получаем текущий таймстемп
+        timestamp = datetime.datetime.now().isoformat()
+        
+        # Записываем данные в файл
+        f.write(f"Size: {size}, Algorithm: TSP, Timestamp: {timestamp}, Execution Time: {execution_time_1} seconds\n")
+        f.write(f"Size: {size}, Algorithm: Alg_Lit, Timestamp: {timestamp}, Execution Time: {execution_time_2} seconds\n")
 
 
-# Измерим время выполнения функции
-execution_time_1 = timeit.timeit(test_right_paths, number=1)
-execution_time_2 = timeit.timeit(test_right_p, number=1)
+    
+     
+# print(test_right_paths())
+# print(20*'-')
+# print(test_right_p())
+# # Измерим время выполнения функции
+# execution_time_1 = timeit.timeit(test_right_paths, number=1)
+# execution_time_2 = timeit.timeit(test_right_p, number=1)
 
 
-# Записываем время выполнения в файл
-with open("execution_time.txt", "w") as f:
-    f.write(f"Execution time 1: {execution_time_1} second\n")
-    f.write(f"Execution time 2: {execution_time_2} second\n")
+# # Записываем время выполнения в файл
+# with open("execution_time.txt", "w") as f:
+#     f.write(f"Execution time 1: {execution_time_1} second\n")
+#     f.write(f"Execution time 2: {execution_time_2} second\n")

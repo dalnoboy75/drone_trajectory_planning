@@ -30,9 +30,8 @@ def find_min_route(numbers):
                 sum_length += numbers[i[j] - 1][i[0] - 1]
             else:
                 sum_length += numbers[i[j] - 1][i[j + 1] - 1]
-        route_data.append((sum_length, i))
-
-    return min(route_data), low_mark
+        route_data.append((int(sum_length), i))
+    return min(route_data), int(low_mark)
 #
 # numbers = np.array(
 #         [

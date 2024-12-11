@@ -36,7 +36,6 @@ class AlgLittle:
         )  # ноды дерева, суть планы Xi
         self.hmin = hmin
         self.h_level = h_level or 0
-        # self.reduce()   # ????
 
     def __str__(self):
         return f"x{self.planID}({self.hmin})"
@@ -147,7 +146,7 @@ class AlgLittle:
                 cmin = min(cmin, self.matrix[r, i])
         return rmin + cmin
 
-    def delete_edge(self, zeros: list, max_coeff: int) -> (typing.Self, int):
+    def delete_edge(self, zeros: list, max_coeff: int) -> (typing.Self):
         "На вход получаем индексы элемента, который имеет наибольший наибольшую степень нуля, удаляем строку и столбец с этими индексами, возвращаем измененную матрицу"
 
         edge = zeros[0]
@@ -261,10 +260,13 @@ def vertex(edges: list[tuple], list_airfields: list) -> list[list]:
     result = []
     cur_res = []
     for i in vertices:
-        cur_res.append(i)
-        if i in list_airfields:
+        cur_res.append(i[0])
+        if i[0] in list_airfields:
+            print("111 ")
             result.append(cur_res)
             cur_res = []
+    if len(cur_res) != 0:
+        result.append(cur_res)
     return result
 
 
@@ -300,16 +302,19 @@ def algorithm_Lit(
     """Алгоритм Литтла"""
     # добавление строки и столбца "заголовков"
     pos = numbers.shape[0]
-    numbers = add_airfields(numbers, s, kolvo_airfields)
+    if kolvo_airfields != 1:
+        numbers = add_airfields(numbers, s, kolvo_airfields)
     numbers = AlgLittle.head_matrix(numbers)
     node = AlgLittle(new_matrix=numbers)
     num_rows = node.matrix.shape[0] - 1
     node.reduce()
     start_airfield = pos
     list_airfields = []
-    for i in range(int(kolvo_airfields / 2)):
-        list_airfields.append(pos + 1)
-        pos += 2
+    print(kolvo_airfields)
+    if kolvo_airfields != 1:
+        for i in range(int(kolvo_airfields / 2)):
+            list_airfields.append(pos + 1)
+            pos += 2
 
     print(f"list: {list_airfields}")
     while True:
@@ -343,8 +348,7 @@ def algorithm_Lit(
                 listok.append(i.include)
                 l.append(listok)
             answer = get_list_edges(l, num_rows, start_airfield)
-            ans = vertex(answer, list_airfields)
+            result = [(int(x), int(y)) for (x, y) in answer]
+            ans = vertex(result, list_airfields)
             print(f"ans: {ans}")
-            return ans, answer
-
-
+            return ans, result
