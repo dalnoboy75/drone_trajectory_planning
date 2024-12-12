@@ -455,3 +455,44 @@ def tangents_between(object1: Union[Circle, Polygon], object2: Union[Circle, Pol
             return tangents_between_polygon(object1, object2)
         else:
             return tangents_between_polygon(object2, object1)
+
+
+def is_convex_polygon(polygon: classes.Polygon) -> bool:
+    """
+    Проверяет, является ли многоугольник выпуклым.
+
+    Args:
+        polygon (classes.Polygon): Многоугольник, который нужно проверить.
+
+    Returns:
+        bool: True если многоугольник выпуклый, иначе False.
+    """
+
+    def cross_product_sign(p1, p2, p3):
+        """
+        Вычисляет знак векторного произведения для трёх последовательных точек.
+        
+        Args:
+            p1, p2, p3 (classes.Point2D): Три точки многоугольника.
+        
+        Returns:
+            float: Знак векторного произведения
+        """
+        return ((p2.x - p1.x) * (p3.y - p1.y)) - ((p2.y - p1.y) * (p3.x - p1.x))
+
+    vertexes = polygon.vertexes
+    if len(vertexes) < 3:
+        return False  # Многоугольник с менее чем 3 вершинами не выпуклый.
+
+    # Определяем знак первого векторного произведения.
+    signs = []
+    for i in range(len(vertexes)):
+        p1 = vertexes[i]
+        p2 = vertexes[(i + 1) % len(vertexes)]
+        p3 = vertexes[(i + 2) % len(vertexes)]
+        cross_prod_sign = cross_product_sign(p1, p2, p3)
+        if cross_prod_sign != 0:
+            signs.append(cross_prod_sign > 0)
+
+    # Если все знаки одинаковы, то многоугольник выпуклый.
+    return all(signs) or not any(signs)
