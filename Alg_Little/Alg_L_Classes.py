@@ -8,6 +8,37 @@ import timeit
 
 INF = 10**8
 
+def has_cycle(edges: list[tuple]):
+    from collections import defaultdict
+
+    graph = defaultdict(list)
+    for u, v in edges:
+        graph[u].append(v)
+
+    visited = set()
+    rec_stack = set()
+
+    def dfs(node):
+        if node in rec_stack:
+            return True
+        if node in visited:
+            return False
+        visited.add(node)
+        rec_stack.add(node)
+
+        for neighbor in graph[node]:
+            if neighbor not in graph:
+                return False
+            if dfs(neighbor):
+                return True
+
+        rec_stack.remove(node)
+        return False
+
+    for vertex in graph:
+        if dfs(vertex):
+            return True
+    return False
 
 @dataclass
 class Edge:
@@ -126,6 +157,9 @@ class AlgLittle:
         row_index_1 = np.where(new_matrix[:, 0] == edge[1])[0]
         #сделать проверку на цикл
 
+        paths_1 = self.paths.copy()
+        paths_1 += [Edge(edge[0], edge[1], include=True)]
+        edges = [(int(edge.istart), int(edge.ifinish)) for edge in paths_1 if edge.include]
         # print(node_include.matrix, col_index_1[0], edge[1])
         if len(row_index_1) != 0 and len(col_index_1) != 0:
             keeps_value = new_matrix[row_index_1[0]][col_index_1[0]]
@@ -135,13 +169,22 @@ class AlgLittle:
         new_matrix = np.delete(new_matrix, row_index[0], axis=0)  # Удаляем строку
         new_matrix = np.delete(new_matrix, col_index[0], axis=1)  # Удаляем столбец
 
-        node_include = AlgLittle(
-            new_matrix=new_matrix,
-            discarded_nodes=self.discarded_nodes.copy(),
-            paths=self.paths + [Edge(edge[0], edge[1], include=True)],
-            hmin=self.hmin,
-            h_level=self.h_level + 1,
-        )
+        if len(edges) >= 3 and has_cycle(edges):
+            node_include = AlgLittle(
+                new_matrix=new_matrix,
+                discarded_nodes=self.discarded_nodes.copy(),
+                paths=self.paths + [Edge(edge[0], edge[1], include=True)],
+                hmin=self.hmin,
+                h_level=self.h_level + 1,
+            )
+        else:    
+            node_include = AlgLittle(
+                new_matrix=new_matrix,
+                discarded_nodes=self.discarded_nodes.copy(),
+                paths=self.paths + [Edge(edge[0], edge[1], include=True)],
+                hmin=self.hmin,
+                h_level=self.h_level + 1,
+            )
         node_include.reduce()
         print(f'{self.include_edge.__qualname__}: {node_include.hmin=} {node_include.matrix=} {node_include.paths=}')
         return node_include
@@ -378,7 +421,6 @@ def get_list_edges(data: list, num_rows: int, start_airfield: int) -> list[tuple
             break
     cnt = 1
     data_1 = [(int(x), int(y), z) for (x, y, z) in data]
-    print(data_1)
     while cnt < num_rows:
         for item in data_1:
             if item[2] and last_pair[1] == item[0]:
@@ -505,27 +547,54 @@ def algorithm_Lit(
         # если размер матрицы 2х2, то закончить алгоритм
         node1 = node
         if node1.check_end_algo():
-            l = node1.find_rest_path()
+            l = node1.find_rest_path()    
+            r = l.copy()   
             for i in node1.paths:
                 listok = []
                 listok.append(i.istart)
                 listok.append(i.ifinish)
                 listok.append(i.include)
                 l.append(listok)
+            
+            edges = [(int(edge[0]), int(edge[1])) for edge in l if edge[2]]
+
+            if has_cycle(edges):
+                
+                edges_1 = [(int(edge[0]), int(edge[1])) for edge in r if edge[2]]
+                if(edges_1[0] == (node1.matrix[1][0], node1.matrix[0][1])):
+                    indices = [
+                                (node1.matrix[1][0], node1.matrix[0][2], True),
+                                (node1.matrix[2][0], node1.matrix[0][1], True),
+                            ]
+                else:
+                    indices = [
+                                (node1.matrix[1][0], node1.matrix[0][1], True),
+                                (node1.matrix[2][0], node1.matrix[0][2], True),
+                            ]
+                l_1 = indices
+                for i in node1.paths:
+                    listok = []
+                    listok.append(i.istart)
+                    listok.append(i.ifinish)
+                    listok.append(i.include)
+                    l_1.append(listok)
+                answer = get_list_edges(l_1, num_rows, start_airfield)
+                ans = vertex(answer, list_airfields)
+                print(f"ans: {ans}")
+                return ans, answer
             answer = get_list_edges(l, num_rows, start_airfield)
-            print("1111")
             # result = [(int(x), int(y)) for (x, y) in answer]
             ans = vertex(answer, list_airfields)
             print(f"ans: {ans}")
             return ans, answer
         
-# assert_matr = np.array([    [INF, 10, 5, 9, 16, 8],
-#                    [6, INF, 11, 8, 18, 19],
-#                    [7, 13, INF, 3, 4, 14],
-#                    [5, 9, 6, INF, 12, 17],
-#                    [5, 4, 11, 6, INF, 14],
-#                    [17, 7, 12, 13, 16, INF]])
-# print(algorithm_Lit(assert_matr, assert_matr.shape[0], 1))
+assert_matr = np.array([    [INF, 10, 5, 9, 16, 8],
+                   [6, INF, 11, 8, 18, 19],
+                   [7, 13, INF, 3, 4, 14],
+                   [5, 9, 6, INF, 12, 17],
+                   [5, 4, 11, 6, INF, 14],
+                   [17, 7, 12, 13, 16, INF]])
+print(algorithm_Lit(assert_matr, assert_matr.shape[0], 1))
 # size = 10
 # # for i in range(5):
 # matrix = np.random.randint(1, 100, size=(size, size))
