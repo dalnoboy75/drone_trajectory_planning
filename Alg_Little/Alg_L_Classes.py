@@ -519,13 +519,13 @@ def algorithm_Lit(
             print(f"ans: {ans}")
             return ans, answer
         
-assert_matr = np.array([    [INF, 10, 5, 9, 16, 8],
-                   [6, INF, 11, 8, 18, 19],
-                   [7, 13, INF, 3, 4, 14],
-                   [5, 9, 6, INF, 12, 17],
-                   [5, 4, 11, 6, INF, 14],
-                   [17, 7, 12, 13, 16, INF]])
-print(algorithm_Lit(assert_matr, assert_matr.shape[0], 1))
+# assert_matr = np.array([    [INF, 10, 5, 9, 16, 8],
+#                    [6, INF, 11, 8, 18, 19],
+#                    [7, 13, INF, 3, 4, 14],
+#                    [5, 9, 6, INF, 12, 17],
+#                    [5, 4, 11, 6, INF, 14],
+#                    [17, 7, 12, 13, 16, INF]])
+# print(algorithm_Lit(assert_matr, assert_matr.shape[0], 1))
 # size = 10
 # # for i in range(5):
 # matrix = np.random.randint(1, 100, size=(size, size))
