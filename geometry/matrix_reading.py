@@ -60,9 +60,17 @@ class Task:
         self.forbidden_segments: list[tuple] = self.parse_forbidden_segments(data)
         self.circles: list[Circle] = self.parse_circles(data)
         self.polygons: list[Polygon] = self.parse_polygons(data)
+        self.check_polygons()
         self.length_matrix, self.path_matrix = self.matrix_distance()
         self.plot_trajectory()
 
+
+    def check_polygons(self):
+        flag = True
+        for i in self.polygons:
+            flag *= is_convex_polygon(i)
+        if not flag:
+            raise ValueError
     def parse_targets(self, data: dict) -> list[Point2D]:
         """
         Парсинг списка целевых точек из входных данных.
