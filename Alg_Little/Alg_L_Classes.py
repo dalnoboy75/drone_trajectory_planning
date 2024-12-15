@@ -11,12 +11,33 @@ INF = 10**8
 
 @dataclass
 class Edge:
+    """
+        Класс для представления ребра графа.
+
+        Attributes:
+            istart (int): Начальная вершина ребра.
+            ifinish (int): Конечная вершина ребра.
+            include (bool): Флаг, указывающий, включено ли ребро в путь.
+    """
     istart: int
     ifinish: int
     include: bool
 
 
 class AlgLittle:
+    """
+        Класс для реализации алгоритма Литтла.
+
+        Attributes:
+            MAXID (int): Максимальный идентификатор узла.
+            planID (int): Уникальный идентификатор текущего узла.
+            matrix (np.ndarray): Матрица расстояний.
+            sub_matrix (np.ndarray): Подматрица расстояний без заголовков.
+            paths (list[Edge]): Список путей (ребер) в текущем узле.
+            discarded_nodes (list[AlgLittle]): Список исключенных узлов.
+            hmin (float | int): Текущая нижняя граница стоимости.
+            h_level (int): Уровень узла в дереве решений.
+    """
     MAXID = -1  # чтобы первый id был 0 и как в примере.
 
     def __init__(
@@ -27,6 +48,16 @@ class AlgLittle:
         hmin: float | int = 0,
         h_level: int = 0,
     ):
+        """
+            Инициализация узла алгоритма Литтла.
+
+            Args:
+                new_matrix (np.ndarray): Матрица расстояний.
+                discarded_nodes (list[AlgLittle] | None): Список исключенных узлов.
+                paths (list[Edge]): Список путей (ребер).
+                hmin (float | int): Начальная нижняя граница стоимости.
+                h_level (int): Уровень узла в дереве решений.
+        """
         self.planID = AlgLittle.next_id()
         self.matrix = new_matrix
         # обрезаем первый столбец и строку - это номера точек, а не расстояния,
@@ -39,14 +70,32 @@ class AlgLittle:
         self.h_level = h_level or 0
 
     def __str__(self):
+        """
+            Возвращает строковое представление узла.
+
+            Returns:
+                str: Строковое представление узла.
+        """
         return f"x{self.planID}({self.hmin})"
 
     def __repr__(self):
+        """
+            Возвращает подробное строковое представление узла.
+
+            Returns:
+                str: Подробное строковое представление узла.
+        """
         delim = "-" * 20
         discarded = " ".join([str(n) for n in self.discarded_nodes])
         return f"{delim}\nX{self.planID}\n{self.pretty_matrix()}\nhmin={self.hmin}\ndiscraded={discarded}"
 
     def pretty_matrix(self):
+        """
+            Возвращает строковое представление матрицы.
+
+            Returns:
+                str: Строковое представление матрицы.
+        """
         return str(self.matrix)
 
     # @property

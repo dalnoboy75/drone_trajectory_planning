@@ -24,6 +24,7 @@ def find_min_route(numbers):
 
     route_data = []
 
+    number_solutions = list(permutations(x))
     for i in number_solutions:
         sum_length = 0
         for j in range(len(i)):
