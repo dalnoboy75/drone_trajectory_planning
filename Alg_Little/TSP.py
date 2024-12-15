@@ -1,5 +1,6 @@
 import numpy as np
 from itertools import permutations
+import timeit
 
 INF = 10**8
 def find_min_route(numbers):
@@ -32,19 +33,10 @@ def find_min_route(numbers):
                 sum_length += numbers[i[j] - 1][i[j + 1] - 1]
         route_data.append((int(sum_length), i))
     return min(route_data), int(low_mark)
-#
-# numbers = np.array(
-#         [
-#             [INF, 20, 18, 12, 8],
-#             [5, INF, 14, 7, 11],
-#             [12, 18, INF, 6, 11],
-#             [11, 17, 11, INF, 12],
-#             [5, 5, 5, 5, INF],
-#         ]
-#     )
-# print(find_min_route(numbers))
-#
-#print(find_min_route([10**8, 5, 16, 14, 13, 10**8, 6, 9, 10, 12, 10**8, 11, 8, 15, 7, 10**8]))
-# print(find_min_route([10**8, 1, 2, 3, 4, 14, 10**8, 15, 16, 5, 13, 20, 10**8, 17, 6, 12, 19, 18, 10**8, 7, 11, 10, 9, 8, 10**8]))
-# print(find_min_route([10**8, 5, 7, 16, 10**8, 2, 4, 6, 10**8]))
-# print(find_min_route([]))
+
+# size = 10
+# matrix = np.random.randint(1, 100, size=(size, size))
+# np.fill_diagonal(matrix, INF)
+# start_airfield = matrix.shape[0]
+# execution_time_2 = timeit.timeit(lambda: find_min_route(matrix), number=1)
+# print(execution_time_2)

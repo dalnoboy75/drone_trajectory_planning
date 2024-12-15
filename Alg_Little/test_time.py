@@ -18,10 +18,9 @@ def test_right_paths(numbers, start_airfield):
     result = algorithm_Lit(numbers, start_airfield, kolvo_airfields)
     return result
 
-with open('answers.txt', 'w') as file, open("execution_time.txt", 'w') as f:
-    for i in range(15):
-        # Генерируем случайный размер матрицы от 3 до 10
-        size = random.randint(3, 9)
+with open('answers.txt', 'a') as file, open("execution_time.txt", 'a') as f:
+    size = 10
+    for i in range(2):
 
         # Создаем матрицу с рандомными числами
         matrix = np.random.randint(1, 100, size=(size, size))

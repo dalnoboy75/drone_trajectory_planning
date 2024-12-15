@@ -1,0 +1,294 @@
+From 0541e745fa8abdc54acc2847430db5f9f553f80c Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=D0=91=D0=BE=D0=BB=D1=8C=D1=88=D0=B0=D0=BA=D0=BE=D0=B2=20?=
+ =?UTF-8?q?=D0=9C=D0=B0=D1=82=D0=B2=D0=B5=D0=B9=20=D0=90=D0=BB=D0=B5=D0=BA?=
+ =?UTF-8?q?=D1=81=D0=B0=D0=BD=D0=B4=D1=80=D0=BE=D0=B2=D0=B8=D1=87?=
+ <143873323+Matvey-cmd@users.noreply.github.com>
+Date: Wed, 11 Dec 2024 15:14:19 +0000
+Subject: [PATCH] add compare programms and two files with output
+
+---
+ Alg_Little/Alg_L_Classes.py |  28 +++++-----
+ Alg_Little/TSP.py           |   5 +-
+ Alg_Little/test_time.py     | 103 +++++++++++++++++-------------------
+ answers.txt                 |  15 ++++++
+ execution_time.txt          |  30 +++++++++++
+ 5 files changed, 111 insertions(+), 70 deletions(-)
+ create mode 100644 answers.txt
+ create mode 100644 execution_time.txt
+
+diff --git a/Alg_Little/Alg_L_Classes.py b/Alg_Little/Alg_L_Classes.py
+index 85688ac..bfb9a81 100644
+--- a/Alg_Little/Alg_L_Classes.py
++++ b/Alg_Little/Alg_L_Classes.py
+@@ -36,7 +36,6 @@ class AlgLittle:
+         )  # ноды дерева, суть планы Xi
+         self.hmin = hmin
+         self.h_level = h_level or 0
+-        # self.reduce()   # ????
+ 
+     def __str__(self):
+         return f"x{self.planID}({self.hmin})"
+@@ -147,7 +146,7 @@ class AlgLittle:
+                 cmin = min(cmin, self.matrix[r, i])
+         return rmin + cmin
+ 
+-    def delete_edge(self, zeros: list, max_coeff: int) -> (typing.Self, int):
++    def delete_edge(self, zeros: list, max_coeff: int) -> (typing.Self):
+         "На вход получаем индексы элемента, который имеет наибольший наибольшую степень нуля, удаляем строку и столбец с этими индексами, возвращаем измененную матрицу"
+ 
+         edge = zeros[0]
+@@ -261,10 +260,13 @@ def vertex(edges: list[tuple], list_airfields: list) -> list[list]:
+     result = []
+     cur_res = []
+     for i in vertices:
+-        cur_res.append(i)
+-        if i in list_airfields:
++        cur_res.append(i[0])
++        if i[0] in list_airfields:
++            print("111 ")
+             result.append(cur_res)
+             cur_res = []
++    if len(cur_res) != 0:
++        result.append(cur_res)
+     return result
+ 
+ 
+@@ -300,16 +302,19 @@ def algorithm_Lit(
+     """Алгоритм Литтла"""
+     # добавление строки и столбца "заголовков"
+     pos = numbers.shape[0]
+-    numbers = add_airfields(numbers, s, kolvo_airfields)
++    if kolvo_airfields != 1:
++        numbers = add_airfields(numbers, s, kolvo_airfields)
+     numbers = AlgLittle.head_matrix(numbers)
+     node = AlgLittle(new_matrix=numbers)
+     num_rows = node.matrix.shape[0] - 1
+     node.reduce()
+     start_airfield = pos
+     list_airfields = []
+-    for i in range(int(kolvo_airfields / 2)):
+-        list_airfields.append(pos + 1)
+-        pos += 2
++    print(kolvo_airfields)
++    if kolvo_airfields != 1:
++        for i in range(int(kolvo_airfields / 2)):
++            list_airfields.append(pos + 1)
++            pos += 2
+ 
+     print(f"list: {list_airfields}")
+     while True:
+@@ -343,8 +348,7 @@ def algorithm_Lit(
+                 listok.append(i.include)
+                 l.append(listok)
+             answer = get_list_edges(l, num_rows, start_airfield)
+-            ans = vertex(answer, list_airfields)
++            result = [(int(x), int(y)) for (x, y) in answer]
++            ans = vertex(result, list_airfields)
+             print(f"ans: {ans}")
+-            return ans, answer
+-
+-
++            return ans, result
+\ No newline at end of file
+diff --git a/Alg_Little/TSP.py b/Alg_Little/TSP.py
+index 2141858..9c4d49b 100644
+--- a/Alg_Little/TSP.py
++++ b/Alg_Little/TSP.py
+@@ -30,9 +30,8 @@ def find_min_route(numbers):
+                 sum_length += numbers[i[j] - 1][i[0] - 1]
+             else:
+                 sum_length += numbers[i[j] - 1][i[j + 1] - 1]
+-        route_data.append((sum_length, i))
+-
+-    return min(route_data), low_mark
++        route_data.append((int(sum_length), i))
++    return min(route_data), int(low_mark)
+ #
+ # numbers = np.array(
+ #         [
+diff --git a/Alg_Little/test_time.py b/Alg_Little/test_time.py
+index f9b26a1..cdf6a60 100644
+--- a/Alg_Little/test_time.py
++++ b/Alg_Little/test_time.py
+@@ -3,72 +3,65 @@ import timeit
+ import numpy as np
+ from Alg_L_Classes import algorithm_Lit
+ from TSP import find_min_route
++import copy
++import datetime
+ 
+ 
+ INF = 10**8
++kolvo_airfields = 1
+ 
+ 
+-# def rand_znach():
+-#     max_size = 30
+-#
+-#     # Создаем случайную матрицу размером max_size x max_size
+-#     matrix_size = np.random.randint(3, max_size + 1)  # случайный размер от 1 до 30
+-#     matrix = np.random.rand(matrix_size, matrix_size)
+-#     size = matrix.shape[0]
+-#     np.fill_diagonal(matrix, INF)
+-#     for i in range(matrix_size):
+-#         for j in range(matrix_size):
+-#             if i != j:
+-#                 matrix[i, j] = np.random.rand()
+-#
+-#     st = size - 1
+-#
+-#     kolvo = random.choice(range(2, 13, 2))
+-#
+-#     return matrix, st, kolvo
+-#
+-#
+-# numbers, start_airfield, kolvo_airfields = rand_znach()
+-#
+-# print(numbers, start_airfield, kolvo_airfields)
+-
+-
+-
+-def test_right_p():
+-    numbers = np.array(
+-        [
+-            [INF, 20, 18, 12, 8],
+-            [5, INF, 14, 7, 11],
+-            [12, 18, INF, 6, 11],
+-            [11, 17, 11, INF, 12],
+-            [5, 5, 5, 5, INF],
+-        ]
+-    )
++def test_right_p(numbers):
+     result_2 = find_min_route(numbers)
+     return result_2
+-def test_right_paths():
+-    numbers = np.array(
+-        [
+-            [INF, 20, 18, 12, 8],
+-            [5, INF, 14, 7, 11],
+-            [12, 18, INF, 6, 11],
+-            [11, 17, 11, INF, 12],
+-            [5, 5, 5, 5, INF],
+-        ]
+-    )
+-    start_airfield = 4
+-    kolvo_airfields = 4
++def test_right_paths(numbers, start_airfield):
+     result = algorithm_Lit(numbers, start_airfield, kolvo_airfields)
+     return result
+ 
++with open('answers.txt', 'w') as file, open("execution_time.txt", 'w') as f:
++    for i in range(15):
++        # Генерируем случайный размер матрицы от 3 до 10
++        size = random.randint(3, 9)
++
++        # Создаем матрицу с рандомными числами
++        matrix = np.random.randint(1, 100, size=(size, size))
++
++        # Устанавливаем INF на главной диагонали
++        np.fill_diagonal(matrix, INF)
++        matrix_tsp = copy.deepcopy(matrix)
++        matrix_alg_lit = copy.deepcopy(matrix)
++        start_airfield = matrix_alg_lit.shape[0]
++
++        # Измеряем время выполнения функции test_right_p
++        execution_time_1 = timeit.timeit(lambda: test_right_p(matrix_tsp), number=1)
++
++        # Измеряем время выполнения функции test_right_paths
++        execution_time_2 = timeit.timeit(lambda: test_right_paths(matrix_alg_lit, start_airfield), number=1)
++
++        res_tsp = test_right_p(matrix_tsp)
++        res_alg_lit = test_right_paths(matrix_alg_lit, start_airfield)
++
++        file.write(f"{'res_tsp:', res_tsp, 'res_alg_lit:', res_alg_lit}\n")
++        
++        # Получаем текущий таймстемп
++        timestamp = datetime.datetime.now().isoformat()
++        
++        # Записываем данные в файл
++        f.write(f"Size: {size}, Algorithm: TSP, Timestamp: {timestamp}, Execution Time: {execution_time_1} seconds\n")
++        f.write(f"Size: {size}, Algorithm: Alg_Lit, Timestamp: {timestamp}, Execution Time: {execution_time_2} seconds\n")
+ 
+ 
+-# Измерим время выполнения функции
+-execution_time_1 = timeit.timeit(test_right_paths, number=1)
+-execution_time_2 = timeit.timeit(test_right_p, number=1)
++    
++     
++# print(test_right_paths())
++# print(20*'-')
++# print(test_right_p())
++# # Измерим время выполнения функции
++# execution_time_1 = timeit.timeit(test_right_paths, number=1)
++# execution_time_2 = timeit.timeit(test_right_p, number=1)
+ 
+ 
+-# Записываем время выполнения в файл
+-with open("execution_time.txt", "w") as f:
+-    f.write(f"Execution time 1: {execution_time_1} second\n")
+-    f.write(f"Execution time 2: {execution_time_2} second\n")
++# # Записываем время выполнения в файл
++# with open("execution_time.txt", "w") as f:
++#     f.write(f"Execution time 1: {execution_time_1} second\n")
++#     f.write(f"Execution time 2: {execution_time_2} second\n")
+\ No newline at end of file
+diff --git a/answers.txt b/answers.txt
+new file mode 100644
+index 0000000..1f0fd56
+--- /dev/null
++++ b/answers.txt
+@@ -0,0 +1,15 @@
++('res_tsp:', ((1, (1, 4, 5, 2, 3, 6)), 0), 'res_alg_lit:', ([[6, 1, 4, 5, 2, 3]], [(6, 1), (1, 4), (4, 5), (5, 2), (2, 3), (3, 6)]))
++('res_tsp:', ((6, (1, 3, 7, 8, 4, 2, 5, 6)), 0), 'res_alg_lit:', ([[8, 4, 2, 5, 6, 1, 3, 7]], [(8, 4), (4, 2), (2, 5), (5, 6), (6, 1), (1, 3), (3, 7), (7, 8)]))
++('res_tsp:', ((17, (1, 2, 3, 4)), 0), 'res_alg_lit:', ([[4, 1, 2, 3]], [(4, 1), (1, 2), (2, 3), (3, 4)]))
++('res_tsp:', ((10, (1, 2, 5, 3, 4)), 0), 'res_alg_lit:', ([[5, 3, 4, 1, 2]], [(5, 3), (3, 4), (4, 1), (1, 2), (2, 5)]))
++('res_tsp:', ((16, (1, 4, 3, 5, 7, 6, 2, 8)), 0), 'res_alg_lit:', ([[8, 1, 4, 3, 5, 7, 6, 2]], [(8, 1), (1, 4), (4, 3), (3, 5), (5, 7), (7, 6), (6, 2), (2, 8)]))
++('res_tsp:', ((45, (1, 3, 2)), 0), 'res_alg_lit:', ([[3, 2, 1]], [(3, 2), (2, 1), (1, 3)]))
++('res_tsp:', ((0, (1, 3, 4, 5, 7, 2, 6)), 0), 'res_alg_lit:', ([[7, 2, 6, 1, 3, 4, 5]], [(7, 2), (2, 6), (6, 1), (1, 3), (3, 4), (4, 5), (5, 7)]))
++('res_tsp:', ((6, (1, 4, 2, 3)), 0), 'res_alg_lit:', ([[4, 2, 3, 1]], [(4, 2), (2, 3), (3, 1), (1, 4)]))
++('res_tsp:', ((7, (1, 2, 3, 5, 6, 4)), 0), 'res_alg_lit:', ([[6, 4, 1, 2, 3, 5]], [(6, 4), (4, 1), (1, 2), (2, 3), (3, 5), (5, 6)]))
++('res_tsp:', ((21, (1, 4, 5, 3, 2)), 0), 'res_alg_lit:', ([[5, 3, 2, 1, 4]], [(5, 3), (3, 2), (2, 1), (1, 4), (4, 5)]))
++('res_tsp:', ((0, (1, 3, 5, 2, 8, 6, 4, 7)), 0), 'res_alg_lit:', ([[8, 6, 4, 7, 1, 3, 5, 2]], [(8, 6), (6, 4), (4, 7), (7, 1), (1, 3), (3, 5), (5, 2), (2, 8)]))
++('res_tsp:', ((32, (1, 6, 4, 5, 3, 2)), 0), 'res_alg_lit:', ([[6, 4, 5, 3, 2, 1]], [(6, 4), (4, 5), (5, 3), (3, 2), (2, 1), (1, 6)]))
++('res_tsp:', ((44, (1, 9, 2, 3, 4, 7, 8, 5, 6)), 0), 'res_alg_lit:', ([[9, 2, 3, 4, 7, 8, 5, 6, 1]], [(9, 2), (2, 3), (3, 4), (4, 7), (7, 8), (8, 5), (5, 6), (6, 1), (1, 9)]))
++('res_tsp:', ((37, (1, 5, 2, 3, 6, 4)), 0), 'res_alg_lit:', ([[6, 4, 1, 5, 2, 3]], [(6, 4), (4, 1), (1, 5), (5, 2), (2, 3), (3, 6)]))
++('res_tsp:', ((26, (1, 3, 2, 5, 4)), 0), 'res_alg_lit:', ([[5, 2, 4, 1, 3]], [(5, 2), (2, 4), (4, 1), (1, 3), (3, 5)]))
+diff --git a/execution_time.txt b/execution_time.txt
+new file mode 100644
+index 0000000..95213a9
+--- /dev/null
++++ b/execution_time.txt
+@@ -0,0 +1,30 @@
++Size: 6, Algorithm: TSP, Timestamp: 2024-12-11T15:13:08.905207, Execution Time: 0.0031776109999555047 seconds
++Size: 6, Algorithm: Alg_Lit, Timestamp: 2024-12-11T15:13:08.905207, Execution Time: 0.002626144000714703 seconds
++Size: 8, Algorithm: TSP, Timestamp: 2024-12-11T15:13:09.135476, Execution Time: 0.10874949699973513 seconds
++Size: 8, Algorithm: Alg_Lit, Timestamp: 2024-12-11T15:13:09.135476, Execution Time: 0.002800508000291302 seconds
++Size: 4, Algorithm: TSP, Timestamp: 2024-12-11T15:13:09.137581, Execution Time: 7.291800011444138e-05 seconds
++Size: 4, Algorithm: Alg_Lit, Timestamp: 2024-12-11T15:13:09.137581, Execution Time: 0.0008231579995481297 seconds
++Size: 5, Algorithm: TSP, Timestamp: 2024-12-11T15:13:09.142297, Execution Time: 0.0003038320000996464 seconds
++Size: 5, Algorithm: Alg_Lit, Timestamp: 2024-12-11T15:13:09.142297, Execution Time: 0.0017477909996159724 seconds
++Size: 8, Algorithm: TSP, Timestamp: 2024-12-11T15:13:09.373647, Execution Time: 0.10888000700015255 seconds
++Size: 8, Algorithm: Alg_Lit, Timestamp: 2024-12-11T15:13:09.373647, Execution Time: 0.0033722949992807116 seconds
++Size: 3, Algorithm: TSP, Timestamp: 2024-12-11T15:13:09.375415, Execution Time: 4.424300004757242e-05 seconds
++Size: 3, Algorithm: Alg_Lit, Timestamp: 2024-12-11T15:13:09.375415, Execution Time: 0.0005490330004249699 seconds
++Size: 7, Algorithm: TSP, Timestamp: 2024-12-11T15:13:09.404763, Execution Time: 0.012382022000565485 seconds
++Size: 7, Algorithm: Alg_Lit, Timestamp: 2024-12-11T15:13:09.404763, Execution Time: 0.0019944499999837717 seconds
++Size: 4, Algorithm: TSP, Timestamp: 2024-12-11T15:13:09.406726, Execution Time: 6.686300002911594e-05 seconds
++Size: 4, Algorithm: Alg_Lit, Timestamp: 2024-12-11T15:13:09.406726, Execution Time: 0.0007636350001121173 seconds
++Size: 6, Algorithm: TSP, Timestamp: 2024-12-11T15:13:09.413882, Execution Time: 0.0016785059997346252 seconds
++Size: 6, Algorithm: Alg_Lit, Timestamp: 2024-12-11T15:13:09.413882, Execution Time: 0.0020109779998165322 seconds
++Size: 5, Algorithm: TSP, Timestamp: 2024-12-11T15:13:09.417312, Execution Time: 0.0002479349996065139 seconds
++Size: 5, Algorithm: Alg_Lit, Timestamp: 2024-12-11T15:13:09.417312, Execution Time: 0.0015486519996557035 seconds
++Size: 8, Algorithm: TSP, Timestamp: 2024-12-11T15:13:09.656237, Execution Time: 0.10880920699946728 seconds
++Size: 8, Algorithm: Alg_Lit, Timestamp: 2024-12-11T15:13:09.656237, Execution Time: 0.0026170940000156406 seconds
++Size: 6, Algorithm: TSP, Timestamp: 2024-12-11T15:13:09.668601, Execution Time: 0.0015656529994885204 seconds
++Size: 6, Algorithm: Alg_Lit, Timestamp: 2024-12-11T15:13:09.668601, Execution Time: 0.004283708000002662 seconds
++Size: 9, Algorithm: TSP, Timestamp: 2024-12-11T15:13:12.152486, Execution Time: 1.143207330000223 seconds
++Size: 9, Algorithm: Alg_Lit, Timestamp: 2024-12-11T15:13:12.152486, Execution Time: 0.006228000000191969 seconds
++Size: 6, Algorithm: TSP, Timestamp: 2024-12-11T15:13:12.162261, Execution Time: 0.0024997210002766224 seconds
++Size: 6, Algorithm: Alg_Lit, Timestamp: 2024-12-11T15:13:12.162261, Execution Time: 0.0017598079994058935 seconds
++Size: 5, Algorithm: TSP, Timestamp: 2024-12-11T15:13:12.166852, Execution Time: 0.00024781899992376566 seconds
++Size: 5, Algorithm: Alg_Lit, Timestamp: 2024-12-11T15:13:12.166852, Execution Time: 0.001963939999768627 seconds
+-- 
+2.46.2
+

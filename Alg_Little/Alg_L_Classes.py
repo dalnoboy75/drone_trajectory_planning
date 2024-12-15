@@ -4,6 +4,7 @@ import typing
 from dataclasses import dataclass
 
 import numpy as np
+import timeit
 
 INF = 10**8
 
@@ -57,6 +58,15 @@ class AlgLittle:
     #     self.__hmin += value
 
     def include_edge(self, zeros: list):
+        """
+            Включает ребро в путь, обновляет матрицу и создает новый узел с учетом включенного ребра.
+
+            Args:
+                zeros (list): Список координат нулевых элементов матрицы, из которых выбирается ребро для включения.
+
+            Returns:
+                AlgLittle: Новый узел с обновленной матрицей и включенным ребром.
+        """
         edge = zeros[0]
         new_matrix = self.matrix.copy()
 
@@ -65,6 +75,7 @@ class AlgLittle:
 
         col_index_1 = np.where(new_matrix[0] == edge[0])[0]
         row_index_1 = np.where(new_matrix[:, 0] == edge[1])[0]
+        #сделать проверку на цикл
 
         # print(node_include.matrix, col_index_1[0], edge[1])
         if len(row_index_1) != 0 and len(col_index_1) != 0:
@@ -83,11 +94,16 @@ class AlgLittle:
             h_level=self.h_level + 1,
         )
         node_include.reduce()
-        # print(f'{self.include_edge.__qualname__}: {node_include.hmin=} {node_include.matrix=} {node_include.paths=}')
+        print(f'{self.include_edge.__qualname__}: {node_include.hmin=} {node_include.matrix=} {node_include.paths=}')
         return node_include
 
     def reduce(self: np.ndarray) -> int:
-        """высчитывает НГЦФ, редуцирует матрицу"""
+        """
+            Высчитывает НГЦФ и выполняет редукцию матрицы, уменьшая ее значения на минимумы строк и столбцов, и обновляет значение hmin.
+
+            Returns:
+                int: Значение hmin после редукции.
+        """
         # Находим минимумы по строкам и столбцам подматрицы
         row_min = self.sub_matrix.min(axis=1)
         self.sub_matrix -= row_min[:, np.newaxis]
@@ -102,7 +118,15 @@ class AlgLittle:
         return self.hmin
 
     def SearchingMaxDegreeZero(self, max_coeff: int) -> (list, int):
-        "Передаем матрицу, считаем максимальную степень нуля и возвращаем индексы, под которыми находится этот ноль в матрице"
+        """
+            Находит нулевые элементы матрицы и определяет их коэффициенты. Возвращает список координат нулей с максимальным коэффициентом.
+
+            Args:
+                max_coeff (int): Текущее максимальное значение коэффициента.
+
+            Returns:
+                tuple: Список координат нулей с максимальным коэффициентом и обновленное значение max_coeff.
+        """
         # Список координат нулевых элементов
         zeros = []
         # Список их коэффициентов
@@ -135,7 +159,16 @@ class AlgLittle:
         return zeros, max_coeff
 
     def get_coefficient(self: np.ndarray, r: int, c: int) -> int:
-        "На вход получаем матрицу и номер столбца и строки матрицы, в которой под индексами [r][c] содержится в матрице 0, на выходе получаем его коэффицент"
+        """
+            Вычисляет коэффициент для нулевого элемента матрицы, находящегося в строке r и столбце c.
+
+            Args:
+                r (int): Индекс строки нулевого элемента.
+                c (int): Индекс столбца нулевого элемента.
+
+            Returns:
+                int: Коэффициент нулевого элемента.
+        """
         rmin = cmin = float("inf")
 
         # Обход строки и столбца
@@ -147,8 +180,17 @@ class AlgLittle:
         return rmin + cmin
 
     def delete_edge(self, zeros: list, max_coeff: int) -> (typing.Self):
-        "На вход получаем индексы элемента, который имеет наибольший наибольшую степень нуля, удаляем строку и столбец с этими индексами, возвращаем измененную матрицу"
+        """
+            Удаляет ребро из пути, обновляет матрицу, устанавливая бесконечность для соответствующего элемента, и создает новый узел.
 
+            Args:
+                zeros (list): Список координат нулевых элементов матрицы, из которых выбирается ребро для удаления.
+                max_coeff (int): Максимальный коэффициент нулевого элемента.
+
+            Returns:
+                AlgLittle: Новый узел с обновленной матрицей и удаленным ребром.
+        """
+        
         edge = zeros[0]
 
         # делаем КОПИЮ матрицы с поставленной куда надо бесконечностью
@@ -169,7 +211,15 @@ class AlgLittle:
 
     @staticmethod
     def head_matrix(matrix: np.ndarray) -> np.ndarray:
-        """Возвращает матрицу, приписывая первую строку и столбец с НОМЕРАМИ точек от 1 до n."""
+        """
+            Добавляет заголовки строк и столбцов к матрице.
+
+            Args:
+                matrix (np.ndarray): Исходная матрица.
+
+            Returns:
+                np.ndarray: Матрица с заголовками.
+        """
         rows, columns = np.shape(matrix)
         list_column = np.arange(1, columns + 1).reshape(
             -1, 1
@@ -183,18 +233,33 @@ class AlgLittle:
         return new_matrix
 
     def trajectory(self) -> list[int]:
-        """Возвращает последовательность точек от 1 до конца, связанную траекторию."""
+        """
+            Возвращает последовательность точек, связанных траекторией.
+
+            Returns:
+                list[int]: Список точек траектории.
+        """
         return [1, 2, 3]
 
     def check_end_algo(self) -> bool:
-        """Проверка на то, надо ли заканчивать алгоритм или нет, если матрица 2*2, то алггоритм закоончен"""
-        print(f"MATRIX_SHAPE = {self.sub_matrix.shape}")
+        """
+            Проверяет, завершен ли алгоритм (если матрица 2*2, то алггоритм закончен).
+
+            Returns:
+                bool: True, если алгоритм завершен, иначе False.
+        """
+        # print(f"MATRIX_SHAPE = {self.sub_matrix.shape}")
         if self.sub_matrix.shape == (2, 2):
             return True
         return False
 
     def end_algo(self) -> list[list]:
-        """Преобразовывает пути в лист ребер, где первый параметр это начальная вершина, второй параметр это конечная вершина, третий параметр показывает включено это ребро в путь или нет"""
+        """
+            Преобразует пути в список ребер.
+
+            Returns:
+                list[list]: Список ребер.
+        """
         l = []
         for i in self.paths:
             listok = []
@@ -205,8 +270,13 @@ class AlgLittle:
         return l
 
     def find_rest_path(self) -> list[list]:
-        """Выбирает два ребра из матрицы 2 на 2, которые надо включить в путь"""
-        print(f"self.matrix: {self.matrix}")
+        """
+            Выбирает два ребра из матрицы 2x2, которые нужно включить в путь.
+
+            Returns:
+                list[list]: Список выбранных ребер.
+        """
+        # print(f"self.matrix: {self.matrix}")
         l = []
         if (
             self.matrix[1][1] + self.matrix[2][2]
@@ -223,17 +293,33 @@ class AlgLittle:
             ]
 
         l = [[value[0], value[1], True] for value in indices]
-        print(l)
         return l
 
     @classmethod
     def next_id(cls):
+        """
+            Генерирует следующий уникальный идентификатор узла.
+
+            Returns:
+                int: Уникальный идентификатор.
+        """
         cls.MAXID += 1
         return cls.MAXID
 
 
 def get_list_edges(data: list, num_rows: int, start_airfield: int) -> list[tuple]:
-    """Возвращает лист ребер, где у первого ребра начальная вершина, в которой находится аэродром"""
+    """
+        Возвращает список ребер, начиная с заданного аэродрома.
+
+        Args:
+            data (list): Список данных о путях.
+            num_rows (int): Количество строк в матрице.
+            start_airfield (int): Начальный аэродром.
+
+        Returns:
+            list[tuple]: Список ребер.
+    """
+    print(data)
     result = []
     # Найти первую пару
     for item in data:
@@ -242,28 +328,37 @@ def get_list_edges(data: list, num_rows: int, start_airfield: int) -> list[tuple
             last_pair = result[-1]
             break
     cnt = 1
+    data_1 = [(int(x), int(y), z) for (x, y, z) in data]
+    print(data_1)
     while cnt < num_rows:
-        for item in data:
+        for item in data_1:
             if item[2] and last_pair[1] == item[0]:
                 result.append((int (item[0]), int (item[1])))
                 last_pair = result[-1]
                 cnt += 1
-                data.remove(item)  # Удаляем элемент из data
+                data_1.remove(item)  # Удаляем элемент из data
                 break
 
     return result
 
 
 def vertex(edges: list[tuple], list_airfields: list) -> list[list]:
-    """Возвращает массив вершин, через которые проходит гамильтонов путь"""
-    print(edges, list_airfields)
+    """
+        Возвращает массив вершин, через которые проходит гамильтонов путь.
+
+        Args:
+            edges (list[tuple]): Список ребер.
+            list_airfields (list): Список аэродромов.
+
+        Returns:
+            list[list]: Массив вершин.
+    """
     vertices = [edge[0] for edge in edges]
     result = []
     cur_res = []
     for i in vertices:
-        cur_res.append(i[0])
-        if i[0] in list_airfields:
-            print("111 ")
+        cur_res.append(i)
+        if i in list_airfields:
             result.append(cur_res)
             cur_res = []
     if len(cur_res) != 0:
@@ -272,7 +367,17 @@ def vertex(edges: list[tuple], list_airfields: list) -> list[list]:
 
 
 def add_airfields(numbers: np.ndarray, s: int, kolvo_airfields: int) -> np.matrix:
-    """Добавление в матрицу аэродромов, возвращает матрицу с добавленными аэродромами"""
+    """
+        Добавляет аэродромы в матрицу.
+
+        Args:
+            numbers (np.ndarray): Исходная матрица.
+            s (int): Индекс начального аэродрома.
+            kolvo_airfields (int): Количество аэродромов.
+
+        Returns:
+            np.matrix: Матрица с добавленными аэродромами.
+    """
     rows = numbers.shape[0]
     size = rows + kolvo_airfields
     new_matrix = np.zeros((size, size), dtype=int)
@@ -300,7 +405,17 @@ def add_airfields(numbers: np.ndarray, s: int, kolvo_airfields: int) -> np.matri
 def algorithm_Lit(
         numbers: np.ndarray, s: int, kolvo_airfields: int
 ) -> tuple[list[list], list[tuple]]:
-    """Алгоритм Литтла"""
+    """
+        Реализация алгоритма Литтла.
+
+        Args:
+            numbers (np.ndarray): Матрица расстояний.
+            s (int): Индекс начального аэродрома.
+            kolvo_airfields (int): Количество аэродромов.
+
+        Returns:
+            tuple[list[list], list[tuple]]: Результаты алгоритма.
+    """
     # добавление строки и столбца "заголовков"
     pos = numbers.shape[0]
     if kolvo_airfields != 1:
@@ -311,15 +426,15 @@ def algorithm_Lit(
     node.reduce()
     start_airfield = pos
     list_airfields = []
-    print(kolvo_airfields)
+    # print(kolvo_airfields)
     if kolvo_airfields != 1:
         for i in range(int(kolvo_airfields / 2)):
             list_airfields.append(pos + 1)
             pos += 2
 
-    print(f"list: {list_airfields}")
+    # print(f"list: {list_airfields}")
     while True:
-        print(repr(node))
+        # print(repr(node))
         max_coeff = 0
         zeros, max_coeff = node.SearchingMaxDegreeZero(max_coeff)
         # node_include, node_exclude = node, node
@@ -327,7 +442,7 @@ def algorithm_Lit(
         node_exclude = node.delete_edge(zeros, max_coeff)
         # print('After delete ' + repr(node))
         node_include = node.include_edge(zeros)
-
+        #проанализировать если node include None 
         node_include.discarded_nodes.append(node_exclude)
         node_exclude.discarded_nodes.append(node_include)
         all_possible_plans = node.discarded_nodes + [node_exclude, node_include]
@@ -349,7 +464,24 @@ def algorithm_Lit(
                 listok.append(i.include)
                 l.append(listok)
             answer = get_list_edges(l, num_rows, start_airfield)
-            result = [(int(x), int(y)) for (x, y) in answer]
-            ans = vertex(result, list_airfields)
+            print("1111")
+            # result = [(int(x), int(y)) for (x, y) in answer]
+            ans = vertex(answer, list_airfields)
             print(f"ans: {ans}")
-            return ans, result
+            return ans, answer
+        
+assert_matr = np.array([    [INF, 10, 5, 9, 16, 8],
+                   [6, INF, 11, 8, 18, 19],
+                   [7, 13, INF, 3, 4, 14],
+                   [5, 9, 6, INF, 12, 17],
+                   [5, 4, 11, 6, INF, 14],
+                   [17, 7, 12, 13, 16, INF]])
+print(algorithm_Lit(assert_matr, assert_matr.shape[0], 1))
+# size = 10
+# # for i in range(5):
+# matrix = np.random.randint(1, 100, size=(size, size))
+# np.fill_diagonal(matrix, INF)
+# start_airfield = matrix.shape[0]
+# execution_time_2 = timeit.timeit(lambda: algorithm_Lit(matrix, start_airfield, 1), number=1)
+# print(execution_time_2)
+# print(algorithm_Lit(matrix, start_airfield, 1))
