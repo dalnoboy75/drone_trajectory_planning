@@ -20,7 +20,6 @@ class Point2D:
         __init__(x=None, y=None): Инициализирует объект Point2D.
         calc_dist(other): Вычисляет расстояние между двумя точками.
         __sub__(self, other): Вычитает одну точку из другой.
-        __pow__(self, power, modulo=None): Возвращает каждую координату в степень.
         __str__(self): Возвращает строковое представление точки.
 
     Returns:
@@ -40,8 +39,6 @@ class Point2D:
     def __sub__(self, other):
         return Point2D(self.x - other.x, self.y - other.y)
 
-    def __pow__(self, power, modulo=None):
-        return (self.x ** power + self.y ** power)
 
     def __str__(self):
         return f'{self.x} {self.y}'
@@ -142,7 +139,7 @@ class Arc:
     Methods:
         __init__(a, b, circle): Инициализирует объект Arc.
         get_length(): Вычисляет длину дуги.
-        plot(ax, targets): Рисует дугу на объекте matplotlib Axes.
+        plot(ax): Рисует дугу на объекте matplotlib Axes.
 
     Returns:
         float: Длина дуги или INF в случае ошибки вычисления.
@@ -166,8 +163,10 @@ class Arc:
             np.arctan2(self.first_point.y - self.circle.center.y, self.first_point.x - self.circle.center.x))
         end_angle = np.degrees(
             np.arctan2(self.second_point.y - self.circle.center.y, self.second_point.x - self.circle.center.x))
+        '''
         start_angle = (start_angle + 360) % 360
         end_angle = (end_angle + 360) % 360
+        '''
         arc_patch = matplotlib.patches.Arc((self.circle.center.x, self.circle.center.y), 2 * self.circle.radius,
                                            2 * self.circle.radius,
                                            theta1=min(start_angle, end_angle),
@@ -213,7 +212,7 @@ class Polygon:
 
     Methods:
         __init__(points: List[Point2D] = None): Инициализирует экземпляр Polygon.
-        plot_(ax: plt.Axes): Отображает многоугольник
+        plot(ax: plt.Axes): Отображает многоугольник
         point_on(point:Point2D): проверяет, лежит ли точка на сторонах многоульгольника
     """
 

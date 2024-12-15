@@ -68,7 +68,8 @@ class Task:
     def check_polygons(self):
         flag = True
         for i in self.polygons:
-            flag *= is_convex_polygon(i)
+            if not is_convex_polygon(i):
+                flag = False
         if not flag:
             raise ValueError
     def parse_targets(self, data: dict) -> list[Point2D]:
