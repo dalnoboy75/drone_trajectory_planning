@@ -512,6 +512,7 @@ def algorithm_Lit(
             tuple[list[list], list[tuple]]: Результаты алгоритма.
     """
     # добавление строки и столбца "заголовков"
+    kolvo_airfields *= 2
     pos = numbers.shape[0]
     if kolvo_airfields != 1:
         numbers = add_airfields(numbers, s, kolvo_airfields)
@@ -562,8 +563,9 @@ def algorithm_Lit(
             
             edges = [(int(edge[0]), int(edge[1])) for edge in l if edge[2]]
             has_cycle_result, cycle_count = has_cycle(edges)
-            if has_cycle_result and cycle_count != size_matrix:
-                
+
+            if has_cycle_result and cycle_count + 1 != size_matrix:
+
                 edges_1 = [(int(edge[0]), int(edge[1])) for edge in r if edge[2]]
                 if(edges_1[0] == (node1.matrix[1][0], node1.matrix[0][1])):
                     indices = [
@@ -584,21 +586,42 @@ def algorithm_Lit(
                     l_1.append(listok)
                 answer = get_list_edges(l_1, num_rows, start_airfield)
                 ans = vertex(answer, list_airfields)
+                for x,y in answer:
+                    if x > start_airfield:
+                        x = start_airfield
+                    if y > start_airfield:
+                        y = start_airfield
+                for x in range(len(ans)):
+                    for j in range(len(ans[x])):
+                        if ans[x][j] > start_airfield:
+                            ans[x][j] = start_airfield
                 print(f"ans: {ans}")
                 return ans, answer
+            
             answer = get_list_edges(l, num_rows, start_airfield)
             # result = [(int(x), int(y)) for (x, y) in answer]
             ans = vertex(answer, list_airfields)
+            for i in range(len(answer)):
+                    x, y = answer[i]
+                    if x > start_airfield:
+                        x = start_airfield
+                    if y > start_airfield:
+                        y = start_airfield
+                    answer[i] = (x, y)
+            for x in range(len(ans)):
+                for j in range(len(ans[x])):
+                    if ans[x][j] > start_airfield:
+                            ans[x][j] = start_airfield
             print(f"ans: {ans}")
             return ans, answer
         
-assert_matr = np.array([    [INF, 10, 5, 9, 16, 8],
-                   [6, INF, 11, 8, 18, 19],
-                   [7, 13, INF, 3, 4, 14],
-                   [5, 9, 6, INF, 12, 17],
-                   [5, 4, 11, 6, INF, 14],
-                   [17, 7, 12, 13, 16, INF]])
-print(algorithm_Lit(assert_matr, assert_matr.shape[0], 1))
+# assert_matr = np.array([    [INF, 10, 5, 9, 16, 8],
+#                    [6, INF, 11, 8, 18, 19],
+#                    [7, 13, INF, 3, 4, 14],
+#                    [5, 9, 6, INF, 12, 17],
+#                    [5, 4, 11, 6, INF, 14],
+#                    [17, 7, 12, 13, 16, INF]])
+# print(algorithm_Lit(assert_matr, assert_matr.shape[0], 1))
 # size = 10
 # # for i in range(5):
 # matrix = np.random.randint(1, 100, size=(size, size))
