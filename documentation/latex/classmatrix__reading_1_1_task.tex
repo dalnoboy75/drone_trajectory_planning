@@ -1,0 +1,262 @@
+\doxysection{matrix\+\_\+reading.\+Task Class Reference}
+\hypertarget{classmatrix__reading_1_1_task}{}\label{classmatrix__reading_1_1_task}\index{matrix\_reading.Task@{matrix\_reading.Task}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classmatrix__reading_1_1_task_ab2e119da30b7daeaa09715664896a9e4}{\+\_\+\+\_\+init\+\_\+\+\_\+}} (self, dict data)
+\item 
+\Hypertarget{classmatrix__reading_1_1_task_ae3a28cfbaef07ae14ca9433692c3e4e3}\label{classmatrix__reading_1_1_task_ae3a28cfbaef07ae14ca9433692c3e4e3} 
+{\bfseries check\+\_\+polygons} (self)
+\item 
+list\mbox{[}Point2D\mbox{]} \mbox{\hyperlink{classmatrix__reading_1_1_task_a7dfc4e1f1627de5b1e695cfd73517960}{parse\+\_\+targets}} (self, dict data)
+\item 
+list\mbox{[}tuple\mbox{]} \mbox{\hyperlink{classmatrix__reading_1_1_task_abdd25ebde6b9fb5237e75f96fbb5bb25}{parse\+\_\+forbidden\+\_\+segments}} (self, dict data)
+\item 
+list\mbox{[}Circle\mbox{]} \mbox{\hyperlink{classmatrix__reading_1_1_task_a24081304117b272ce8c87f2a099a3888}{parse\+\_\+circles}} (self, dict data)
+\item 
+list\mbox{[}Polygon\mbox{]} \mbox{\hyperlink{classmatrix__reading_1_1_task_a5fe2f8e2ce07f40ea7db15ce1dfed741}{parse\+\_\+polygons}} (self, dict data)
+\item 
+dict \mbox{\hyperlink{classmatrix__reading_1_1_task_a207c680667c6e164440d4bfa32fd37e9}{read\+\_\+data}} (cls, str\texorpdfstring{$\vert$}{|}Path filename=\textquotesingle{}data.\+json\textquotesingle{})
+\item 
+tuple\mbox{[}np.\+array, np.\+array\mbox{]} \mbox{\hyperlink{classmatrix__reading_1_1_task_a1f391a75abae6897ddff32cf282aad3d}{matrix\+\_\+distance}} (self)
+\item 
+(float, GPath) \mbox{\hyperlink{classmatrix__reading_1_1_task_a4fd8de508b478a20451fd8d7d6e87171}{calculate\+\_\+path}} (self, int start, int finish, matrix\+\_\+length, matrix\+\_\+path)
+\item 
+\mbox{\hyperlink{classmatrix__reading_1_1_task_a80f0dc4a8ee0ab162b4109e3b60652ef}{plot\+\_\+trajectory}} (self)
+\item 
+tuple\mbox{[}np.\+array, list\mbox{]} \mbox{\hyperlink{classmatrix__reading_1_1_task_a75c060860bd1b88868f47e63ee697bff}{dijkstra}} (self, matrix, start\+\_\+vertex=0)
+\item 
+list \mbox{\hyperlink{classmatrix__reading_1_1_task_a28dcb3a6d72263e77bed819babba9eaa}{reconstruct\+\_\+path}} (self, predecessors, start, end)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classmatrix__reading_1_1_task_a1d978f0a11ed6b049c06cb3d74a05af4}\label{classmatrix__reading_1_1_task_a1d978f0a11ed6b049c06cb3d74a05af4} 
+list\mbox{[}Point2D\mbox{]} {\bfseries targets} = self.\+parse\+\_\+targets(data)
+\item 
+\Hypertarget{classmatrix__reading_1_1_task_ad42dfe2bab39851c1da86f599f491dab}\label{classmatrix__reading_1_1_task_ad42dfe2bab39851c1da86f599f491dab} 
+list\mbox{[}tuple\mbox{]} {\bfseries forbidden\+\_\+segments} = self.\+parse\+\_\+forbidden\+\_\+segments(data)
+\item 
+\Hypertarget{classmatrix__reading_1_1_task_ae4b5a3a2285f4079f4d942056189cc0b}\label{classmatrix__reading_1_1_task_ae4b5a3a2285f4079f4d942056189cc0b} 
+list\mbox{[}Circle\mbox{]} {\bfseries circles} = self.\+parse\+\_\+circles(data)
+\item 
+\Hypertarget{classmatrix__reading_1_1_task_afe4978ee8c21a14a11e374935b6e165e}\label{classmatrix__reading_1_1_task_afe4978ee8c21a14a11e374935b6e165e} 
+list\mbox{[}Polygon\mbox{]} {\bfseries polygons} = self.\+parse\+\_\+polygons(data)
+\item 
+\Hypertarget{classmatrix__reading_1_1_task_afacc76e7f924ca25f9939f75e8df0722}\label{classmatrix__reading_1_1_task_afacc76e7f924ca25f9939f75e8df0722} 
+{\bfseries length\+\_\+matrix}
+\item 
+\Hypertarget{classmatrix__reading_1_1_task_a0dca88de06f726241f12997894fe4b32}\label{classmatrix__reading_1_1_task_a0dca88de06f726241f12997894fe4b32} 
+tuple\mbox{[}np.\+array, np.\+array\mbox{]} {\bfseries path\+\_\+matrix} = self.\+matrix\+\_\+distance()
+\item 
+\Hypertarget{classmatrix__reading_1_1_task_a1566a413f1e3c88d3a06bd107341ef53}\label{classmatrix__reading_1_1_task_a1566a413f1e3c88d3a06bd107341ef53} 
+bool {\bfseries polygons} = False
+\item 
+\Hypertarget{classmatrix__reading_1_1_task_a6cacb3130b985f08a1840635f82224df}\label{classmatrix__reading_1_1_task_a6cacb3130b985f08a1840635f82224df} 
+list {\bfseries polygons} = \mbox{[}\mbox{[}pstart, None, None\mbox{]}\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}Класс для решения задачи.
+
+Args:
+    targets (list): Список целевых точек.
+    forbidden_segments (list): Список запрещенных участков.
+    circles (list): Список круговых препятствий (ПВО).
+    polygons (list): Список полигонов.
+    length_matrix (numpy array): Матрица расстояний между точками.
+    path_matrix (numpy array): Матрица путей между точками.
+
+Methods:
+    parse_targets(data: dict) -> list[Point2D]:
+        Парсинг списка целевых точек из входных данных.
+    
+    parse_forbidden_segments(data: dict) -> list[tuple]:
+        Парсинг списка запрещенных участков из входных данных.
+
+    parse_circles(data: dict) -> list[Circle]:
+        Парсинг списка круговых препятствий из входных данных.
+
+    parse_polygons(data: dict) -> list[Polygon]:
+        Парсинг списка полигонов из входных данных.
+
+    read_data(filename: str | Path = 'data.json') -> dict:
+        Чтение входных данных из JSON-файла.
+
+    matrix_distance() -> tuple[np.array, np.array]:
+        Вычисление матрицы расстояний и путей между точками.
+
+    calculate_path(start: int, finish: int, matrix_length, matrix_path) -> (float, GPath):
+        Вычисление оптимального пути между двумя точками.
+
+    plot_trajectory() -> None:
+        Рисование траектории на графике.
+
+    dijkstra(matrix, start_vertex=0) -> tuple[np.array, list]:
+        Реализация алгоритма Дейкстры для нахождения кратчайшего пути.
+
+    reconstruct_path(predecessors, start, end) -> list:
+        Реконструкция оптимального пути из предков.
+\end{DoxyVerb}
+ 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classmatrix__reading_1_1_task_ab2e119da30b7daeaa09715664896a9e4}\index{matrix\_reading.Task@{matrix\_reading.Task}!\_\_init\_\_@{\_\_init\_\_}}
+\index{\_\_init\_\_@{\_\_init\_\_}!matrix\_reading.Task@{matrix\_reading.Task}}
+\doxysubsubsection{\texorpdfstring{\_\_init\_\_()}{\_\_init\_\_()}}
+{\footnotesize\ttfamily \label{classmatrix__reading_1_1_task_ab2e119da30b7daeaa09715664896a9e4} 
+matrix\+\_\+reading.\+Task.\+\_\+\+\_\+init\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{dict}]{data}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Инициализация объекта Task.
+
+Args:
+    data (dict): Словарь с входными данными.
+\end{DoxyVerb}
+ 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classmatrix__reading_1_1_task_a4fd8de508b478a20451fd8d7d6e87171}\index{matrix\_reading.Task@{matrix\_reading.Task}!calculate\_path@{calculate\_path}}
+\index{calculate\_path@{calculate\_path}!matrix\_reading.Task@{matrix\_reading.Task}}
+\doxysubsubsection{\texorpdfstring{calculate\_path()}{calculate\_path()}}
+{\footnotesize\ttfamily \label{classmatrix__reading_1_1_task_a4fd8de508b478a20451fd8d7d6e87171} 
+ (float, GPath) matrix\+\_\+reading.\+Task.\+calculate\+\_\+path (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{int}]{start}{, }\item[{int}]{finish}{, }\item[{}]{matrix\+\_\+length}{, }\item[{}]{matrix\+\_\+path}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Вычисление оптимального пути между двумя точками.
+
+Args:
+    start (int): Начальная точка.
+    finish (int): Конечная точка.
+    matrix_length (numpy array): Матрица расстояний.
+    matrix_path (numpy array): Матрица путей.
+
+Returns:
+    tuple: Длина пути и объект пути.
+\end{DoxyVerb}
+ \Hypertarget{classmatrix__reading_1_1_task_a75c060860bd1b88868f47e63ee697bff}\index{matrix\_reading.Task@{matrix\_reading.Task}!dijkstra@{dijkstra}}
+\index{dijkstra@{dijkstra}!matrix\_reading.Task@{matrix\_reading.Task}}
+\doxysubsubsection{\texorpdfstring{dijkstra()}{dijkstra()}}
+{\footnotesize\ttfamily \label{classmatrix__reading_1_1_task_a75c060860bd1b88868f47e63ee697bff} 
+ tuple\mbox{[}np.\+array, list\mbox{]} matrix\+\_\+reading.\+Task.\+dijkstra (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{}]{matrix}{, }\item[{}]{start\+\_\+vertex}{ = {\ttfamily 0}}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Реализация алгоритма Дейкстры для нахождения кратчайшего пути.
+
+Args:
+    matrix (numpy array): Матрица расстояний между точками.
+    start_vertex (int): Начальная вершина (по умолчанию 0).
+
+Returns:
+    tuple: Короткая длина пути и список предков.
+\end{DoxyVerb}
+ \Hypertarget{classmatrix__reading_1_1_task_a1f391a75abae6897ddff32cf282aad3d}\index{matrix\_reading.Task@{matrix\_reading.Task}!matrix\_distance@{matrix\_distance}}
+\index{matrix\_distance@{matrix\_distance}!matrix\_reading.Task@{matrix\_reading.Task}}
+\doxysubsubsection{\texorpdfstring{matrix\_distance()}{matrix\_distance()}}
+{\footnotesize\ttfamily \label{classmatrix__reading_1_1_task_a1f391a75abae6897ddff32cf282aad3d} 
+ tuple\mbox{[}np.\+array, np.\+array\mbox{]} matrix\+\_\+reading.\+Task.\+matrix\+\_\+distance (\begin{DoxyParamCaption}\item[{}]{self}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Вычисление матрицы расстояний и путей между точками.
+
+Returns:
+    tuple: Матрица расстояний и матрица путей.
+\end{DoxyVerb}
+ \Hypertarget{classmatrix__reading_1_1_task_a24081304117b272ce8c87f2a099a3888}\index{matrix\_reading.Task@{matrix\_reading.Task}!parse\_circles@{parse\_circles}}
+\index{parse\_circles@{parse\_circles}!matrix\_reading.Task@{matrix\_reading.Task}}
+\doxysubsubsection{\texorpdfstring{parse\_circles()}{parse\_circles()}}
+{\footnotesize\ttfamily \label{classmatrix__reading_1_1_task_a24081304117b272ce8c87f2a099a3888} 
+ list\mbox{[}Circle\mbox{]} matrix\+\_\+reading.\+Task.\+parse\+\_\+circles (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{dict}]{data}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Парсинг списка круговых препятствий из входных данных.
+
+Args:
+    data (dict): Словарь с входными данными.
+
+Returns:
+    list[Circle]: Список круговых препятствий.
+\end{DoxyVerb}
+ \Hypertarget{classmatrix__reading_1_1_task_abdd25ebde6b9fb5237e75f96fbb5bb25}\index{matrix\_reading.Task@{matrix\_reading.Task}!parse\_forbidden\_segments@{parse\_forbidden\_segments}}
+\index{parse\_forbidden\_segments@{parse\_forbidden\_segments}!matrix\_reading.Task@{matrix\_reading.Task}}
+\doxysubsubsection{\texorpdfstring{parse\_forbidden\_segments()}{parse\_forbidden\_segments()}}
+{\footnotesize\ttfamily \label{classmatrix__reading_1_1_task_abdd25ebde6b9fb5237e75f96fbb5bb25} 
+ list\mbox{[}tuple\mbox{]} matrix\+\_\+reading.\+Task.\+parse\+\_\+forbidden\+\_\+segments (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{dict}]{data}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Парсинг списка запрещенных участков из входных данных.
+
+Args:
+    data (dict): Словарь с входными данными.
+
+Returns:
+    list[tuple]: Список запрещенных участков.
+\end{DoxyVerb}
+ \Hypertarget{classmatrix__reading_1_1_task_a5fe2f8e2ce07f40ea7db15ce1dfed741}\index{matrix\_reading.Task@{matrix\_reading.Task}!parse\_polygons@{parse\_polygons}}
+\index{parse\_polygons@{parse\_polygons}!matrix\_reading.Task@{matrix\_reading.Task}}
+\doxysubsubsection{\texorpdfstring{parse\_polygons()}{parse\_polygons()}}
+{\footnotesize\ttfamily \label{classmatrix__reading_1_1_task_a5fe2f8e2ce07f40ea7db15ce1dfed741} 
+ list\mbox{[}Polygon\mbox{]} matrix\+\_\+reading.\+Task.\+parse\+\_\+polygons (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{dict}]{data}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Парсинг списка полигонов из входных данных.
+
+Args:
+    data (dict): Словарь с входными данными.
+
+Returns:
+    list[Polygon]: Список полигонов.
+\end{DoxyVerb}
+ \Hypertarget{classmatrix__reading_1_1_task_a7dfc4e1f1627de5b1e695cfd73517960}\index{matrix\_reading.Task@{matrix\_reading.Task}!parse\_targets@{parse\_targets}}
+\index{parse\_targets@{parse\_targets}!matrix\_reading.Task@{matrix\_reading.Task}}
+\doxysubsubsection{\texorpdfstring{parse\_targets()}{parse\_targets()}}
+{\footnotesize\ttfamily \label{classmatrix__reading_1_1_task_a7dfc4e1f1627de5b1e695cfd73517960} 
+ list\mbox{[}Point2D\mbox{]} matrix\+\_\+reading.\+Task.\+parse\+\_\+targets (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{dict}]{data}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Парсинг списка целевых точек из входных данных.
+
+Args:
+    data (dict): Словарь с входными данными.
+
+Returns:
+    list[Point2D]: Список целевых точек.
+\end{DoxyVerb}
+ \Hypertarget{classmatrix__reading_1_1_task_a80f0dc4a8ee0ab162b4109e3b60652ef}\index{matrix\_reading.Task@{matrix\_reading.Task}!plot\_trajectory@{plot\_trajectory}}
+\index{plot\_trajectory@{plot\_trajectory}!matrix\_reading.Task@{matrix\_reading.Task}}
+\doxysubsubsection{\texorpdfstring{plot\_trajectory()}{plot\_trajectory()}}
+{\footnotesize\ttfamily \label{classmatrix__reading_1_1_task_a80f0dc4a8ee0ab162b4109e3b60652ef} 
+matrix\+\_\+reading.\+Task.\+plot\+\_\+trajectory (\begin{DoxyParamCaption}\item[{}]{self}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Рисование траектории на графике.
+
+Создает изображение с отображением зон ПВО и возможных маршрутов.
+\end{DoxyVerb}
+ \Hypertarget{classmatrix__reading_1_1_task_a207c680667c6e164440d4bfa32fd37e9}\index{matrix\_reading.Task@{matrix\_reading.Task}!read\_data@{read\_data}}
+\index{read\_data@{read\_data}!matrix\_reading.Task@{matrix\_reading.Task}}
+\doxysubsubsection{\texorpdfstring{read\_data()}{read\_data()}}
+{\footnotesize\ttfamily \label{classmatrix__reading_1_1_task_a207c680667c6e164440d4bfa32fd37e9} 
+ dict matrix\+\_\+reading.\+Task.\+read\+\_\+data (\begin{DoxyParamCaption}\item[{}]{cls}{, }\item[{str \texorpdfstring{$\vert$}{|} Path }]{filename}{ = {\ttfamily \textquotesingle{}data.json\textquotesingle{}}}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Чтение входных данных из JSON-файла.
+
+Args:
+    filename (str | Path): Путь к файлу с входными данными (по умолчанию 'data.json').
+
+Returns:
+    dict: Словарь с входными данными.
+\end{DoxyVerb}
+ \Hypertarget{classmatrix__reading_1_1_task_a28dcb3a6d72263e77bed819babba9eaa}\index{matrix\_reading.Task@{matrix\_reading.Task}!reconstruct\_path@{reconstruct\_path}}
+\index{reconstruct\_path@{reconstruct\_path}!matrix\_reading.Task@{matrix\_reading.Task}}
+\doxysubsubsection{\texorpdfstring{reconstruct\_path()}{reconstruct\_path()}}
+{\footnotesize\ttfamily \label{classmatrix__reading_1_1_task_a28dcb3a6d72263e77bed819babba9eaa} 
+ list matrix\+\_\+reading.\+Task.\+reconstruct\+\_\+path (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{}]{predecessors}{, }\item[{}]{start}{, }\item[{}]{end}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Реконструкция оптимального пути из предков.
+
+Args:
+    predecessors (numpy array): Массив предков.
+    start (int): Начальная вершина.
+    end (int): Конечная вершина.
+
+Returns:
+    list: Список вершин оптимального пути.
+\end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Projects/drone\+\_\+trajectory\+\_\+planning/geometry/matrix\+\_\+reading.\+py\end{DoxyCompactItemize}

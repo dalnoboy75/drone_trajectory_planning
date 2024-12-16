@@ -1,0 +1,298 @@
+\doxysection{Alg\+\_\+\+L\+\_\+\+Classes.\+Alg\+Little Class Reference}
+\hypertarget{class_alg___l___classes_1_1_alg_little}{}\label{class_alg___l___classes_1_1_alg_little}\index{Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_alg___l___classes_1_1_alg_little_a9d35967c9507b82a6dfc2fdec12e21a6}{\+\_\+\+\_\+init\+\_\+\+\_\+}} (self, np.\+ndarray new\+\_\+matrix, list\mbox{[}\mbox{\hyperlink{class_alg___l___classes_1_1_alg_little}{Alg\+Little}}\mbox{]}\texorpdfstring{$\vert$}{|}None discarded\+\_\+nodes=None, list\mbox{[}\mbox{\hyperlink{class_alg___l___classes_1_1_edge}{Edge}}\mbox{]} paths=None, float\texorpdfstring{$\vert$}{|}int hmin=0, int h\+\_\+level=0)
+\item 
+\mbox{\hyperlink{class_alg___l___classes_1_1_alg_little_a1b24a2c5d4a0f9ec1be193e91f074b5a}{\+\_\+\+\_\+str\+\_\+\+\_\+}} (self)
+\item 
+\mbox{\hyperlink{class_alg___l___classes_1_1_alg_little_a36f27c9c7045bbfd771f1f0b1f1e9eb9}{\+\_\+\+\_\+repr\+\_\+\+\_\+}} (self)
+\item 
+\mbox{\hyperlink{class_alg___l___classes_1_1_alg_little_a92cb2939bda7bd36c17220374e88fa8d}{pretty\+\_\+matrix}} (self)
+\item 
+\mbox{\hyperlink{class_alg___l___classes_1_1_alg_little_a77f45d34e0a85cc7f0439e191d8b3d92}{include\+\_\+edge}} (self, list zeros)
+\item 
+int \mbox{\hyperlink{class_alg___l___classes_1_1_alg_little_a5b072311b9f3bd1fef50bdb2b549581b}{reduce}} (np.\+ndarray self)
+\item 
+(list, int) \mbox{\hyperlink{class_alg___l___classes_1_1_alg_little_aab33e286fc99592909843434aa5d2c58}{Searching\+Max\+Degree\+Zero}} (self, int max\+\_\+coeff)
+\item 
+int \mbox{\hyperlink{class_alg___l___classes_1_1_alg_little_ad4162edb3804dd96dd460f1498f44da6}{get\+\_\+coefficient}} (np.\+ndarray self, int r, int c)
+\item 
+(typing.\+Self) \mbox{\hyperlink{class_alg___l___classes_1_1_alg_little_afcdfb93071d098f3df8adaeb165321b8}{delete\+\_\+edge}} (self, list zeros, int max\+\_\+coeff)
+\item 
+list\mbox{[}int\mbox{]} \mbox{\hyperlink{class_alg___l___classes_1_1_alg_little_a3d385decfe1207e8ec85731b3953ff86}{trajectory}} (self)
+\item 
+bool \mbox{\hyperlink{class_alg___l___classes_1_1_alg_little_a3b41ee4ffdb06bedde95ffae57beccf2}{check\+\_\+end\+\_\+algo}} (self)
+\item 
+list\mbox{[}list\mbox{]} \mbox{\hyperlink{class_alg___l___classes_1_1_alg_little_abd800badb18fc8e5a7eed78dfffc35e4}{end\+\_\+algo}} (self)
+\item 
+list\mbox{[}list\mbox{]} \mbox{\hyperlink{class_alg___l___classes_1_1_alg_little_a38062e0427528f93815733c4d2fde42c}{find\+\_\+rest\+\_\+path}} (self)
+\item 
+\mbox{\hyperlink{class_alg___l___classes_1_1_alg_little_a60823ef764f29bd8d39b45cfa25d3a57}{next\+\_\+id}} (cls)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+np.\+ndarray \mbox{\hyperlink{class_alg___l___classes_1_1_alg_little_a53833db6375babf778de648aceea4e51}{head\+\_\+matrix}} (np.\+ndarray matrix)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_alg___l___classes_1_1_alg_little_acb8644c9f16866fb1f25c492bf962d1e}\label{class_alg___l___classes_1_1_alg_little_acb8644c9f16866fb1f25c492bf962d1e} 
+{\bfseries plan\+ID} = \mbox{\hyperlink{class_alg___l___classes_1_1_alg_little_a60823ef764f29bd8d39b45cfa25d3a57}{Alg\+Little.\+next\+\_\+id}}()
+\item 
+\Hypertarget{class_alg___l___classes_1_1_alg_little_ac861d17eefa67d500aa696a88a145ef8}\label{class_alg___l___classes_1_1_alg_little_ac861d17eefa67d500aa696a88a145ef8} 
+{\bfseries matrix} = new\+\_\+matrix
+\item 
+\Hypertarget{class_alg___l___classes_1_1_alg_little_af4344e17333403bc24ad32fad3295132}\label{class_alg___l___classes_1_1_alg_little_af4344e17333403bc24ad32fad3295132} 
+{\bfseries sub\+\_\+matrix} = new\+\_\+matrix\mbox{[}1\+:, 1\+:\mbox{]}
+\item 
+\Hypertarget{class_alg___l___classes_1_1_alg_little_a82a1209e922e33b17dc318148f60044c}\label{class_alg___l___classes_1_1_alg_little_a82a1209e922e33b17dc318148f60044c} 
+list\mbox{[}\mbox{\hyperlink{class_alg___l___classes_1_1_edge}{Edge}}\mbox{]} {\bfseries paths} = paths or \mbox{[}$\,$\mbox{]}
+\item 
+tuple \mbox{\hyperlink{class_alg___l___classes_1_1_alg_little_a7454511f076d1bef65eed862b60108d2}{discarded\+\_\+nodes}}
+\item 
+\Hypertarget{class_alg___l___classes_1_1_alg_little_a18bf390ba5022fb09879c3ac17e5a27f}\label{class_alg___l___classes_1_1_alg_little_a18bf390ba5022fb09879c3ac17e5a27f} 
+{\bfseries hmin} = hmin
+\item 
+\Hypertarget{class_alg___l___classes_1_1_alg_little_a39a50a9fafb1533ba37665b7360489ec}\label{class_alg___l___classes_1_1_alg_little_a39a50a9fafb1533ba37665b7360489ec} 
+int {\bfseries h\+\_\+level} = h\+\_\+level or 0
+\item 
+\Hypertarget{class_alg___l___classes_1_1_alg_little_a9677a43a4396090fc6246b9ee516a426}\label{class_alg___l___classes_1_1_alg_little_a9677a43a4396090fc6246b9ee516a426} 
+list {\bfseries paths} = \mbox{[}$\,$\mbox{]}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_alg___l___classes_1_1_alg_little_aeff860f6f8b73721994e9d0dc007dddf}\label{class_alg___l___classes_1_1_alg_little_aeff860f6f8b73721994e9d0dc007dddf} 
+int {\bfseries MAXID} = -\/1
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}    Класс для реализации алгоритма Литтла.
+
+    Attributes:
+        MAXID (int): Максимальный идентификатор узла.
+        planID (int): Уникальный идентификатор текущего узла.
+        matrix (np.ndarray): Матрица расстояний.
+        sub_matrix (np.ndarray): Подматрица расстояний без заголовков.
+        paths (list[Edge]): Список путей (ребер) в текущем узле.
+        discarded_nodes (list[AlgLittle]): Список исключенных узлов.
+        hmin (float | int): Текущая нижняя граница стоимости.
+        h_level (int): Уровень узла в дереве решений.
+\end{DoxyVerb}
+ 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_alg___l___classes_1_1_alg_little_a9d35967c9507b82a6dfc2fdec12e21a6}\index{Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}!\_\_init\_\_@{\_\_init\_\_}}
+\index{\_\_init\_\_@{\_\_init\_\_}!Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}}
+\doxysubsubsection{\texorpdfstring{\_\_init\_\_()}{\_\_init\_\_()}}
+{\footnotesize\ttfamily \label{class_alg___l___classes_1_1_alg_little_a9d35967c9507b82a6dfc2fdec12e21a6} 
+Alg\+\_\+\+L\+\_\+\+Classes.\+Alg\+Little.\+\_\+\+\_\+init\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{np.\+ndarray}]{new\+\_\+matrix}{, }\item[{list\mbox{[}\mbox{\hyperlink{class_alg___l___classes_1_1_alg_little}{Alg\+Little}}\mbox{]} \texorpdfstring{$\vert$}{|} None }]{discarded\+\_\+nodes}{ = {\ttfamily None}, }\item[{list\mbox{[}\mbox{\hyperlink{class_alg___l___classes_1_1_edge}{Edge}}\mbox{]} }]{paths}{ = {\ttfamily None}, }\item[{float \texorpdfstring{$\vert$}{|} int }]{hmin}{ = {\ttfamily 0}, }\item[{int }]{h\+\_\+level}{ = {\ttfamily 0}}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}    Инициализация узла алгоритма Литтла.
+
+    Args:
+        new_matrix (np.ndarray): Матрица расстояний.
+        discarded_nodes (list[AlgLittle] | None): Список исключенных узлов.
+        paths (list[Edge]): Список путей (ребер).
+        hmin (float | int): Начальная нижняя граница стоимости.
+        h_level (int): Уровень узла в дереве решений.
+\end{DoxyVerb}
+ 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_alg___l___classes_1_1_alg_little_a36f27c9c7045bbfd771f1f0b1f1e9eb9}\index{Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}!\_\_repr\_\_@{\_\_repr\_\_}}
+\index{\_\_repr\_\_@{\_\_repr\_\_}!Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}}
+\doxysubsubsection{\texorpdfstring{\_\_repr\_\_()}{\_\_repr\_\_()}}
+{\footnotesize\ttfamily \label{class_alg___l___classes_1_1_alg_little_a36f27c9c7045bbfd771f1f0b1f1e9eb9} 
+Alg\+\_\+\+L\+\_\+\+Classes.\+Alg\+Little.\+\_\+\+\_\+repr\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}    Возвращает подробное строковое представление узла.
+
+    Returns:
+        str: Подробное строковое представление узла.
+\end{DoxyVerb}
+ \Hypertarget{class_alg___l___classes_1_1_alg_little_a1b24a2c5d4a0f9ec1be193e91f074b5a}\index{Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}!\_\_str\_\_@{\_\_str\_\_}}
+\index{\_\_str\_\_@{\_\_str\_\_}!Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}}
+\doxysubsubsection{\texorpdfstring{\_\_str\_\_()}{\_\_str\_\_()}}
+{\footnotesize\ttfamily \label{class_alg___l___classes_1_1_alg_little_a1b24a2c5d4a0f9ec1be193e91f074b5a} 
+Alg\+\_\+\+L\+\_\+\+Classes.\+Alg\+Little.\+\_\+\+\_\+str\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}    Возвращает строковое представление узла.
+
+    Returns:
+        str: Строковое представление узла.
+\end{DoxyVerb}
+ \Hypertarget{class_alg___l___classes_1_1_alg_little_a3b41ee4ffdb06bedde95ffae57beccf2}\index{Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}!check\_end\_algo@{check\_end\_algo}}
+\index{check\_end\_algo@{check\_end\_algo}!Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}}
+\doxysubsubsection{\texorpdfstring{check\_end\_algo()}{check\_end\_algo()}}
+{\footnotesize\ttfamily \label{class_alg___l___classes_1_1_alg_little_a3b41ee4ffdb06bedde95ffae57beccf2} 
+ bool Alg\+\_\+\+L\+\_\+\+Classes.\+Alg\+Little.\+check\+\_\+end\+\_\+algo (\begin{DoxyParamCaption}\item[{}]{self}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}    Проверяет, завершен ли алгоритм (если матрица 2*2, то алггоритм закончен).
+
+    Returns:
+        bool: True, если алгоритм завершен, иначе False.
+\end{DoxyVerb}
+ \Hypertarget{class_alg___l___classes_1_1_alg_little_afcdfb93071d098f3df8adaeb165321b8}\index{Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}!delete\_edge@{delete\_edge}}
+\index{delete\_edge@{delete\_edge}!Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}}
+\doxysubsubsection{\texorpdfstring{delete\_edge()}{delete\_edge()}}
+{\footnotesize\ttfamily \label{class_alg___l___classes_1_1_alg_little_afcdfb93071d098f3df8adaeb165321b8} 
+ (typing.\+Self) Alg\+\_\+\+L\+\_\+\+Classes.\+Alg\+Little.\+delete\+\_\+edge (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{list}]{zeros}{, }\item[{int}]{max\+\_\+coeff}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}    Удаляет ребро из пути, обновляет матрицу, устанавливая бесконечность для соответствующего элемента, и создает новый узел.
+
+    Args:
+        zeros (list): Список координат нулевых элементов матрицы, из которых выбирается ребро для удаления.
+        max_coeff (int): Максимальный коэффициент нулевого элемента.
+
+    Returns:
+        AlgLittle: Новый узел с обновленной матрицей и удаленным ребром.
+\end{DoxyVerb}
+ \Hypertarget{class_alg___l___classes_1_1_alg_little_abd800badb18fc8e5a7eed78dfffc35e4}\index{Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}!end\_algo@{end\_algo}}
+\index{end\_algo@{end\_algo}!Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}}
+\doxysubsubsection{\texorpdfstring{end\_algo()}{end\_algo()}}
+{\footnotesize\ttfamily \label{class_alg___l___classes_1_1_alg_little_abd800badb18fc8e5a7eed78dfffc35e4} 
+ list\mbox{[}list\mbox{]} Alg\+\_\+\+L\+\_\+\+Classes.\+Alg\+Little.\+end\+\_\+algo (\begin{DoxyParamCaption}\item[{}]{self}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}    Преобразует пути в список ребер.
+
+    Returns:
+        list[list]: Список ребер.
+\end{DoxyVerb}
+ \Hypertarget{class_alg___l___classes_1_1_alg_little_a38062e0427528f93815733c4d2fde42c}\index{Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}!find\_rest\_path@{find\_rest\_path}}
+\index{find\_rest\_path@{find\_rest\_path}!Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}}
+\doxysubsubsection{\texorpdfstring{find\_rest\_path()}{find\_rest\_path()}}
+{\footnotesize\ttfamily \label{class_alg___l___classes_1_1_alg_little_a38062e0427528f93815733c4d2fde42c} 
+ list\mbox{[}list\mbox{]} Alg\+\_\+\+L\+\_\+\+Classes.\+Alg\+Little.\+find\+\_\+rest\+\_\+path (\begin{DoxyParamCaption}\item[{}]{self}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}    Выбирает два ребра из матрицы 2x2, которые нужно включить в путь.
+
+    Returns:
+        list[list]: Список выбранных ребер.
+\end{DoxyVerb}
+ \Hypertarget{class_alg___l___classes_1_1_alg_little_ad4162edb3804dd96dd460f1498f44da6}\index{Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}!get\_coefficient@{get\_coefficient}}
+\index{get\_coefficient@{get\_coefficient}!Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}}
+\doxysubsubsection{\texorpdfstring{get\_coefficient()}{get\_coefficient()}}
+{\footnotesize\ttfamily \label{class_alg___l___classes_1_1_alg_little_ad4162edb3804dd96dd460f1498f44da6} 
+ int Alg\+\_\+\+L\+\_\+\+Classes.\+Alg\+Little.\+get\+\_\+coefficient (\begin{DoxyParamCaption}\item[{np.\+ndarray}]{self}{, }\item[{int}]{r}{, }\item[{int}]{c}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}    Вычисляет коэффициент для нулевого элемента матрицы, находящегося в строке r и столбце c.
+
+    Args:
+        r (int): Индекс строки нулевого элемента.
+        c (int): Индекс столбца нулевого элемента.
+
+    Returns:
+        int: Коэффициент нулевого элемента.
+\end{DoxyVerb}
+ \Hypertarget{class_alg___l___classes_1_1_alg_little_a53833db6375babf778de648aceea4e51}\index{Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}!head\_matrix@{head\_matrix}}
+\index{head\_matrix@{head\_matrix}!Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}}
+\doxysubsubsection{\texorpdfstring{head\_matrix()}{head\_matrix()}}
+{\footnotesize\ttfamily \label{class_alg___l___classes_1_1_alg_little_a53833db6375babf778de648aceea4e51} 
+ np.\+ndarray Alg\+\_\+\+L\+\_\+\+Classes.\+Alg\+Little.\+head\+\_\+matrix (\begin{DoxyParamCaption}\item[{np.\+ndarray}]{matrix}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\begin{DoxyVerb}    Добавляет заголовки строк и столбцов к матрице.
+
+    Args:
+        matrix (np.ndarray): Исходная матрица.
+
+    Returns:
+        np.ndarray: Матрица с заголовками.
+\end{DoxyVerb}
+ \Hypertarget{class_alg___l___classes_1_1_alg_little_a77f45d34e0a85cc7f0439e191d8b3d92}\index{Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}!include\_edge@{include\_edge}}
+\index{include\_edge@{include\_edge}!Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}}
+\doxysubsubsection{\texorpdfstring{include\_edge()}{include\_edge()}}
+{\footnotesize\ttfamily \label{class_alg___l___classes_1_1_alg_little_a77f45d34e0a85cc7f0439e191d8b3d92} 
+Alg\+\_\+\+L\+\_\+\+Classes.\+Alg\+Little.\+include\+\_\+edge (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{list}]{zeros}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}    Включает ребро в путь, обновляет матрицу и создает новый узел с учетом включенного ребра.
+
+    Args:
+        zeros (list): Список координат нулевых элементов матрицы, из которых выбирается ребро для включения.
+
+    Returns:
+        AlgLittle: Новый узел с обновленной матрицей и включенным ребром.
+\end{DoxyVerb}
+ \Hypertarget{class_alg___l___classes_1_1_alg_little_a60823ef764f29bd8d39b45cfa25d3a57}\index{Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}!next\_id@{next\_id}}
+\index{next\_id@{next\_id}!Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}}
+\doxysubsubsection{\texorpdfstring{next\_id()}{next\_id()}}
+{\footnotesize\ttfamily \label{class_alg___l___classes_1_1_alg_little_a60823ef764f29bd8d39b45cfa25d3a57} 
+Alg\+\_\+\+L\+\_\+\+Classes.\+Alg\+Little.\+next\+\_\+id (\begin{DoxyParamCaption}\item[{}]{cls}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}    Генерирует следующий уникальный идентификатор узла.
+
+    Returns:
+        int: Уникальный идентификатор.
+\end{DoxyVerb}
+ \Hypertarget{class_alg___l___classes_1_1_alg_little_a92cb2939bda7bd36c17220374e88fa8d}\index{Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}!pretty\_matrix@{pretty\_matrix}}
+\index{pretty\_matrix@{pretty\_matrix}!Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}}
+\doxysubsubsection{\texorpdfstring{pretty\_matrix()}{pretty\_matrix()}}
+{\footnotesize\ttfamily \label{class_alg___l___classes_1_1_alg_little_a92cb2939bda7bd36c17220374e88fa8d} 
+Alg\+\_\+\+L\+\_\+\+Classes.\+Alg\+Little.\+pretty\+\_\+matrix (\begin{DoxyParamCaption}\item[{}]{self}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}    Возвращает строковое представление матрицы.
+
+    Returns:
+        str: Строковое представление матрицы.
+\end{DoxyVerb}
+ \Hypertarget{class_alg___l___classes_1_1_alg_little_a5b072311b9f3bd1fef50bdb2b549581b}\index{Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}!reduce@{reduce}}
+\index{reduce@{reduce}!Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}}
+\doxysubsubsection{\texorpdfstring{reduce()}{reduce()}}
+{\footnotesize\ttfamily \label{class_alg___l___classes_1_1_alg_little_a5b072311b9f3bd1fef50bdb2b549581b} 
+ int Alg\+\_\+\+L\+\_\+\+Classes.\+Alg\+Little.\+reduce (\begin{DoxyParamCaption}\item[{np.\+ndarray}]{self}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}    Высчитывает НГЦФ и выполняет редукцию матрицы, уменьшая ее значения на минимумы строк и столбцов, и обновляет значение hmin.
+
+    Returns:
+        int: Значение hmin после редукции.
+\end{DoxyVerb}
+ \Hypertarget{class_alg___l___classes_1_1_alg_little_aab33e286fc99592909843434aa5d2c58}\index{Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}!SearchingMaxDegreeZero@{SearchingMaxDegreeZero}}
+\index{SearchingMaxDegreeZero@{SearchingMaxDegreeZero}!Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}}
+\doxysubsubsection{\texorpdfstring{SearchingMaxDegreeZero()}{SearchingMaxDegreeZero()}}
+{\footnotesize\ttfamily \label{class_alg___l___classes_1_1_alg_little_aab33e286fc99592909843434aa5d2c58} 
+ (list, int) Alg\+\_\+\+L\+\_\+\+Classes.\+Alg\+Little.\+Searching\+Max\+Degree\+Zero (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{int}]{max\+\_\+coeff}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}    Находит нулевые элементы матрицы и определяет их коэффициенты. Возвращает список координат нулей с максимальным коэффициентом.
+
+    Args:
+        max_coeff (int): Текущее максимальное значение коэффициента.
+
+    Returns:
+        tuple: Список координат нулей с максимальным коэффициентом и обновленное значение max_coeff.
+\end{DoxyVerb}
+ \Hypertarget{class_alg___l___classes_1_1_alg_little_a3d385decfe1207e8ec85731b3953ff86}\index{Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}!trajectory@{trajectory}}
+\index{trajectory@{trajectory}!Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}}
+\doxysubsubsection{\texorpdfstring{trajectory()}{trajectory()}}
+{\footnotesize\ttfamily \label{class_alg___l___classes_1_1_alg_little_a3d385decfe1207e8ec85731b3953ff86} 
+ list\mbox{[}int\mbox{]} Alg\+\_\+\+L\+\_\+\+Classes.\+Alg\+Little.\+trajectory (\begin{DoxyParamCaption}\item[{}]{self}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}    Возвращает последовательность точек, связанных траекторией.
+
+    Returns:
+        list[int]: Список точек траектории.
+\end{DoxyVerb}
+ 
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_alg___l___classes_1_1_alg_little_a7454511f076d1bef65eed862b60108d2}\index{Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}!discarded\_nodes@{discarded\_nodes}}
+\index{discarded\_nodes@{discarded\_nodes}!Alg\_L\_Classes.AlgLittle@{Alg\_L\_Classes.AlgLittle}}
+\doxysubsubsection{\texorpdfstring{discarded\_nodes}{discarded\_nodes}}
+{\footnotesize\ttfamily \label{class_alg___l___classes_1_1_alg_little_a7454511f076d1bef65eed862b60108d2} 
+tuple Alg\+\_\+\+L\+\_\+\+Classes.\+Alg\+Little.\+discarded\+\_\+nodes}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=\ \ (}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ discarded\_nodes\ \textcolor{keywordflow}{or}\ []}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ )}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Projects/drone\+\_\+trajectory\+\_\+planning/\+Alg\+\_\+\+Little/Alg\+\_\+\+L\+\_\+\+Classes.\+py\end{DoxyCompactItemize}

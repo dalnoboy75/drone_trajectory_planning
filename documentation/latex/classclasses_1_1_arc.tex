@@ -1,0 +1,49 @@
+\doxysection{classes.\+Arc Class Reference}
+\hypertarget{classclasses_1_1_arc}{}\label{classclasses_1_1_arc}\index{classes.Arc@{classes.Arc}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classclasses_1_1_arc_a7621748b49e0021137123f2ec89a6eb1}\label{classclasses_1_1_arc_a7621748b49e0021137123f2ec89a6eb1} 
+{\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self, \mbox{\hyperlink{classclasses_1_1_point2_d}{Point2D}} a, \mbox{\hyperlink{classclasses_1_1_point2_d}{Point2D}} b, \mbox{\hyperlink{classclasses_1_1_circle}{Circle}} circle)
+\item 
+\Hypertarget{classclasses_1_1_arc_a9427ef8089f7c13568c990c2e557ad90}\label{classclasses_1_1_arc_a9427ef8089f7c13568c990c2e557ad90} 
+{\bfseries get\+\_\+length} (self)
+\item 
+\Hypertarget{classclasses_1_1_arc_a1f0bf0f3c7756d8195a88c7102b6c548}\label{classclasses_1_1_arc_a1f0bf0f3c7756d8195a88c7102b6c548} 
+{\bfseries plot} (self, plt.\+Axes ax, targets)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classclasses_1_1_arc_a1c22bb81584d6766bb88c0a0df03d5a1}\label{classclasses_1_1_arc_a1c22bb81584d6766bb88c0a0df03d5a1} 
+{\bfseries first\+\_\+point} = a
+\item 
+\Hypertarget{classclasses_1_1_arc_abaf67923141789e937f591916accaa69}\label{classclasses_1_1_arc_abaf67923141789e937f591916accaa69} 
+{\bfseries second\+\_\+point} = b
+\item 
+\Hypertarget{classclasses_1_1_arc_a3b3018fbed7bcf9102f8bd88c6f7eda7}\label{classclasses_1_1_arc_a3b3018fbed7bcf9102f8bd88c6f7eda7} 
+{\bfseries circle} = circle
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}Представляет дугу окружности в 2D пространстве.
+
+Args:
+    first_point (Point2D): Первая точка дуги.
+    second_point (Point2D): Вторая точка дуги.
+    circle (Circle): Окружность, на которой лежит дуга.
+
+Methods:
+    __init__(a, b, circle): Инициализирует объект Arc.
+    get_length(): Вычисляет длину дуги.
+    plot(ax): Рисует дугу на объекте matplotlib Axes.
+
+Returns:
+    float: Длина дуги или INF в случае ошибки вычисления.
+\end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Projects/drone\+\_\+trajectory\+\_\+planning/geometry/classes.\+py\end{DoxyCompactItemize}

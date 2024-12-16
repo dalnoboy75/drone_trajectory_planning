@@ -1,0 +1,41 @@
+\doxysection{classes.\+Line\+Function Class Reference}
+\hypertarget{classclasses_1_1_line_function}{}\label{classclasses_1_1_line_function}\index{classes.LineFunction@{classes.LineFunction}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classclasses_1_1_line_function_ab5a65f2bd777cc1aa24a5036193a6680}\label{classclasses_1_1_line_function_ab5a65f2bd777cc1aa24a5036193a6680} 
+{\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self, \mbox{\hyperlink{classclasses_1_1_point2_d}{Point2D}} a=None, \mbox{\hyperlink{classclasses_1_1_point2_d}{Point2D}} b=None, a\+\_\+coef=None, b\+\_\+coef=None, c\+\_\+coef=None)
+\item 
+\Hypertarget{classclasses_1_1_line_function_a600fd3223816f89b0eeec6c468c94191}\label{classclasses_1_1_line_function_a600fd3223816f89b0eeec6c468c94191} 
+{\bfseries substitute} (self, \mbox{\hyperlink{classclasses_1_1_point2_d}{Point2D}} p)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classclasses_1_1_line_function_a86e19511bd0652d7a181d792415e3673}\label{classclasses_1_1_line_function_a86e19511bd0652d7a181d792415e3673} 
+{\bfseries a} = b.\+y -\/ a.\+y
+\item 
+\Hypertarget{classclasses_1_1_line_function_a6eace6f90d3d7be4a9677da182c1a137}\label{classclasses_1_1_line_function_a6eace6f90d3d7be4a9677da182c1a137} 
+{\bfseries b} = -\/(b.\+x -\/ a.\+x)
+\item 
+\Hypertarget{classclasses_1_1_line_function_ab7eb9cd9207f65c833b7b72ad4ca9380}\label{classclasses_1_1_line_function_ab7eb9cd9207f65c833b7b72ad4ca9380} 
+{\bfseries c} = -\/self.\+b\texorpdfstring{$\ast$}{*} a.\+y -\/ self.\+a \texorpdfstring{$\ast$}{*} a.\+x
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}    Класс, представляющий линейную функцию (прямую).
+
+    Args:
+        a:Point2D: первая точка, принадлежащая прямой
+        b:Point2D: вторая точка принадлежащая прямой
+        a_coef, b_coef, c_coef: коэффициенты прямой
+
+    Methods:
+        __init__(a:Point2D = None, b:Point2D = None, a_coef = None, b_coef = None, c_coef = None): Инициализирует экземпляр LineFunction.
+        substitute(p:Point2D): проверка, лежит ли точка на прямой\end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Projects/drone\+\_\+trajectory\+\_\+planning/geometry/classes.\+py\end{DoxyCompactItemize}
