@@ -95,6 +95,10 @@ class MainWindow(QMainWindow):
         load_polygons_json_action.triggered.connect(self.load_polygons_from_json)
         file_menu.addAction(load_polygons_json_action)
 
+        save_json_action = QAction('Save to JSON', self)
+        save_json_action.triggered.connect(self.save_to_json)
+        file_menu.addAction(save_json_action)
+
     def setup_connections(self):
         self.targetAddFromTablePushButton.clicked.connect(self.add_target_from_table)
         self.targetRemovePushButton.clicked.connect(self.remove_target)
@@ -346,7 +350,7 @@ class MainWindow(QMainWindow):
         t = Task(data)
         matrix = t.length_matrix
         s = t.length_matrix.shape[0]
-        ans, answer = algorithm_Lit(matrix, s, 4)
+        ans, answer = algorithm_Lit(matrix, s, 6)
         print(ans, answer)
 
         # Очищаем таблицы перед добавлением новых данных
@@ -381,6 +385,60 @@ class MainWindow(QMainWindow):
 
         # Обновляем график
         self.update_plot()
+
+    def tables_to_dict(self):
+        data = {
+            "points": [],
+            "circles": [],
+            "polygons": []
+        }
+
+        # Собираем точки
+        for row in range(self.targetInfoTableWidget.rowCount()):
+            x_item = self.targetInfoTableWidget.item(row, 0)
+            y_item = self.targetInfoTableWidget.item(row, 1)
+            if x_item and y_item:
+                x = float(x_item.text())
+                y = float(y_item.text())
+                data["points"].append({"x": x, "y": y})
+
+        # Собираем окружности
+        for row in range(self.trappyCircleInfoTableWidget.rowCount()):
+            x_item = self.trappyCircleInfoTableWidget.item(row, 0)
+            y_item = self.trappyCircleInfoTableWidget.item(row, 1)
+            radius_item = self.trappyCircleInfoTableWidget.item(row, 2)
+            if x_item and y_item and radius_item:
+                x = float(x_item.text())
+                y = float(y_item.text())
+                radius = float(radius_item.text())
+                data["circles"].append([x, y, radius])
+
+        # Собираем многоугольники
+        polygons = {}
+        for row in range(self.hillInfoTableWidget.rowCount()):
+            polygon_id_item = self.hillInfoTableWidget.item(row, 0)
+            x_item = self.hillInfoTableWidget.item(row, 1)
+            y_item = self.hillInfoTableWidget.item(row, 2)
+            if polygon_id_item and x_item and y_item:
+                polygon_id = int(polygon_id_item.text())
+                x = float(x_item.text())
+                y = float(y_item.text())
+                if polygon_id not in polygons:
+                    polygons[polygon_id] = []
+                polygons[polygon_id].append({"x": x, "y": y})
+
+        for polygon in polygons.values():
+            data["polygons"].append(polygon)
+
+        return data
+
+    def save_to_json(self):
+        data = self.tables_to_dict()
+        file_name, _ = QFileDialog.getSaveFileName(self, "Save JSON File", "", "JSON Files (*.json);;All Files (*)")
+        if file_name:
+            with open(file_name, 'w') as file:
+                json.dump(data, file, indent=4)
+
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
