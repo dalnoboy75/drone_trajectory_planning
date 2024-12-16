@@ -17,9 +17,11 @@ def has_cycle(edges: list[tuple]):
 
     visited = set()
     rec_stack = set()
+    cycle_nodes = set()  
 
     def dfs(node):
         if node in rec_stack:
+            cycle_nodes.add(node)  
             return True
         if node in visited:
             return False
@@ -30,6 +32,7 @@ def has_cycle(edges: list[tuple]):
             if neighbor not in graph:
                 return False
             if dfs(neighbor):
+                cycle_nodes.add(node)  
                 return True
 
         rec_stack.remove(node)
@@ -37,8 +40,8 @@ def has_cycle(edges: list[tuple]):
 
     for vertex in graph:
         if dfs(vertex):
-            return True
-    return False
+            return True, len(cycle_nodes)  
+    return False, 0  
 
 @dataclass
 class Edge:
@@ -169,7 +172,8 @@ class AlgLittle:
         new_matrix = np.delete(new_matrix, row_index[0], axis=0)  # Удаляем строку
         new_matrix = np.delete(new_matrix, col_index[0], axis=1)  # Удаляем столбец
 
-        if len(edges) >= 3 and has_cycle(edges):
+        has_cycle_result, cycle_count = has_cycle(edges)
+        if len(edges) >= 3 and has_cycle_result:
             node_include = AlgLittle(
                 new_matrix=new_matrix,
                 discarded_nodes=self.discarded_nodes.copy(),
@@ -522,7 +526,7 @@ def algorithm_Lit(
         for i in range(int(kolvo_airfields / 2)):
             list_airfields.append(pos + 1)
             pos += 2
-
+    size_matrix = numbers.shape[0]
     # print(f"list: {list_airfields}")
     while True:
         # print(repr(node))
@@ -557,8 +561,8 @@ def algorithm_Lit(
                 l.append(listok)
             
             edges = [(int(edge[0]), int(edge[1])) for edge in l if edge[2]]
-
-            if has_cycle(edges):
+            has_cycle_result, cycle_count = has_cycle(edges)
+            if has_cycle_result and cycle_count != size_matrix:
                 
                 edges_1 = [(int(edge[0]), int(edge[1])) for edge in r if edge[2]]
                 if(edges_1[0] == (node1.matrix[1][0], node1.matrix[0][1])):
