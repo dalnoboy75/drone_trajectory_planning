@@ -415,7 +415,7 @@ def get_list_edges(data: list, num_rows: int, start_airfield: int) -> list[tuple
         Returns:
             list[tuple]: Список ребер.
     """
-    print(data)
+    print(f"st: {start_airfield}")
     result = []
     # Найти первую пару
     for item in data:
@@ -473,6 +473,7 @@ def add_airfields(numbers: np.ndarray, s: int, kolvo_airfields: int) -> np.matri
         Returns:
             np.matrix: Матрица с добавленными аэродромами.
     """
+    print(numbers)
     rows = numbers.shape[0]
     size = rows + kolvo_airfields
     new_matrix = np.zeros((size, size), dtype=int)
@@ -512,11 +513,13 @@ def algorithm_Lit(
             tuple[list[list], list[tuple]]: Результаты алгоритма.
     """
     # добавление строки и столбца "заголовков"
-    kolvo_airfields *= 2
+    # if kolvo_airfields != 1:
+    #     kolvo_airfields *= 2
     pos = numbers.shape[0]
     if kolvo_airfields != 1:
         numbers = add_airfields(numbers, s, kolvo_airfields)
     numbers = AlgLittle.head_matrix(numbers)
+    print(f"numbers: {numbers}")
     node = AlgLittle(new_matrix=numbers)
     num_rows = node.matrix.shape[0] - 1
     node.reduce()
@@ -586,11 +589,13 @@ def algorithm_Lit(
                     l_1.append(listok)
                 answer = get_list_edges(l_1, num_rows, start_airfield)
                 ans = vertex(answer, list_airfields)
-                for x,y in answer:
+                for i in range(len(answer)):
+                    x, y = answer[i]
                     if x > start_airfield:
                         x = start_airfield
                     if y > start_airfield:
                         y = start_airfield
+                    answer[i] = (x, y)
                 for x in range(len(ans)):
                     for j in range(len(ans[x])):
                         if ans[x][j] > start_airfield:
@@ -615,13 +620,14 @@ def algorithm_Lit(
             print(f"ans: {ans}")
             return ans, answer
         
-# assert_matr = np.array([    [INF, 10, 5, 9, 16, 8],
-#                    [6, INF, 11, 8, 18, 19],
-#                    [7, 13, INF, 3, 4, 14],
-#                    [5, 9, 6, INF, 12, 17],
-#                    [5, 4, 11, 6, INF, 14],
-#                    [17, 7, 12, 13, 16, INF]])
-# print(algorithm_Lit(assert_matr, assert_matr.shape[0], 1))
+
+# assert_matr = np.array([[1.000000e+08, 1.3026466e+01, 1.6874285e+01, 5.8309520e+00, 1.4775642e+01],
+#  [1.3026466e+01, 1.000000e+08, 1.0792264e+01, 1.8294219e+01, 1.3916611e+01],
+#  [1.6874285e+01, 1.0792264e+01, 1.000000e+08, 1.3015664e+01, 4.1231060e+00],
+#  [5.8309520e+00, 1.8294219e+01, 1.3015664e+01, 1.000000e+08, 1.0242517e+01],
+#  [1.4775642e+01, 1.3916611e+01, 4.1231060e+00, 1.0242517e+01, 1.000000e+08]]
+# )
+# print(algorithm_Lit(assert_matr, assert_matr.shape[0] - 1, 2))
 # size = 10
 # # for i in range(5):
 # matrix = np.random.randint(1, 100, size=(size, size))
