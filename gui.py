@@ -368,25 +368,10 @@ class MainWindow(QMainWindow):
             self.plot_widget.plot(x_values, y_values, pen=mkPen(color=QColor(0, 255, 0)))
 
     def run(self):
-        """Выполнение алгоритма."""
-        data = self.tables_to_dict()
-        print(data)
-        task = Task(data)
-        matrix = task.length_matrix
-        print(matrix)
-        s = task.length_matrix.shape[0]
-        ans, answer = algorithm_Lit(matrix, s, 5)
-        print(ans, answer)
-
-        # Преобразуем вершины в рёбра
-        edges = []
-        for start, finish in zip(ans[:-1], ans[1:]):
-            route = task.path_matrix[start, finish]
-            edges.extend(route.route)
-
-        # Отрисовываем траекторию
-        self.plot_trajectory(task, edges)
-        self.update_plot()
+        """Рисование окружности радиуса 1 с центром в точке (0, 0)."""
+        
+        self.draw_circle(0, 0, 1)  # Рисуем окружность
+        self.plot_widget.replot()  # Обновляем график
 
     def load_data_from_data4_json(self):
         """Загрузка данных из файла data4.json."""
@@ -408,9 +393,11 @@ class MainWindow(QMainWindow):
         for circle in data.get("circles", []):
             self.add_circle_to_table(circle[0], circle[1], circle[2])
 
+        id = 0
         for polygon in data.get("polygons", []):
             for vertex in polygon:
-                self.add_polygon_vertices_to_table(vertex.get("polygon_id", 0), vertex["x"], vertex["y"])
+                self.add_polygon_vertices_to_table(vertex.get("polygon_id", id), vertex["x"], vertex["y"])
+            id += 1
 
         self.update_plot()
 
