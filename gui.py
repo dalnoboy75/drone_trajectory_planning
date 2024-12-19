@@ -367,12 +367,6 @@ class MainWindow(QMainWindow):
             y_values.append(y_values[0])
             self.plot_widget.plot(x_values, y_values, pen=mkPen(color=QColor(0, 255, 0)))
 
-    def run(self):
-        """Рисование окружности радиуса 1 с центром в точке (0, 0)."""
-        
-        self.draw_circle(0, 0, 1)  # Рисуем окружность
-        self.plot_widget.replot()  # Обновляем график
-
     def load_data_from_data4_json(self):
         """Загрузка данных из файла data4.json."""
         file_path = "data4.json"
@@ -400,6 +394,66 @@ class MainWindow(QMainWindow):
             id += 1
 
         self.update_plot()
+    
+
+    def run(self):
+        """Расчет и отрисовка траектории движения дрона."""
+        data = self.tables_to_dict()
+
+        t = Task(data)
+        matrix = t.length_matrix
+        s = t.length_matrix.shape[0]
+
+        # Расчет траектории
+        ans, answer = algorithm_Lit(matrix, s - 1, 1)
+        print(matrix)
+        print(ans, answer)
+
+        # Преобразование данных для отрисовки
+        points = data.get("points", [])
+        circles = data.get("circles", [])
+        polygons = data.get("polygons", [])
+
+        # Создаем словарь для быстрого доступа к точкам по их номерам
+        point_dict = {i + 1: (point["x"], point["y"]) for i, point in enumerate(points)}
+
+        # Очистка графика
+        self.plot_widget.clear()
+
+        # Отрисовка точек
+        for point in points:
+            self.plot_widget.plot([point["x"]], [point["y"]], pen=None, symbol='o', symbolSize=5, symbolBrush=QColor(255, 0, 0))
+
+        # Отрисовка окружностей
+        for circle in circles:
+            x, y, radius = circle
+            self.draw_circle(x, y, radius)
+
+        # Отрисовка многоугольников
+        for polygon in polygons:
+            x_values = [vertex["x"] for vertex in polygon]
+            y_values = [vertex["y"] for vertex in polygon]
+            x_values.append(x_values[0])
+            y_values.append(y_values[0])
+            self.plot_widget.plot(x_values, y_values, pen=mkPen(color=QColor(0, 255, 0)))
+
+        # Отрисовка траектории
+        if answer:
+            gpath = classes.GPath()  # Создаем объект GPath для хранения пути
+            for start, end in answer:
+                # Преобразуем номера точек в координаты
+
+                if start and end:
+                    gpath += t.path_matrix[start - 1, end - 1]
+
+            #Проверяем типы ребер в пути
+            for figure in gpath.route:
+                if isinstance(figure, classes.Line):
+                    self.draw_line(figure)
+                elif isinstance(figure, classes.Arc):
+                    self.draw_arc(figure)
+
+        self.plot_widget.replot()
 
     def draw_line(self, line):
         """Отрисовка линии на графике."""
@@ -407,7 +461,7 @@ class MainWindow(QMainWindow):
             [line.first_point.x, line.second_point.x],
             [line.first_point.y, line.second_point.y],
             pen=mkPen(color=(255, 0, 0), width=2)
-        )
+    )
 
     def draw_arc(self, arc):
         """Отрисовка дуги на графике."""
@@ -415,10 +469,6 @@ class MainWindow(QMainWindow):
         end_angle = np.arctan2(arc.second_point.y - arc.circle.center.y, arc.second_point.x - arc.circle.center.x)
 
         if end_angle < start_angle:
-            end_angle += 2 * np.pi
-
-        if end_angle - start_angle > np.pi:
-            start_angle, end_angle = end_angle, start_angle
             end_angle += 2 * np.pi
 
         num_points = 100
