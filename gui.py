@@ -443,7 +443,7 @@ class MainWindow(QMainWindow):
             for start, end in answer:
                 # Преобразуем номера точек в координаты
 
-                if start and end:
+                if start and end and start != end:
                     gpath += t.path_matrix[start - 1, end - 1]
 
             #Проверяем типы ребер в пути
