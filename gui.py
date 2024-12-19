@@ -7,13 +7,13 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QColor
 from pyqtgraph import PlotWidget, mkPen
-from geometry.matrix_reading import Task
-from Alg_Little.Alg_L_Classes import algorithm_Lit
+from matrix_reading import Task
+from Alg_L_Classes import algorithm_Lit
 import numpy as np
 import csv
 import json
 import os
-import geometry.classes
+import classes
 
 
 class MainWindow(QMainWindow):
@@ -465,17 +465,20 @@ class MainWindow(QMainWindow):
 
     def draw_arc(self, arc):
         """Отрисовка дуги на графике."""
+        # Вычисляем начальный и конечный углы
         start_angle = np.arctan2(arc.first_point.y - arc.circle.center.y, arc.first_point.x - arc.circle.center.x)
         end_angle = np.arctan2(arc.second_point.y - arc.circle.center.y, arc.second_point.x - arc.circle.center.x)
 
-        if end_angle < start_angle:
-            end_angle += 2 * np.pi
+        # Убеждаемся, что end_angle больше start_angle (для меньшей дуги)
 
+        # Генерируем точки для отрисовки дуги
         num_points = 100
-        angles = np.linspace(start_angle, end_angle, num_points)
+        angles = np.linspace(min(start_angle, end_angle), max(start_angle, end_angle), num_points)
         x = arc.circle.center.x + arc.circle.radius * np.cos(angles)
         y = arc.circle.center.y + arc.circle.radius * np.sin(angles)
-        self.plot_widget.plot(x, y, pen=mkPen(color=(0, 0, 255), width=2))
+
+        # Отрисовываем дугу
+        self.plot_widget.plot(x, y, pen=mkPen(color=(255, 0, 0), width=2))
 
     def plot_trajectory(self, task, edges):
         """Отрисовка траектории на графике по списку рёбер."""
