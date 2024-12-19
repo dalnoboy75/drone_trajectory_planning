@@ -72,7 +72,7 @@ class AlgLittle:
             hmin (float | int): Текущая нижняя граница стоимости.
             h_level (int): Уровень узла в дереве решений.
     """
-    MAXID = -1  # чтобы первый id был 0 и как в примере.
+    MAXID = -1  
 
     def __init__(
         self,
@@ -94,12 +94,11 @@ class AlgLittle:
         """
         self.planID = AlgLittle.next_id()
         self.matrix = new_matrix
-        # обрезаем первый столбец и строку - это номера точек, а не расстояния,
         self.sub_matrix = new_matrix[1:, 1:]
-        self.paths: list[Edge] = paths or []  # [+(1, 5), -(3, 4), -(2, 5)]
+        self.paths: list[Edge] = paths or [] 
         self.discarded_nodes: list[AlgLittle] = (
             discarded_nodes or []
-        )  # ноды дерева, суть планы Xi
+        )
         self.hmin = hmin
         self.h_level = h_level or 0
 
@@ -132,14 +131,6 @@ class AlgLittle:
         """
         return str(self.matrix)
 
-    # @property
-    # def hmin(self):
-    #     return self.__hmin
-
-    # @hmin.setter
-    # def hmin(self, value: int):
-    #     self.__hmin += value
-
     def include_edge(self, zeros: list):
         """
             Включает ребро в путь, обновляет матрицу и создает новый узел с учетом включенного ребра.
@@ -158,19 +149,16 @@ class AlgLittle:
 
         col_index_1 = np.where(new_matrix[0] == edge[0])[0]
         row_index_1 = np.where(new_matrix[:, 0] == edge[1])[0]
-        #сделать проверку на цикл
 
         paths_1 = self.paths.copy()
         paths_1 += [Edge(edge[0], edge[1], include=True)]
         edges = [(int(edge.istart), int(edge.ifinish)) for edge in paths_1 if edge.include]
-        # print(node_include.matrix, col_index_1[0], edge[1])
         if len(row_index_1) != 0 and len(col_index_1) != 0:
             keeps_value = new_matrix[row_index_1[0]][col_index_1[0]]
             new_matrix[row_index_1[0]][col_index_1[0]] = INF
             self.matrix[row_index_1[0]][col_index_1[0]] = keeps_value
-        # print(node_include.matrix)
-        new_matrix = np.delete(new_matrix, row_index[0], axis=0)  # Удаляем строку
-        new_matrix = np.delete(new_matrix, col_index[0], axis=1)  # Удаляем столбец
+        new_matrix = np.delete(new_matrix, row_index[0], axis=0)
+        new_matrix = np.delete(new_matrix, col_index[0], axis=1)  
 
         has_cycle_result, cycle_count = has_cycle(edges)
         if len(edges) >= 3 and has_cycle_result:
@@ -190,7 +178,7 @@ class AlgLittle:
                 h_level=self.h_level + 1,
             )
         node_include.reduce()
-        print(f'{self.include_edge.__qualname__}: {node_include.hmin=} {node_include.matrix=} {node_include.paths=}')
+        # print(f'{self.include_edge.__qualname__}: {node_include.hmin=} {node_include.matrix=} {node_include.paths=}')
         return node_include
 
     def reduce(self: np.ndarray) -> int:
@@ -200,13 +188,11 @@ class AlgLittle:
             Returns:
                 int: Значение hmin после редукции.
         """
-        # Находим минимумы по строкам и столбцам подматрицы
         row_min = self.sub_matrix.min(axis=1)
         self.sub_matrix -= row_min[:, np.newaxis]
         columns_min = self.sub_matrix.min(axis=0)
         self.sub_matrix -= columns_min
 
-        # Суммируем минимумы
         self.hmin += sum(row_min) + sum(columns_min)
 
         self.matrix[1:, 1:] = self.sub_matrix
@@ -223,24 +209,16 @@ class AlgLittle:
             Returns:
                 tuple: Список координат нулей с максимальным коэффициентом и обновленное значение max_coeff.
         """
-        # Список координат нулевых элементов
         zeros = []
-        # Список их коэффициентов
         coeff_list = []
-        # Поиск нулевых элементов
         for i in range(1, self.matrix.shape[0]):
             for j in range(1, self.matrix.shape[1]):
-                # Если равен нулю
                 if self.matrix[i, j] == 0:
-                    # Добавление в список координат
                     zeros.append((self.matrix[i][0], self.matrix[0][j]))
-                    # Расчет коэффициента и добавление в список
                     coeff = self.get_coefficient(i, j)
                     coeff_list.append(coeff)
-                    # Сравнение с максимальным
                     max_coeff = max(max_coeff, coeff)
 
-        # print("zeros = ", zeros)
         length = len(zeros)
         i = 0
         cnt = 0
@@ -267,7 +245,6 @@ class AlgLittle:
         """
         rmin = cmin = float("inf")
 
-        # Обход строки и столбца
         for i in range(1, self.matrix.shape[0]):
             if i != r:
                 rmin = min(rmin, self.matrix[i, c])
@@ -289,7 +266,6 @@ class AlgLittle:
         
         edge = zeros[0]
 
-        # делаем КОПИЮ матрицы с поставленной куда надо бесконечностью
         new_matrix = self.matrix.copy()
         col_index_1 = np.where(new_matrix[0] == edge[1])[0]
         row_index_1 = np.where(new_matrix[:, 0] == edge[0])[0]
@@ -319,10 +295,10 @@ class AlgLittle:
         rows, columns = np.shape(matrix)
         list_column = np.arange(1, columns + 1).reshape(
             -1, 1
-        )  # столбец из элементов от 1 до n
+        )
         list_row = np.arange(0, columns + 1).reshape(
             1, -1
-        )  # строка из элементов от 0 до n
+        )
         new_matrix = matrix
         new_matrix = np.hstack((np.array(list_column), new_matrix))
         new_matrix = np.vstack((np.array(list_row), new_matrix))
@@ -416,10 +392,13 @@ def get_list_edges(data: list, num_rows: int, start_airfield: int) -> list[tuple
             list[tuple]: Список ребер.
     """
     print(f"st: {start_airfield}")
+    for i in data:
+        if i[0] == 7:
+            print(i)
+    
     result = []
-    # Найти первую пару
     for item in data:
-        if item[2] and item[0] == start_airfield:
+        if item[2]:
             result.append((int (item[0]), int (item[1])))
             last_pair = result[-1]
             break
@@ -431,7 +410,7 @@ def get_list_edges(data: list, num_rows: int, start_airfield: int) -> list[tuple
                 result.append((int (item[0]), int (item[1])))
                 last_pair = result[-1]
                 cnt += 1
-                data_1.remove(item)  # Удаляем элемент из data
+                data_1.remove(item) 
                 break
 
     return result
@@ -473,7 +452,6 @@ def add_airfields(numbers: np.ndarray, s: int, kolvo_airfields: int) -> np.matri
         Returns:
             np.matrix: Матрица с добавленными аэродромами.
     """
-    print(numbers)
     rows = numbers.shape[0]
     size = rows + kolvo_airfields
     new_matrix = np.zeros((size, size), dtype=int)
@@ -512,20 +490,17 @@ def algorithm_Lit(
         Returns:
             tuple[list[list], list[tuple]]: Результаты алгоритма.
     """
-    # добавление строки и столбца "заголовков"
-    # if kolvo_airfields != 1:
+
     kolvo_airfields *= 2
     pos = numbers.shape[0]
     if kolvo_airfields != 1:
         numbers = add_airfields(numbers, s, kolvo_airfields)
     numbers = AlgLittle.head_matrix(numbers)
-    print(f"numbers: {numbers}")
     node = AlgLittle(new_matrix=numbers)
     num_rows = node.matrix.shape[0] - 1
     node.reduce()
     start_airfield = pos
     list_airfields = []
-    # print(kolvo_airfields)
     if kolvo_airfields != 1:
         for i in range(int(kolvo_airfields / 2)):
             list_airfields.append(pos + 1)
@@ -541,18 +516,16 @@ def algorithm_Lit(
         node_exclude = node.delete_edge(zeros, max_coeff)
         # print('After delete ' + repr(node))
         node_include = node.include_edge(zeros)
-        #проанализировать если node include None 
         node_include.discarded_nodes.append(node_exclude)
         node_exclude.discarded_nodes.append(node_include)
         all_possible_plans = node.discarded_nodes + [node_exclude, node_include]
         prev_node = node
         node = min(all_possible_plans, key=lambda nd: nd.hmin)
-        print("=" * 20)
-        print(f"prev_node: {prev_node.hmin}")
-        print(f"node: {node.hmin}")
+        # print("=" * 20)
+        # print(f"prev_node: {prev_node.hmin}")
+        # print(f"node: {node.hmin}")
         if prev_node.h_level == node.h_level:
             node.discarded_nodes.remove(prev_node)
-        # если размер матрицы 2х2, то закончить алгоритм
         node1 = node
         if node1.check_end_algo():
             l = node1.find_rest_path()    
@@ -588,6 +561,7 @@ def algorithm_Lit(
                     listok.append(i.include)
                     l_1.append(listok)
                 answer = get_list_edges(l_1, num_rows, start_airfield)
+                # print(f"answer: {answer}")
                 ans = vertex(answer, list_airfields)
                 for i in range(len(answer)):
                     x, y = answer[i]
@@ -600,10 +574,11 @@ def algorithm_Lit(
                     for j in range(len(ans[x])):
                         if ans[x][j] > start_airfield:
                             ans[x][j] = start_airfield
-                print(f"ans: {ans}")
+                # print(f"ans: {ans}")
                 return ans, answer
             
             answer = get_list_edges(l, num_rows, start_airfield)
+            # print(f"answer: {answer}")
             # result = [(int(x), int(y)) for (x, y) in answer]
             ans = vertex(answer, list_airfields)
             for i in range(len(answer)):
@@ -617,22 +592,5 @@ def algorithm_Lit(
                 for j in range(len(ans[x])):
                     if ans[x][j] > start_airfield:
                             ans[x][j] = start_airfield
-            print(f"ans: {ans}")
+            # print(f"ans: {ans}")
             return ans, answer
-        
-
-assert_matr = np.array([[1.000000e+08, 1.3026466e+01, 1.6874285e+01, 5.8309520e+00, 1.4775642e+01],
- [1.3026466e+01, 1.000000e+08, 1.0792264e+01, 1.8294219e+01, 1.3916611e+01],
- [1.6874285e+01, 1.0792264e+01, 1.000000e+08, 1.3015664e+01, 4.1231060e+00],
- [5.8309520e+00, 1.8294219e+01, 1.3015664e+01, 1.000000e+08, 1.0242517e+01],
- [1.4775642e+01, 1.3916611e+01, 4.1231060e+00, 1.0242517e+01, 1.000000e+08]]
-)
-print(algorithm_Lit(assert_matr, assert_matr.shape[0] - 1, 1))
-# size = 10
-# # for i in range(5):
-# matrix = np.random.randint(1, 100, size=(size, size))
-# np.fill_diagonal(matrix, INF)
-# start_airfield = matrix.shape[0]
-# execution_time_2 = timeit.timeit(lambda: algorithm_Lit(matrix, start_airfield, 1), number=1)
-# print(execution_time_2)
-# print(algorithm_Lit(matrix, start_airfield, 1))
